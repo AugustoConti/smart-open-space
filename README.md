@@ -1,6 +1,5 @@
 # Smart Open Space
 ### Elevator pitch
-*Conceptos claves*
 - **Para** Asistente
 - **Quien**
   - No logra captar los datos de una charla.
