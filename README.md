@@ -5,15 +5,13 @@
   <img src="/other/logo.png" width="100" height="100" />
 </p>
 <p align="center">
-  Organiza tu Open Space, simple e inteligente! 😎
+  Organizá tu Open Space! 😎
 </p>
 
+[Backlog](https://trello.com/b/A3IsSe1r/smartopenspace)
 
 ## 📖 Índice
 - [Descripción](#-descripción)
-- [Tecnología](#-tecnología)
-- [Instalación](#-instalación)
-- [Entregas](#-entregas)
 - [LICENSE](#-license)
 
 ## 📓 Descripción
@@ -33,19 +31,6 @@
 - **El nuestro**
   - No requiere carga manual (siempre actualizado)
   - Sugiere optimizaciones a la agenda.
- 
-## 📡 Tecnología
-- Frontend: [**ReactJS**](https://reactjs.org/)
-- Backend: [**Kotlin**](https://kotlinlang.org/) + [**Spring**](https://spring.io/)
-- Estrategia versionado: [**Trunk Based Development**](https://trunkbaseddevelopment.com/)
-- CI: Travis <!-- ACTUALIZAR CON URL -->
-- Tablero: [**Quire**](https://quire.io/w/SmartOpenSpace)
-
-## 💻 Instalación
-...
-
-## 🚚 Entregas
-...
 
 ## 👮 LICENSE
 [GPLv3](LICENSE)
