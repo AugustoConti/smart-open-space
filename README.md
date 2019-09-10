@@ -1,6 +1,21 @@
-# Smart Open Space
-### Elevator pitch
-- **Para** Asistente
+<h1 align="center">
+  Smart Open Space
+</h1>
+<p align="center">
+  <img src="/other/logo.png" width="100" height="100" />
+</p>
+<p align="center">
+  Organizá tu Open Space! 😎
+</p>
+
+[Backlog](https://trello.com/b/A3IsSe1r/smartopenspace)
+
+## 📖 Índice
+- [Descripción](#-descripción)
+- [LICENSE](#-license)
+
+## 📓 Descripción
+- **Para** Asistente de Open Space
 - **Quien**
   - No logra captar los datos de una charla.
   - Agenda:
@@ -16,4 +31,6 @@
 - **El nuestro**
   - No requiere carga manual (siempre actualizado)
   - Sugiere optimizaciones a la agenda.
- 
+
+## 👮 LICENSE
+[GPLv3](LICENSE)
