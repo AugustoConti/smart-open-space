@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class SmartOpenSpaceApplication
 
 fun main(args: Array<String>) {
-	runApplication<SmartOpenSpaceApplication>(*args)
+  runApplication<SmartOpenSpaceApplication>(*args)
 }
