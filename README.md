@@ -8,6 +8,7 @@
   Organizá tu Open Space! 😎
 </p>
 
+[![Build Status](https://travis-ci.org/AugustoConti/smart-open-space.svg?branch=master)](https://travis-ci.org/AugustoConti/smart-open-space)
 [Backlog](https://trello.com/b/A3IsSe1r/smartopenspace)
 
 ## 📖 Índice
