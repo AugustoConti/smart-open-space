@@ -36,19 +36,14 @@ tasks.withType<KotlinCompile> {
 
 tasks.jacocoTestReport {
   reports {
-    xml.isEnabled = false
-    csv.isEnabled = false
-    html.isEnabled = true
-    html.destination = file("$buildDir/reports/coverage")
+    xml.isEnabled = true
+    html.isEnabled = false
   }
 }
 
 val testCoverage by tasks.registering {
   group = "verification"
   description = "Runs the unit tests with coverage."
-
   dependsOn(":test", ":jacocoTestReport")
-  val jacocoTestReport = tasks.findByName("jacocoTestReport")
-  jacocoTestReport?.mustRunAfter(tasks.findByName("test"))
-  tasks.findByName("jacocoTestCoverageVerification")?.mustRunAfter(jacocoTestReport)
+  tasks.findByName("jacocoTestReport")?.mustRunAfter(tasks.findByName("test"))
 }
