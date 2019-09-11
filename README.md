@@ -2,14 +2,18 @@
   Smart Open Space
 </h1>
 <p align="center">
-  <img src="/other/logo.png" width="100" height="100" />
+  <img src="/other/logo.png" width="150" height="150" />
 </p>
 <p align="center">
   Organizá tu Open Space! 😎
 </p>
 
-[![Build Status](https://travis-ci.org/AugustoConti/smart-open-space.svg?branch=master)](https://travis-ci.org/AugustoConti/smart-open-space)
-[Backlog](https://trello.com/b/A3IsSe1r/smartopenspace)
+<hr />
+
+[![Build Status][build-badge]][build]
+[![Issues][issues-badge]][issues]
+[![Backlog][backlog-badge]][backlog]
+[![License: GPL v3][license-badge]][license]
 
 ## 📖 Índice
 - [Descripción](#-descripción)
@@ -35,3 +39,12 @@
 
 ## 👮 LICENSE
 [GPLv3](LICENSE)
+
+[backlog-badge]: https://img.shields.io/badge/trello-backlog-blue?style=flat-square&logo=trello
+[backlog]: https://trello.com/b/A3IsSe1r/smartopenspace
+[build-badge]: https://img.shields.io/travis/AugustoConti/smart-open-space?logo=travis&style=flat-square
+[build]: https://travis-ci.org/AugustoConti/smart-open-space
+[issues-badge]: https://img.shields.io/github/issues-raw/AugustoConti/smart-open-space?style=flat-square
+[issues]: https://github.com/AugustoConti/smart-open-space/issues
+[license-badge]: https://img.shields.io/github/license/AugustoConti/smart-open-space?style=flat-square
+[license]: LICENSE
