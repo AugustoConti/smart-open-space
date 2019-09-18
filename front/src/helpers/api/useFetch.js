@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const server = process.env.API_URI;
+const server = process.env.API_URL;
+
+console.log(server);
 
 const useFetch = (fetch, path, setData = () => {}, body = {}) => {
   const logError = err => {

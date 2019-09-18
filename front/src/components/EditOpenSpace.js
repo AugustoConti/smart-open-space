@@ -35,7 +35,7 @@ const MyCalendar = ({ onChange, value, ...props }) => {
       open={open}
     >
       <Box align="center" direction="row" gap="medium" pad="small">
-        <Text>{value ? new Date(value).toLocaleDateString() : 'Select date'}</Text>
+        <Text>{value ? new Date(value).toLocaleDateString() : 'Elegir fecha'}</Text>
         <FormDown />
       </Box>
     </DropButton>
@@ -81,7 +81,9 @@ TimeSelector.propTypes = {
   value: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
-const List = props => <Box as="ul" {...props} />;
+const List = props => (
+  <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
+);
 
 const ListItem = props => (
   <Box as="li" border="top" direction="row" justify="between" pad="xxsmall" {...props} />
@@ -95,7 +97,7 @@ const Rooms = ({ value, onChange }) => {
       <Box direction="row" justify="between">
         <TextInput
           onChange={event => setTextValue(event.target.value)}
-          placeholder="room name"
+          placeholder="nombre de sala"
           value={textValue}
         />
         <Button
@@ -107,7 +109,7 @@ const Rooms = ({ value, onChange }) => {
           }}
         />
       </Box>
-      <List margin={{ top: 'small', bottom: 'none' }}>
+      <List>
         {value.map((room, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <ListItem key={`${room}-${index}`} index={index}>
@@ -128,24 +130,39 @@ Rooms.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
+const BoxCenter = ({ children }) => {
+  return (
+    <Box align="center" margin={{ bottom: 'medium', horizontal: 'medium' }}>
+      <Box width="medium">{children}</Box>
+    </Box>
+  );
+};
+
+BoxCenter.propTypes = { children: PropTypes.node.isRequired };
+
+const pad = n => (n < 10 ? '0' : '') + n;
+
+const beforeYesterday = date =>
+  new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
+
+const initialValues = {
+  date: new Date().toLocaleDateString(),
+  time: [10, 15],
+  rooms: [],
+};
+
 const EditOpenSpace = ({ history }) => {
   const post = usePost('', () => history.push('/'));
-
-  const initialValues = {
-    date: new Date().toLocaleDateString(),
-    time: [10, 15],
-    rooms: [],
-  };
 
   const onSubmit = ({ value }) => {
     const [start, end] = value.time;
     post({
       body: {
         date: new Date(value.date),
-        endTime: `${end}:00`,
+        endTime: `${pad(end)}:00`,
         name: value.name,
         rooms: value.rooms.map(r => ({ name: r })),
-        startTime: `${start}:00`,
+        startTime: `${pad(start)}:00`,
       },
     });
   };
@@ -153,21 +170,35 @@ const EditOpenSpace = ({ history }) => {
   return (
     <>
       <Header />
-      <Box align="center" margin={{ bottom: 'medium', horizontal: 'medium' }}>
-        <Box width="medium">
-          <Heading level={2}>New Open Space</Heading>
-          <Form onSubmit={onSubmit} value={initialValues}>
-            <FormField label="Name" name="name" required />
-            <FormField component={MyCalendar} label="Date" name="date" required />
-            <FormField component={TimeSelector} label="Time" name="time" required />
-            <FormField component={Rooms} label="Rooms" name="rooms" required />
-            <Box direction="row" justify="between" margin={{ top: 'medium' }}>
-              <Button label="Cancel" onClick={() => history.goBack()} />
-              <Button label="Create" primary type="submit" />
-            </Box>
-          </Form>
-        </Box>
-      </Box>
+      <BoxCenter>
+        <Heading level={2}>Nuevo Open Space</Heading>
+        <Form
+          messages={{ invalid: 'inválido', required: 'requerido' }}
+          onSubmit={onSubmit}
+          value={initialValues}
+        >
+          <FormField label="Nombre" name="name" required />
+          <FormField
+            component={MyCalendar}
+            label="Fecha"
+            name="date"
+            required
+            validate={date => beforeYesterday(date) && 'debe ser mayor o igual a hoy'}
+          />
+          <FormField component={TimeSelector} label="Horario" name="time" required />
+          <FormField
+            component={Rooms}
+            label="Salas"
+            name="rooms"
+            required
+            validate={rooms => rooms.length < 1 && 'se requiere al menos una sala'}
+          />
+          <Box direction="row" justify="between" margin={{ top: 'medium' }}>
+            <Button label="Cancelar" onClick={history.goBack} />
+            <Button label="Crear" primary type="submit" />
+          </Box>
+        </Form>
+      </BoxCenter>
     </>
   );
 };
