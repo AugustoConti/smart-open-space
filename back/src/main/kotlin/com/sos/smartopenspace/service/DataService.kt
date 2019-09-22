@@ -15,6 +15,7 @@ import java.time.LocalTime
 class DataService(private val openSpaceRepository: OpenSpaceRepository) {
   @EventListener
   fun appReady(event: ApplicationReadyEvent) {
+    if (openSpaceRepository.count()>0) return
     openSpaceRepository.saveAll(
       listOf(
         OpenSpace(

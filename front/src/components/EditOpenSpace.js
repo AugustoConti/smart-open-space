@@ -16,8 +16,9 @@ import {
 import { Add, FormDown, FormTrash } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
-import Header from './shared/Header';
-import { usePost } from '../helpers/api/useFetch';
+import RowBetween from './shared/RowBetween';
+
+import { post } from '../helpers/api/useFetch';
 
 const MyCalendar = ({ onChange, value, ...props }) => {
   const [open, setOpen] = useState(false);
@@ -34,7 +35,7 @@ const MyCalendar = ({ onChange, value, ...props }) => {
       onOpen={() => setOpen(true)}
       open={open}
     >
-      <Box align="center" direction="row" gap="medium" pad="small">
+      <Box align="center" direction="row" pad="small">
         <Text>{value ? new Date(value).toLocaleDateString() : 'Elegir fecha'}</Text>
         <FormDown />
       </Box>
@@ -49,7 +50,7 @@ MyCalendar.propTypes = {
 
 const TimeSelector = ({ onChange, value, ...props }) => (
   <Stack>
-    <Box direction="row" justify="between">
+    <RowBetween>
       {[...Array(16)].map((_, v) => (
         <Box
           align="center"
@@ -63,12 +64,13 @@ const TimeSelector = ({ onChange, value, ...props }) => (
           <Text>{v + 8}</Text>
         </Box>
       ))}
-    </Box>
+    </RowBetween>
     <RangeSelector
       direction="horizontal"
       max={23}
       min={8}
       onChange={values => onChange({ value: values })}
+      round="small"
       size="full"
       values={value}
       {...props}
@@ -85,16 +87,26 @@ const List = props => (
   <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
 );
 
-const ListItem = props => (
-  <Box as="li" border="top" direction="row" justify="between" pad="xxsmall" {...props} />
+const ListItem = props => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
+
+const RoomItem = ({ room, onRemove }) => (
+  <ListItem>
+    <Text alignSelf="center">{room}</Text>
+    <Button icon={<FormTrash />} onClick={onRemove} />
+  </ListItem>
 );
+
+RoomItem.propTypes = {
+  onRemove: PropTypes.func.isRequired,
+  room: PropTypes.string.isRequired,
+};
 
 const Rooms = ({ value, onChange }) => {
   const [textValue, setTextValue] = useState('');
 
   return (
     <Box pad="small">
-      <Box direction="row" justify="between">
+      <RowBetween>
         <TextInput
           onChange={event => setTextValue(event.target.value)}
           placeholder="nombre de sala"
@@ -108,17 +120,15 @@ const Rooms = ({ value, onChange }) => {
             setTextValue('');
           }}
         />
-      </Box>
+      </RowBetween>
       <List>
         {value.map((room, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <ListItem key={`${room}-${index}`} index={index}>
-            <Text alignSelf="center">{room}</Text>
-            <Button
-              icon={<FormTrash />}
-              onClick={() => onChange({ value: value.filter((_, i) => i !== index) })}
-            />
-          </ListItem>
+          <RoomItem
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${room}-${index}`}
+            room={room}
+            onRemove={() => onChange({ value: value.filter((_, i) => i !== index) })}
+          />
         ))}
       </List>
     </Box>
@@ -129,16 +139,6 @@ Rooms.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
-
-const BoxCenter = ({ children }) => {
-  return (
-    <Box align="center" margin={{ bottom: 'medium', horizontal: 'medium' }}>
-      <Box width="medium">{children}</Box>
-    </Box>
-  );
-};
-
-BoxCenter.propTypes = { children: PropTypes.node.isRequired };
 
 const pad = n => (n < 10 ? '0' : '') + n;
 
@@ -152,53 +152,49 @@ const initialValues = {
 };
 
 const EditOpenSpace = ({ history }) => {
-  const post = usePost('', () => history.push('/'));
-
-  const onSubmit = ({ value }) => {
-    const [start, end] = value.time;
-    post({
-      body: {
-        date: new Date(value.date),
-        endTime: `${pad(end)}:00`,
-        name: value.name,
-        rooms: value.rooms.map(r => ({ name: r })),
-        startTime: `${pad(start)}:00`,
-      },
-    });
+  const onSubmit = ({ value: { date, name, rooms, time } }) => {
+    const [start, end] = time;
+    post('/openSpace', {
+      date: new Date(date),
+      endTime: `${pad(end)}:00`,
+      name,
+      rooms: rooms.map(r => ({ name: r })),
+      startTime: `${pad(start)}:00`,
+    }).then(() => history.push('/'));
   };
 
   return (
     <>
-      <Header />
-      <BoxCenter>
-        <Heading level={2}>Nuevo Open Space</Heading>
-        <Form
-          messages={{ invalid: 'inválido', required: 'requerido' }}
-          onSubmit={onSubmit}
-          value={initialValues}
-        >
-          <FormField label="Nombre" name="name" required />
-          <FormField
-            component={MyCalendar}
-            label="Fecha"
-            name="date"
-            required
-            validate={date => beforeYesterday(date) && 'debe ser mayor o igual a hoy'}
-          />
-          <FormField component={TimeSelector} label="Horario" name="time" required />
-          <FormField
-            component={Rooms}
-            label="Salas"
-            name="rooms"
-            required
-            validate={rooms => rooms.length < 1 && 'se requiere al menos una sala'}
-          />
-          <Box direction="row" justify="between" margin={{ top: 'medium' }}>
-            <Button label="Cancelar" onClick={history.goBack} />
-            <Button label="Crear" primary type="submit" />
-          </Box>
-        </Form>
-      </BoxCenter>
+      <Heading level={2}>Nuevo Open Space</Heading>
+      <Form
+        messages={{ invalid: 'Inválido', required: 'Obligatorio' }}
+        onSubmit={onSubmit}
+        value={initialValues}
+      >
+        <FormField label="Nombre" name="name" required />
+        <FormField
+          component={MyCalendar}
+          label="Fecha"
+          name="date"
+          required
+          validate={
+            date => beforeYesterday(date) && 'Ingresa una fecha mayor o igual a hoy'
+            // eslint-disable-next-line react/jsx-curly-newline
+          }
+        />
+        <FormField component={TimeSelector} label="Horario" name="time" required />
+        <FormField
+          component={Rooms}
+          label="Salas"
+          name="rooms"
+          required
+          validate={rooms => rooms.length < 1 && 'Ingresa al menos una sala'}
+        />
+        <RowBetween margin={{ top: 'medium' }} justify="evenly">
+          <Button label="Cancelar" onClick={history.goBack} />
+          <Button label="Crear" primary type="submit" />
+        </RowBetween>
+      </Form>
     </>
   );
 };

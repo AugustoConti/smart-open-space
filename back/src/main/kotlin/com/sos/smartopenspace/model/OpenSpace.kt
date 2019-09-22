@@ -14,11 +14,11 @@ import javax.validation.constraints.NotEmpty
 
 @Entity
 class OpenSpace(
-  @field:NotEmpty(message = "Please provide a name")
-  @field:NotBlank(message = "Name may not be blank")
+  @field:NotEmpty(message = "Ingrese un nombre")
+  @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
   @field:Valid
-  @field:NotEmpty(message="At least one room is required")
+  @field:NotEmpty(message="Ingrese al menos una sala")
   @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
   val rooms: List<Room>,
   val date: LocalDate,
