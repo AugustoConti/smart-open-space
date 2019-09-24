@@ -1,14 +1,52 @@
 sudo: false
 
-language: java
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-before_script: cd back
-script: ./gradlew testCoverage
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+jobs:
+  include:
+    - stage: Test
+      language: java
+      before_cache:
+        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+      cache:
+        directories:
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+      before_script: cd back
+      script: ./gradlew testCoverage
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
+
+    - stage: DeployBack
+      if: branch = master
+      language: java
+      before_cache:
+        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+      cache:
+        directories:
+          - $HOME/.gradle/caches/
+          - $HOME/.gradle/wrapper/
+      before_script: cd back
+      deploy:
+        provider: heroku
+        skip_cleanup: true
+        api_key:
+          secure: $HEROKU_API_KEY
+        app: sosback
+        on:
+          repo: AugustoConti/smart-open-space
+
+    - stage: DeployFront
+      if: branch = master
+      language: node_js
+      node_js: node
+      cache: yarn
+      before_script: cd front
+      deploy:
+        provider: heroku
+        skip_cleanup: true
+        api_key:
+          secure: $HEROKU_API_KEY
+        app: smartopenspace
+        on:
+          repo: AugustoConti/smart-open-space

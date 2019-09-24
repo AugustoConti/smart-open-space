@@ -3,15 +3,24 @@
   "version": "1.0.0",
   "description": "Smart Open Space",
   "main": "index.js",
-  "scripts": {
-    "watch": "parcel src/index.html",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint --fix ./src"
-  },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "private": true,
+  "author": "Augusto Conti <augustoconti10@gmail.com> (https://github.com/AugustoConti)",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/AugustoConti/smart-open-space#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AugustoConti/smart-open-space.git",
+    "directory": "front"
+  },
+  "scripts": {
+    "heroku-postbuild": "parcel build src/index.html",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "start": "parcel dist/index.html",
+    "test": "echo \"\"",
+    "watch": "parcel src/index.html --open"
+  },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
     "eslint": "^6.3.0",
@@ -25,13 +34,13 @@
     "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^3.0.5",
     "lint-staged": "^9.2.5",
-    "parcel-bundler": "^1.12.3",
     "prettier": "1.18.2"
   },
   "dependencies": {
     "axios": "^0.19.0",
     "grommet": "^2.7.8",
     "grommet-icons": "^4.3.0",
+    "parcel-bundler": "^1.12.3",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
