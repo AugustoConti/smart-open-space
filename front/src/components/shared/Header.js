@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { Box, Button, Menu, ResponsiveContext, Text } from 'grommet';
+import { Box, Button, Menu, Text } from 'grommet';
 import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import RowBetween from './RowBetween';
-import { useAuth } from '../../helpers/useAuth';
+import useAuth from '../../helpers/useAuth';
+import useSize from '../../helpers/useSize';
 
 const SmallMenu = ({ color }) => (
   <Box direction="row" pad="medium" justify="end">
@@ -26,7 +27,7 @@ LargeMenu.propTypes = {
 };
 
 const Header = ({ history }) => {
-  const size = useContext(ResponsiveContext);
+  const size = useSize();
   const { getUser, logout } = useAuth();
   const user = getUser();
   const isLogged = !!user;
@@ -56,25 +57,24 @@ const Header = ({ history }) => {
 
   return (
     <RowBetween as="header" fill>
-      <Box>
-        <Button
-          hoverIndicator
-          label={
-            // eslint-disable-next-line react/jsx-wrap-multilines
-            <Text color="light-1" size="large">
-              Smart Open Space
-            </Text>
-          }
-          onClick={() => history.push('/')}
-          plain
-        />
-      </Box>
+      <Button
+        fill="vertical"
+        hoverIndicator
+        label={
+          // eslint-disable-next-line react/jsx-wrap-multilines
+          <Text color="light-1" size="large">
+            Smart Open Space
+          </Text>
+        }
+        onClick={() => history.push('/')}
+        plain
+      />
       {isLogged ? (
         <Menu plain items={menuItems} size="medium">
           {({ drop, hover }) => {
             // eslint-disable-next-line no-nested-ternary
             const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
-            return size === 'small' ? (
+            return size === 'small' && !drop ? (
               <SmallMenu color={color} />
             ) : (
               <LargeMenu color={color} name={user.name} />
@@ -89,9 +89,7 @@ const Header = ({ history }) => {
 };
 
 Header.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default Header;

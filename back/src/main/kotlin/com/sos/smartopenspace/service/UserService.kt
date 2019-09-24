@@ -11,10 +11,12 @@ class UserNotFoundException : RuntimeException("Usuario incorrecto")
 @Transactional
 class UserService(private val userRepository: UserRepository) {
   fun create(user: User): User {
-    user.id = userRepository.findByEmail(user.email)?.id?:0
+    user.id = userRepository.findByEmail(user.email)?.id ?: 0
     return userRepository.save(user)
   }
+
   fun auth(email: String, password: String) =
     userRepository.findByEmailAndPassword(email, password) ?: throw UserNotFoundException()
+
   fun findAll() = userRepository.findAll().toList()
 }

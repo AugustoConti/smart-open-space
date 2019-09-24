@@ -1,11 +1,11 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Button, Form, FormField, Heading } from 'grommet';
+import { Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
-import RowBetween from './shared/RowBetween';
-import { useAuth } from '../helpers/useAuth';
+import useAuth from '../helpers/useAuth';
+import MyForm from './shared/MyForm';
 
 const Login = ({ history, location: { pathname } }) => {
   const { getUser, login, register } = useAuth();
@@ -29,19 +29,17 @@ const Login = ({ history, location: { pathname } }) => {
   ) : (
     <>
       <Heading>{data.title}</Heading>
-      <Form
-        messages={{ invalid: 'Inválido', required: 'Obligatorio' }}
+      <MyForm
+        onSecondary={() => history.push(data.toPath)}
+        primaryLabel={data.actionTitle}
+        secondaryLabel={data.toTitle}
         onSubmit={onSubmit}
         value={initialValues}
       >
-        {isRegister && <FormField label="Nombre" name="name" required />}
-        <FormField label="Email" name="email" type="email" required />
-        <FormField label="Contraseña" name="password" type="password" required />
-        <RowBetween margin={{ vertical: 'large' }}>
-          <Button label={data.toTitle} onClick={() => history.push(data.toPath)} />
-          <Button label={data.actionTitle} primary type="submit" />
-        </RowBetween>
-      </Form>
+        {isRegister && <MyForm.Name />}
+        <MyForm.Email />
+        <MyForm.Password />
+      </MyForm>
     </>
   );
 };

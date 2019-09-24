@@ -5,7 +5,6 @@ import {
   Button,
   Calendar,
   DropButton,
-  Form,
   FormField,
   Heading,
   RangeSelector,
@@ -17,8 +16,9 @@ import { Add, FormDown, FormTrash } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import RowBetween from './shared/RowBetween';
+import MyForm from './shared/MyForm';
 
-import { post } from '../helpers/api/useFetch';
+import { createOS } from '../helpers/api/os-client';
 
 const MyCalendar = ({ onChange, value, ...props }) => {
   const [open, setOpen] = useState(false);
@@ -30,7 +30,7 @@ const MyCalendar = ({ onChange, value, ...props }) => {
 
   return (
     <DropButton
-      dropContent={<Calendar date={value} onSelect={onSelect} size="small" {...props} />}
+      dropContent={<Calendar date={value} onSelect={onSelect} {...props} />}
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
@@ -154,7 +154,7 @@ const initialValues = {
 const EditOpenSpace = ({ history }) => {
   const onSubmit = ({ value: { date, name, rooms, time } }) => {
     const [start, end] = time;
-    post('/openSpace', {
+    createOS({
       date: new Date(date),
       endTime: `${pad(end)}:00`,
       name,
@@ -166,12 +166,8 @@ const EditOpenSpace = ({ history }) => {
   return (
     <>
       <Heading level={2}>Nuevo Open Space</Heading>
-      <Form
-        messages={{ invalid: 'Inválido', required: 'Obligatorio' }}
-        onSubmit={onSubmit}
-        value={initialValues}
-      >
-        <FormField label="Nombre" name="name" required />
+      <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
+        <MyForm.Name />
         <FormField
           component={MyCalendar}
           label="Fecha"
@@ -190,11 +186,7 @@ const EditOpenSpace = ({ history }) => {
           required
           validate={rooms => rooms.length < 1 && 'Ingresa al menos una sala'}
         />
-        <RowBetween margin={{ top: 'medium' }} justify="evenly">
-          <Button label="Cancelar" onClick={history.goBack} />
-          <Button label="Crear" primary type="submit" />
-        </RowBetween>
-      </Form>
+      </MyForm>
     </>
   );
 };

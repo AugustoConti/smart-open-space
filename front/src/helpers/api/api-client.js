@@ -18,7 +18,7 @@ const useGet = (path, initial = {}, onError = () => {}) => {
   const [data, setData] = useState(initial);
 
   useEffect(() => {
-    doFetch(axios.get, path, setData)
+    doFetch(axios.get, path)
       .then(setData)
       .catch(onError);
   }, []);

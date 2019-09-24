@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { post } from './api/useFetch';
+import * as userClient from './api/os-client';
 
 const localStorageKey = '__smartopenspace_user__';
 
@@ -9,9 +9,9 @@ const handleUserResponse = user => {
   return user;
 };
 
-const login = user => post('/user/auth', user).then(handleUserResponse);
+const login = userData => userClient.login(userData).then(handleUserResponse);
 
-const register = user => post('/user', user).then(handleUserResponse);
+const register = userData => userClient.register(userData).then(handleUserResponse);
 
 const logout = () => {
   window.localStorage.removeItem(localStorageKey);
@@ -34,4 +34,5 @@ const useAuth = () => {
   return context;
 };
 
-export { AuthProvider, useAuth };
+export { AuthProvider };
+export default useAuth;

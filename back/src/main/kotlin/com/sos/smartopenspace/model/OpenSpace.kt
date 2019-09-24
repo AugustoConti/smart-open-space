@@ -17,13 +17,19 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
-  @field:Valid
-  @field:NotEmpty(message="Ingrese al menos una sala")
-  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-  val rooms: List<Room>,
   val date: LocalDate,
   val startTime: LocalTime,
   val endTime: LocalTime,
+
+  @field:Valid
+  @field:NotEmpty(message = "Ingrese al menos una sala")
+  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  val rooms: Set<Room>,
+
+  @field:Valid
+  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  val talks: MutableSet<Talk> = mutableSetOf(),
+
   @Id @GeneratedValue
   val id: Long = 0
 )

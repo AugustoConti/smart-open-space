@@ -1,56 +1,55 @@
 import React from 'react';
 
 import { Box, Button, Grid, Heading, Text } from 'grommet';
-import { Add } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
+import ButtonNew from './shared/ButtonNew';
 import RowBetween from './shared/RowBetween';
 
-import { useGet } from '../helpers/api/useFetch';
+import { useGetAllOS } from '../helpers/api/os-client';
 
-const OpenSpaceCard = ({ name, date, startTime, endTime, rooms }) => (
-  <Box
-    background="white"
-    elevation="small"
-    fill
-    overflow="hidden"
-    pad="small"
-    round="small"
-  >
-    <Box>
-      <Heading level="3" margin="none">
-        {name}
-      </Heading>
-      {`${rooms.length} Salas`}
-      <Text color="dark-5" size="small">
-        {date}
-        <br />
-        {startTime}
-        &#8226;
-        {endTime}
-      </Text>
-    </Box>
-    {/* <Text size="small" color="dark-5" margin={{ vertical: 'small' }} truncate>
+const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
+  <Button fill onClick={onClick} plain>
+    {({ hover }) => (
+      <Box
+        background="white"
+        border={hover ? { color: 'brand', size: 'medium', style: 'outset' } : undefined}
+        elevation="small"
+        fill
+        pad="small"
+        round
+        overflow="hidden"
+      >
+        <Heading level="3" margin="none">
+          {name}
+        </Heading>
+        {`${rooms.length} Salas`}
+        <Text color="dark-5" size="small">
+          {date}
+          <br />
+          {startTime}
+          &#8226;
+          {endTime}
+        </Text>
+        {/* <Text size="small" color="dark-5" margin={{ vertical: 'small' }} truncate>
           description
         </Text> */}
-  </Box>
+      </Box>
+    )}
+  </Button>
 );
 
 OpenSpaceCard.propTypes = {
   date: PropTypes.string.isRequired,
   endTime: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
   rooms: PropTypes.arrayOf(PropTypes.object).isRequired,
   startTime: PropTypes.string.isRequired,
 };
 
-const ButtonNew = ({ onClick }) => (
-  <Button icon={<Add />} label="Nuevo" onClick={onClick} primary />
-);
-ButtonNew.propTypes = { onClick: PropTypes.func.isRequired };
-
 const Home = ({ history }) => {
-  const [openSpaces] = useGet('/openSpace', []);
+  const [openSpaces] = useGetAllOS();
 
   return (
     <>
@@ -58,9 +57,13 @@ const Home = ({ history }) => {
         <Heading>Open Spaces</Heading>
         <ButtonNew onClick={() => history.push('/new')} />
       </RowBetween>
-      <Grid columns="small" gap="small">
+      <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
         {openSpaces.map(openSpace => (
-          <OpenSpaceCard key={openSpace.id} {...openSpace} />
+          <OpenSpaceCard
+            key={openSpace.id}
+            onClick={() => history.push(`/os/${openSpace.id}`)}
+            {...openSpace}
+          />
         ))}
       </Grid>
     </>
