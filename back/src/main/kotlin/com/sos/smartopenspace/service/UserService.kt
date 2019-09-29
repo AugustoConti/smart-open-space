@@ -2,6 +2,7 @@ package com.sos.smartopenspace.service
 
 import com.sos.smartopenspace.model.User
 import com.sos.smartopenspace.persistence.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,4 +20,6 @@ class UserService(private val userRepository: UserRepository) {
     userRepository.findByEmailAndPassword(email, password) ?: throw UserNotFoundException()
 
   fun findAll() = userRepository.findAll().toList()
+
+  fun findById(id: Long) = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
 }

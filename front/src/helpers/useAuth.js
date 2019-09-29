@@ -1,6 +1,6 @@
 import React from 'react';
 
-import * as userClient from './api/os-client';
+import * as userClient from './api/user-client';
 
 const localStorageKey = '__smartopenspace_user__';
 
@@ -18,12 +18,10 @@ const logout = () => {
   return Promise.resolve();
 };
 
-const getUser = () => JSON.parse(window.localStorage.getItem(localStorageKey));
-
 const AuthContext = React.createContext();
 
 const AuthProvider = props => (
-  <AuthContext.Provider value={{ getUser, login, logout, register }} {...props} />
+  <AuthContext.Provider value={{ login, logout, register }} {...props} />
 );
 
 const useAuth = () => {
@@ -34,5 +32,7 @@ const useAuth = () => {
   return context;
 };
 
-export { AuthProvider };
+const useUser = () => JSON.parse(window.localStorage.getItem(localStorageKey));
+
+export { AuthProvider, useUser };
 export default useAuth;

@@ -1,6 +1,8 @@
 package com.sos.smartopenspace.persistence
 
+import com.sos.smartopenspace.model.Talk
 import com.sos.smartopenspace.model.User
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 
 interface UserRepository : CrudRepository<User, Long> {

@@ -15,7 +15,9 @@ const EditTalk = ({
   const [os] = useGetOS(id, () => history.push('/'));
 
   const onSubmit = ({ value: { name, description } }) => {
-    createTalk(id, { name, description }).then(() => history.push(`/os/${id}`));
+    createTalk(id, { name, description }).then(() =>
+      history.push(`/os/${id}/mis-charlas`)
+    );
   };
 
   return (

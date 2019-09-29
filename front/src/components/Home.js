@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { Box, Button, Grid, Heading, Text } from 'grommet';
 import PropTypes from 'prop-types';
@@ -7,6 +8,7 @@ import ButtonNew from './shared/ButtonNew';
 import RowBetween from './shared/RowBetween';
 
 import { useGetAllOS } from '../helpers/api/os-client';
+import { useUser } from '../helpers/useAuth';
 
 const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
   <Button fill onClick={onClick} plain>
@@ -48,13 +50,13 @@ OpenSpaceCard.propTypes = {
   startTime: PropTypes.string.isRequired,
 };
 
-const Home = ({ history }) => {
+const HomeLogged = ({ history }) => {
   const [openSpaces] = useGetAllOS();
 
   return (
     <>
       <RowBetween>
-        <Heading>Open Spaces</Heading>
+        <Heading level="2">Mis Open Spaces</Heading>
         <ButtonNew onClick={() => history.push('/new')} />
       </RowBetween>
       <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
@@ -68,6 +70,17 @@ const Home = ({ history }) => {
       </Grid>
     </>
   );
+};
+
+HomeLogged.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+const Home = ({ history }) => {
+  const user = useUser();
+  return user ? <HomeLogged history={history} /> : <Redirect to="/login" />;
 };
 
 Home.propTypes = {

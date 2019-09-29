@@ -4,12 +4,12 @@ import { Redirect } from 'react-router-dom';
 import { Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
-import useAuth from '../helpers/useAuth';
+import useAuth, { useUser } from '../helpers/useAuth';
 import MyForm from './shared/MyForm';
 
 const Login = ({ history, location: { pathname } }) => {
-  const { getUser, login, register } = useAuth();
-  const user = getUser();
+  const { login, register } = useAuth();
+  const user = useUser();
   const isRegister = pathname === '/register';
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',

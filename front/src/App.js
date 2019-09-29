@@ -15,33 +15,43 @@ import Login from './components/Login';
 import OpenSpace from './components/OpenSpace';
 import EditTalk from './components/EditTalk';
 import useSize from './helpers/useSize';
+import MyTalks from './components/MyTalks';
 
 toast.configure();
 
+const layoutSmall = {
+  areas: [['header'], ['main']],
+  columns: ['flex'],
+  pad: { horizontal: 'medium' },
+};
+
+const layoutMedium = {
+  areas: [['headerL', 'header', 'headerR'], ['l', 'main', 'r']],
+  columns: ['flex', 'large', 'flex'],
+  pad: undefined,
+};
+
+const layoutLarge = {
+  ...layoutMedium,
+  columns: ['flex', 'xlarge', 'flex'],
+};
+
 const useMainLayout = () => {
   const size = useSize();
+  // eslint-disable-next-line no-nested-ternary
+  return size === 'small' ? layoutSmall : size === 'medium' ? layoutMedium : layoutLarge;
+};
 
-  const layoutSmall = {
-    areas: [
-      { name: 'header', start: [0, 0], end: [0, 0] },
-      { name: 'main', start: [0, 1], end: [0, 1] },
-    ],
-    columns: ['flex'],
-    pad: { horizontal: 'medium' },
-  };
+const BoxBrand = ({ children, ...props }) => (
+  <Box background="brand" {...props}>
+    {children}
+  </Box>
+);
 
-  const layoutLarge = {
-    areas: [
-      { name: 'headerBGL', start: [0, 0], end: [0, 0] },
-      { name: 'header', start: [1, 0], end: [1, 0] },
-      { name: 'headerBGR', start: [2, 0], end: [2, 0] },
-      { name: 'main', start: [1, 1], end: [1, 1] },
-    ],
-    columns: ['flex', 'large', 'flex'],
-    pad: undefined,
-  };
+BoxBrand.defaultProps = { children: [] };
 
-  return size === 'small' ? layoutSmall : layoutLarge;
+BoxBrand.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
 const MainLayout = ({ children }) => {
@@ -49,11 +59,11 @@ const MainLayout = ({ children }) => {
 
   return (
     <Grid areas={areas} columns={columns} fill rows={['xxsmall', 'flex']}>
-      <Box background="brand" gridArea="headerBGL" />
-      <Box background="brand" gridArea="headerBGR" />
-      <Box background="brand" gridArea="header" pad={pad}>
+      <BoxBrand gridArea="headerL" />
+      <BoxBrand gridArea="headerR" />
+      <BoxBrand gridArea="header" pad={pad}>
         <Route path="/" component={Header} />
-      </Box>
+      </BoxBrand>
       <Box gridArea="main" pad={pad}>
         <div>{children}</div>
       </Box>
@@ -72,10 +82,11 @@ const App = () => (
       <AuthProvider>
         <MainLayout>
           <Switch>
-            <Route path={['/newTalk/:id', '/editTalk/:id']} component={EditTalk} />
-            <Route path={['/new', '/edit/:id']} component={EditOpenSpace} />
-            <Route path="/os/:id" component={OpenSpace} />
-            <Route path={['/login', '/register']} component={Login} />
+            <Route path="/os/:id/mis-charlas" exact component={MyTalks} />
+            <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
+            <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
+            <Route path="/os/:id" exact component={OpenSpace} />
+            <Route path={['/login', '/register']} exact component={Login} />
             <Route path="/" exact component={Home} />
             {/* <Route component={Page404} /> */}
           </Switch>

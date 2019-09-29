@@ -1,12 +1,14 @@
 import React from 'react';
 
-import { Box, Button, Menu, Text } from 'grommet';
+import { Box, Button, Menu, Text, Image } from 'grommet';
 import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import RowBetween from './RowBetween';
-import useAuth from '../../helpers/useAuth';
+import useAuth, { useUser } from '../../helpers/useAuth';
 import useSize from '../../helpers/useSize';
+
+import logo from '../../dist/logo.svg';
 
 const SmallMenu = ({ color }) => (
   <Box direction="row" pad="medium" justify="end">
@@ -28,8 +30,8 @@ LargeMenu.propTypes = {
 
 const Header = ({ history }) => {
   const size = useSize();
-  const { getUser, logout } = useAuth();
-  const user = getUser();
+  const { logout } = useAuth();
+  const user = useUser();
   const isLogged = !!user;
   const menuItems = [
     // {
@@ -55,35 +57,59 @@ const Header = ({ history }) => {
     },
   ];
 
+  const LogoSmall = () => (
+    <Box
+      height="xxsmall"
+      width="xxsmall"
+      round="small"
+      pad="xxsmall"
+      background="accent-1"
+    >
+      <Image fit="cover" src={logo} />
+    </Box>
+  );
+
+  const ButtonHome = () => (
+    <Button
+      fill="vertical"
+      hoverIndicator
+      label={
+        // eslint-disable-next-line react/jsx-wrap-multilines
+        <RowBetween pad="xxsmall" fill="vertical">
+          <LogoSmall />
+          {size !== 'small' && (
+            <Text color="light-1" size="xlarge" margin={{ left: 'xsmall' }}>
+              Smart-OS
+            </Text>
+          )}
+        </RowBetween>
+      }
+      onClick={() => history.push('/')}
+      plain
+    />
+  );
+
+  const MyMenu = () =>
+    isLogged ? (
+      <Menu plain items={menuItems} size="medium">
+        {({ drop, hover }) => {
+          // eslint-disable-next-line no-nested-ternary
+          const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
+          return size === 'small' && !drop ? (
+            <SmallMenu color={color} />
+          ) : (
+            <LargeMenu color={color} name={user.name} />
+          );
+        }}
+      </Menu>
+    ) : (
+      <Button label="Ingresar" onClick={() => history.push('/login')} />
+    );
+
   return (
     <RowBetween as="header" fill>
-      <Button
-        fill="vertical"
-        hoverIndicator
-        label={
-          // eslint-disable-next-line react/jsx-wrap-multilines
-          <Text color="light-1" size="large">
-            Smart Open Space
-          </Text>
-        }
-        onClick={() => history.push('/')}
-        plain
-      />
-      {isLogged ? (
-        <Menu plain items={menuItems} size="medium">
-          {({ drop, hover }) => {
-            // eslint-disable-next-line no-nested-ternary
-            const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
-            return size === 'small' && !drop ? (
-              <SmallMenu color={color} />
-            ) : (
-              <LargeMenu color={color} name={user.name} />
-            );
-          }}
-        </Menu>
-      ) : (
-        <Button label="Ingresar" onClick={() => history.push('/login')} />
-      )}
+      <ButtonHome />
+      <MyMenu />
     </RowBetween>
   );
 };
