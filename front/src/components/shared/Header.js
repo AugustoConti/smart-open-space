@@ -8,7 +8,7 @@ import RowBetween from './RowBetween';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 
-const logo = require('#dist/logo.svg');
+import logo from '#dist';
 
 const SmallMenu = ({ color }) => (
   <Box direction="row" pad="medium" justify="end">
