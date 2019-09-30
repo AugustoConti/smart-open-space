@@ -5,10 +5,10 @@ import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import RowBetween from './RowBetween';
-import useAuth, { useUser } from '../../helpers/useAuth';
-import useSize from '../../helpers/useSize';
+import useAuth, { useUser } from '#helpers/useAuth';
+import useSize from '#helpers/useSize';
 
-import logo from '../../dist/logo.svg';
+import logo from '#assets/logo.svg';
 
 const SmallMenu = ({ color }) => (
   <Box direction="row" pad="medium" justify="end">
@@ -27,6 +27,12 @@ LargeMenu.propTypes = {
   color: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
 };
+
+const LogoSmall = () => (
+  <Box height="xxsmall" width="xxsmall" round="small" pad="xxsmall" background="accent-1">
+    <Image fit="cover" src={logo} />
+  </Box>
+);
 
 const Header = ({ history }) => {
   const size = useSize();
@@ -56,18 +62,6 @@ const Header = ({ history }) => {
       },
     },
   ];
-
-  const LogoSmall = () => (
-    <Box
-      height="xxsmall"
-      width="xxsmall"
-      round="small"
-      pad="xxsmall"
-      background="accent-1"
-    >
-      <Image fit="cover" src={logo} />
-    </Box>
-  );
 
   const ButtonHome = () => (
     <Button

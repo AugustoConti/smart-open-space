@@ -14,12 +14,13 @@
     "directory": "front"
   },
   "scripts": {
-    "heroku-postbuild": "parcel build src/index.html",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "start": "parcel dist/index.html",
     "test": "echo \"\"",
-    "watch": "parcel src/index.html --open"
+    "start": "serve -s dist",
+    "watch": "parcel src/index.html --open",
+    "clean": "rm -rf dist/*",
+    "heroku-postbuild": "parcel build src/index.html"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
@@ -47,6 +48,7 @@
     "react-router-dom": "^5.1.1",
     "react-slick": "^0.25.2",
     "react-toastify": "^5.3.2",
+    "serve": "^11.2.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.3.2"
   },
@@ -64,5 +66,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "alias": {
+    "#root": "./src",
+    "#assets": "./src/assets",
+    "#helpers": "./src/helpers"
   }
 }

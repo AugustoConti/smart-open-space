@@ -1,5 +1,5 @@
 import { post, put, useGet } from './api-client';
-import { useUser } from '../useAuth';
+import { useUser, getUser } from '../useAuth';
 
 const createOS = osData => post('/openSpace', osData);
 
@@ -11,7 +11,7 @@ const useGetAllOS = onError => {
 const useGetOS = (id, onError) => useGet(`/openSpace/${id}`, { talks: [] }, onError);
 
 const createTalk = (osID, talkData) => {
-  const { id } = useUser();
+  const { id } = getUser();
   return post(`/openSpace/talk/${id}/${osID}`, talkData);
 };
 

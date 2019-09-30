@@ -17,7 +17,6 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
 
     - stage: DeployBack
-      if: branch = master
       language: java
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -37,7 +36,6 @@ jobs:
           repo: AugustoConti/smart-open-space
 
     - stage: DeployFront
-      if: branch = master
       language: node_js
       node_js: node
       cache: yarn
