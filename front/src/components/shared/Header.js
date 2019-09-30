@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, Menu, Text, Image } from 'grommet';
+import { Box, Button, Menu, Text } from 'grommet';
 import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,7 @@ import RowBetween from './RowBetween';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 
-import logo from '#dist';
+import Logo from '#dist/logo.svg';
 
 const SmallMenu = ({ color }) => (
   <Box direction="row" pad="medium" justify="end">
@@ -30,7 +30,7 @@ LargeMenu.propTypes = {
 
 const LogoSmall = () => (
   <Box height="xxsmall" width="xxsmall" round="small" pad="xxsmall" background="accent-1">
-    <Image fit="cover" src={logo} />
+    <Logo style={{ width: '44px' }} />
   </Box>
 );
 
