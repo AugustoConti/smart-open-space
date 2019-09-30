@@ -64,5 +64,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "alias": {
+    "#root": "./src",
+    "#dist": "./src/dist",
+    "#helpers": "./src/helpers"
   }
 }

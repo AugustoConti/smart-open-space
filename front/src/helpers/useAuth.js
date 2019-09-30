@@ -32,7 +32,9 @@ const useAuth = () => {
   return context;
 };
 
-const useUser = () => JSON.parse(window.localStorage.getItem(localStorageKey));
+const getUser = () => JSON.parse(window.localStorage.getItem(localStorageKey));
 
-export { AuthProvider, useUser };
+const useUser = () => getUser();
+
+export { AuthProvider, useUser, getUser };
 export default useAuth;

@@ -1,7 +1,7 @@
 {
   "env": { "browser": true },
   "extends": ["airbnb", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "react-hooks"],
   "rules": {
     "prettier/prettier": "error",
     "react/jsx-props-no-spreading": "off",
@@ -9,6 +9,14 @@
       1,
       {
         "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "import/no-unresolved": [
+      2,
+      {
+        "ignore": ["#"]
       }
     ]
   },
