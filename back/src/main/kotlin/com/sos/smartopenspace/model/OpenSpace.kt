@@ -17,7 +17,7 @@ import javax.validation.constraints.NotEmpty
 
 class BusySlotException : RuntimeException("Slot ocupado")
 class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
-class TalkAlreadyAssignedException : RuntimeException("Charla ya se encuentra agendada")
+class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
 
 @Entity
 class OpenSpace(
