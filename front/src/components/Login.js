@@ -36,7 +36,7 @@ const Login = ({ history, location: { pathname } }) => {
         onSubmit={onSubmit}
         value={initialValues}
       >
-        {isRegister && <MyForm.Name />}
+        {isRegister && <MyForm.Text />}
         <MyForm.Email />
         <MyForm.Password />
       </MyForm>

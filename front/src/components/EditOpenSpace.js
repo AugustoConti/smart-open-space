@@ -167,7 +167,7 @@ const EditOpenSpace = ({ history }) => {
     <>
       <Heading level={2}>Nuevo Open Space</Heading>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
-        <MyForm.Name />
+        <MyForm.Text />
         <FormField
           component={MyCalendar}
           label="Fecha"

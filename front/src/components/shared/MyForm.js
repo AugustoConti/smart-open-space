@@ -4,7 +4,11 @@ import { Form, Button, FormField, TextArea } from 'grommet';
 import PropTypes from 'prop-types';
 import RowBetween from './RowBetween';
 
-const MyFieldName = props => <FormField label="Nombre" name="name" required {...props} />;
+const MyFieldText = props => <FormField label="Nombre" name="name" required {...props} />;
+
+const MyFieldTextArea = props => (
+  <FormField label="Descripción" name="description" component={TextArea} {...props} />
+);
 
 const MyFieldEmail = props => (
   <FormField label="Email" name="email" type="email" required {...props} />
@@ -12,10 +16,6 @@ const MyFieldEmail = props => (
 
 const MyFieldPassword = props => (
   <FormField label="Contraseña" name="password" type="password" required {...props} />
-);
-
-const MyFieldDescription = props => (
-  <FormField label="Descripción" name="description" component={TextArea} {...props} />
 );
 
 const MyForm = ({ children, onSecondary, primaryLabel, secondaryLabel, ...props }) => (
@@ -42,9 +42,9 @@ MyForm.propTypes = {
   secondaryLabel: PropTypes.string,
 };
 
-MyForm.Name = MyFieldName;
+MyForm.Text = MyFieldText;
+MyForm.TextArea = MyFieldTextArea;
 MyForm.Email = MyFieldEmail;
 MyForm.Password = MyFieldPassword;
-MyForm.Description = MyFieldDescription;
 
 export default MyForm;

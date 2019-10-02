@@ -29,8 +29,8 @@ const EditTalk = ({
         <Text color="dark-5">{os.name}</Text>
       </Box>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
-        <MyForm.Name label="Título" />
-        <MyForm.Description />
+        <MyForm.Text label="Título" />
+        <MyForm.TextArea />
       </MyForm>
     </>
   );
