@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 
-import { Heading, Grid, Box, Text, Button, Layer, FormField, Select } from 'grommet';
+import { Heading, Grid, Box, Text, Button, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
 import RowBetween from './shared/RowBetween';
 import ButtonNew from './shared/ButtonNew';
-import { scheduleTalk, useGetTalks, useGetOS } from '../helpers/api/os-client';
+import {
+  scheduleTalk,
+  useGetTalks,
+  useGetOS,
+  useGetSlots,
+} from '../helpers/api/os-client';
 import MyForm from './shared/MyForm';
 
 const TalkCard = ({ assigned, description, name, onSchedule }) => (
@@ -58,6 +63,47 @@ TalkCard.propTypes = {
   onSchedule: PropTypes.func.isRequired,
 };
 
+const SelectSlotLayout = ({ name, onExit, freeSlots, onSubmit }) => {
+  const [freeHours, setFreeHours] = useState([]);
+  return (
+    <Layer onEsc={onExit} onClickOutside={onExit}>
+      <Box pad="medium">
+        <Box alignSelf="center" margin={{ vertical: 'medium' }}>
+          <Heading level="2" margin="none">
+            Agendate!
+          </Heading>
+          <Text color="dark-5" size="large">
+            {name}
+          </Text>
+        </Box>
+        <MyForm onSecondary={onExit} onSubmit={onSubmit}>
+          <MyForm.Select
+            label="Sala"
+            name="room"
+            options={freeSlots.map(p => p.first)}
+            labelKey="name"
+            onChange={({ selected }) => {
+              setFreeHours(freeSlots[selected].second.map(String));
+            }}
+          />
+          <MyForm.Select label="Horario" name="time" options={freeHours} />
+        </MyForm>
+      </Box>
+    </Layer>
+  );
+};
+
+SelectSlotLayout.propTypes = {
+  name: PropTypes.string.isRequired,
+  onExit: PropTypes.func.isRequired,
+  freeSlots: PropTypes.arrayOf(
+    PropTypes.shape({
+      second: PropTypes.arrayOf(PropTypes.number),
+    }).isRequired
+  ).isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
 const MyTalks = ({
   match: {
     params: { id },
@@ -65,23 +111,31 @@ const MyTalks = ({
   history,
 }) => {
   const [os] = useGetOS(id);
+  const [slots] = useGetSlots(id);
   const [talks] = useGetTalks(id);
   const [talkSch, setTalkSch] = useState(null);
-  const [freeHours, setFreeHours] = useState([]);
 
   const onSubmit = ({ value: { time, room } }) => {
     scheduleTalk(talkSch.id, room.id, time).then(() => history.push(`/os/${id}`));
   };
 
-  const isAssigned = idTalk => !!os.slots.find(s => s.talk.id === idTalk);
+  const isAssigned = idTalk => !!slots.find(s => s.talk.id === idTalk);
 
   return (
     <>
       <RowBetween>
         <Box margin={{ vertical: 'medium' }}>
-          <Heading level="2" margin="none">
-            {os.name}
-          </Heading>
+          <Button
+            hoverIndicator
+            label={
+              // eslint-disable-next-line react/jsx-wrap-multilines
+              <Heading level="2" margin="none">
+                {os.name}
+              </Heading>
+            }
+            onClick={() => history.push(`/os/${id}`)}
+            plain
+          />
           <Text color="dark-5" size="large">
             Mis charlas
           </Text>
@@ -89,49 +143,22 @@ const MyTalks = ({
         <ButtonNew label="Charla" onClick={() => history.push(`/newTalk/${id}`)} />
       </RowBetween>
       <Grid columns="small" gap="small" margin={{ bottom: 'medium' }}>
-        {os.slots &&
-          talks.map(talk => (
-            <TalkCard
-              assigned={isAssigned(talk.id)}
-              key={talk.id}
-              {...talk}
-              onSchedule={() => setTalkSch(talk)}
-            />
-          ))}
+        {talks.map(talk => (
+          <TalkCard
+            assigned={isAssigned(talk.id)}
+            key={talk.id}
+            onSchedule={() => setTalkSch(talk)}
+            {...talk}
+          />
+        ))}
       </Grid>
       {talkSch && os.freeSlots && (
-        <Layer onEsc={() => setTalkSch(null)} onClickOutside={() => setTalkSch(null)}>
-          <Box pad="medium">
-            <Box alignSelf="center" margin={{ vertical: 'medium' }}>
-              <Heading level="2" margin="none">
-                Agendate!
-              </Heading>
-              <Text color="dark-5" size="large">
-                {talkSch.name}
-              </Text>
-            </Box>
-            <MyForm onSecondary={() => setTalkSch(null)} onSubmit={onSubmit}>
-              <FormField
-                label="Sala"
-                name="room"
-                component={Select}
-                options={os.freeSlots.map(p => p.first)}
-                labelKey="name"
-                onChange={({ selected }) => {
-                  setFreeHours(os.freeSlots[selected].second.map(String));
-                }}
-                required
-              />
-              <FormField
-                label="Horario"
-                name="time"
-                component={Select}
-                options={freeHours}
-                required
-              />
-            </MyForm>
-          </Box>
-        </Layer>
+        <SelectSlotLayout
+          name={talkSch.name}
+          onExit={() => setTalkSch(null)}
+          freeSlots={os.freeSlots}
+          onSubmit={onSubmit}
+        />
       )}
     </>
   );

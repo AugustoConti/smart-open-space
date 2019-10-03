@@ -6,7 +6,6 @@ import com.sos.smartopenspace.service.OpenSpaceService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import javax.validation.Valid
@@ -14,8 +13,8 @@ import javax.validation.Valid
 @ServiceREST
 @RequestMapping("openSpace")
 class OpenSpaceServiceREST(private val openSpaceService: OpenSpaceService) {
-  @PostMapping
-  fun create(@Valid @RequestBody openSpace: OpenSpace) = openSpaceService.create(openSpace)
+  @PostMapping("/{userID}")
+  fun create(@PathVariable userID: Long, @Valid @RequestBody openSpace: OpenSpace) = openSpaceService.create(userID, openSpace)
 
   @PostMapping("/talk/{userID}/{osID}")
   fun createTalk(@PathVariable userID: Long, @PathVariable osID: Long, @Valid @RequestBody talk: Talk) =
@@ -30,7 +29,6 @@ class OpenSpaceServiceREST(private val openSpaceService: OpenSpaceService) {
   @GetMapping("/talks/{userID}/{osID}")
   fun findTalks(@PathVariable userID: Long, @PathVariable osID: Long) = openSpaceService.findTalks(userID, osID)
 
-  @PutMapping("/schedule/{talkID}/{roomID}/{hour}")
-  fun scheduleTalk(@PathVariable talkID: Long, @PathVariable roomID: Long, @PathVariable hour: Int) =
-    openSpaceService.scheduleTalk(talkID, roomID, hour)
+  @GetMapping("/slots/{id}")
+  fun findSlotsById(@PathVariable id: Long) = openSpaceService.findSlotsById(id)
 }

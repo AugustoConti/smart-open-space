@@ -8,6 +8,7 @@ import Slider from 'react-slick';
 import RowBetween from './shared/RowBetween';
 import { useGetOS } from '../helpers/api/os-client';
 import { useUser } from '../helpers/useAuth';
+import useSlots from '../helpers/schedule-socket';
 
 const sliderSettings = {
   centerMode: true,
@@ -156,13 +157,18 @@ TimeSpan.propTypes = {
   slots: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
+const getHour = time => Number(time.slice(0, 2));
+const getRangeHours = (start, end) => [getHour(start), getHour(end) + 1];
+
 const Schedule = ({ slots, startTime, endTime }) => {
-  const start = Number(startTime.slice(0, 2));
-  const end = Number(endTime.slice(0, 2));
-  const times = [...Array(end - start)].map((_, i) => i + start);
-  return times.map(hour => (
-    <TimeSpan key={hour} hour={hour} slots={slots.filter(s => s.hour === hour)} />
-  ));
+  const slotsOf = hour => slots.filter(s => s.hour === hour);
+  const [start, end] = getRangeHours(startTime, endTime);
+  return [...Array(end - start).keys()].map(i => {
+    const hour = i + start;
+    const slotsHour = slotsOf(hour);
+    const key = `${hour}-${slotsHour.map(s => s.id).join('-')}`;
+    return <TimeSpan hour={hour} key={key} slots={slotsHour} />;
+  });
 };
 
 const OpenSpace = ({
@@ -172,8 +178,9 @@ const OpenSpace = ({
   history,
   location: { pathname },
 }) => {
-  const [{ name, slots, ...os }] = useGetOS(id, () => {}); // history.push('/'));
+  const [{ name, ...os }] = useGetOS(id, () => history.push('/'));
   const user = useUser();
+  const slots = useSlots(id);
 
   const ButtonMyTalks = () => (
     <Box>
@@ -181,7 +188,7 @@ const OpenSpace = ({
         color="accent-1"
         fill="vertical"
         label="Mis charlas"
-        onClick={() => history.push(`${user ? `${pathname}/mis-charlas` : '/login'}`)}
+        onClick={() => history.push(user ? `${pathname}/mis-charlas` : '/login')}
         primary
       />
     </Box>
@@ -193,7 +200,11 @@ const OpenSpace = ({
         <Heading level="2">{name}</Heading>
         <ButtonMyTalks />
       </RowBetween>
-      {slots && <Schedule slots={slots} startTime={os.startTime} endTime={os.endTime} />}
+      <Box margin={{ bottom: 'medium' }}>
+        {os.startTime && (
+          <Schedule slots={slots} startTime={os.startTime} endTime={os.endTime} />
+        )}
+      </Box>
     </>
   );
 };

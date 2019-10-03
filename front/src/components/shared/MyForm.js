@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Form, Button, FormField, TextArea } from 'grommet';
+import { Form, Button, FormField, TextArea, Select } from 'grommet';
 import PropTypes from 'prop-types';
 import RowBetween from './RowBetween';
 
@@ -16,6 +16,10 @@ const MyFieldEmail = props => (
 
 const MyFieldPassword = props => (
   <FormField label="Contraseña" name="password" type="password" required {...props} />
+);
+
+const MyFieldSelect = props => (
+  <FormField label="Elegir" name="select" component={Select} required {...props} />
 );
 
 const MyForm = ({ children, onSecondary, primaryLabel, secondaryLabel, ...props }) => (
@@ -46,5 +50,6 @@ MyForm.Text = MyFieldText;
 MyForm.TextArea = MyFieldTextArea;
 MyForm.Email = MyFieldEmail;
 MyForm.Password = MyFieldPassword;
+MyForm.Select = MyFieldSelect;
 
 export default MyForm;

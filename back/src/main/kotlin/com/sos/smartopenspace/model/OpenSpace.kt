@@ -50,6 +50,7 @@ class OpenSpace(
   @ManyToOne
   lateinit var organizer: User
 
+  @JsonIgnore
   @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
   val slots: MutableSet<Slot> = mutableSetOf()
 
@@ -70,7 +71,7 @@ class OpenSpace(
     return slot
   }
 
-  private fun slotsHours() = startTime.hour until endTime.hour
+  private fun slotsHours() = startTime.hour until endTime.hour + 1
 
   @JsonProperty
   fun freeSlots() = rooms.map { room -> room to slotsHours().filter { !isBusySlot(room, it) } }
