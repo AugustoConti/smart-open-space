@@ -16,10 +16,13 @@ class UserService(private val userRepository: UserRepository) {
     return userRepository.save(user)
   }
 
+  @Transactional(readOnly = true)
   fun auth(email: String, password: String) =
     userRepository.findByEmailAndPassword(email, password) ?: throw UserNotFoundException()
 
+  @Transactional(readOnly = true)
   fun findAll() = userRepository.findAll().toList()
 
+  @Transactional(readOnly = true)
   fun findById(id: Long) = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
 }

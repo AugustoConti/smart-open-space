@@ -13,7 +13,7 @@ class SlotTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) = OpenSpace(
     "os", LocalDate.now(), LocalTime.of(9, 0),
-    LocalTime.of(12, 0), setOf(room1), talks
+    LocalTime.of(11, 0), setOf(room1), talks
   )
 
   @Test
