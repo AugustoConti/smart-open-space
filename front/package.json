@@ -43,7 +43,7 @@
     "grommet-icons": "^4.3.0",
     "parcel-bundler": "^1.12.3",
     "prop-types": "^15.7.2",
-    "react": "^16.10.1",
+    "react": "^16.10.2",
     "react-dom": "^16.10.1",
     "react-router-dom": "^5.1.2",
     "react-slick": "^0.25.2",
