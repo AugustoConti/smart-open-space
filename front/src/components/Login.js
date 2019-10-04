@@ -45,12 +45,8 @@ const Login = ({ history, location: { pathname } }) => {
 };
 
 Login.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
 };
 
 export default Login;

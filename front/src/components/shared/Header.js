@@ -34,11 +34,12 @@ const LogoSmall = () => (
   </Box>
 );
 
-const Header = ({ history }) => {
+const Header = ({ history, location: { pathname } }) => {
   const size = useSize();
   const { logout } = useAuth();
   const user = useUser();
   const isLogged = !!user;
+  const inLogin = ['/register', '/login'].some(p => p === pathname);
   const menuItems = [
     // {
     //   label: 'Help',
@@ -97,7 +98,7 @@ const Header = ({ history }) => {
         }}
       </Menu>
     ) : (
-      <Button label="Ingresar" onClick={() => history.push('/login')} />
+      !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
     );
 
   return (
@@ -110,6 +111,7 @@ const Header = ({ history }) => {
 
 Header.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
 };
 
 export default Header;
