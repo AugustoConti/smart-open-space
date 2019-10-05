@@ -39,7 +39,7 @@ const Header = ({ history, location: { pathname } }) => {
   const { logout } = useAuth();
   const user = useUser();
   const isLogged = !!user;
-  const inLogin = ['/register', '/login'].some(p => p === pathname);
+  const inLogin = pathname === '/login';
   const menuItems = [
     // {
     //   label: 'Help',

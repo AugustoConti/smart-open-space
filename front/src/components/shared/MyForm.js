@@ -26,7 +26,7 @@ const MyForm = ({ children, onSecondary, primaryLabel, secondaryLabel, ...props 
   <Form messages={{ invalid: 'Inválido', required: 'Obligatorio' }} {...props}>
     {children}
     <RowBetween margin={{ vertical: 'medium' }} justify="evenly">
-      <Button label={secondaryLabel} onClick={onSecondary} />
+      {!!secondaryLabel && <Button label={secondaryLabel} onClick={onSecondary} />}
       <Button label={primaryLabel} primary type="submit" />
     </RowBetween>
   </Form>

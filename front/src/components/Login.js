@@ -13,7 +13,7 @@ const Login = ({ history, location: { pathname } }) => {
   const isRegister = pathname === '/register';
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',
-    toTitle: isRegister ? 'Iniciar sesión' : 'Registrarse',
+    toTitle: isRegister ? null : 'Registrarse',
     toPath: isRegister ? '/login' : '/register',
     actionTitle: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
