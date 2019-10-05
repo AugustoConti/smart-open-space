@@ -21,6 +21,7 @@
 - [🏆 Solución](#-solución)
 - [🎉 Diferencial](#-diferencial)
 - [🔧 Instalación](#-instalación)
+- [📜 Documentación](#-documentación)
 - [👮 Licencia](#-licencia)
 
 ## 👎 Problema
@@ -55,6 +56,14 @@ cd back && ./gradlew bootRun
 ```bash
 cd front && yarn && yarn watch
 ```
+
+## 📜 Documentación
+
+### Diagrama de Arquitectura
+![Diagrama de arquitectura](/other/Arquitectura.png)
+
+### Caso de uso principal
+![Caso de uso principal](/other/CasoDeUso.png)
 
 ## 👮 LICENCIA
 - [GPLv3](LICENSE)
