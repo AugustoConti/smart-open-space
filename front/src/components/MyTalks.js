@@ -7,54 +7,72 @@ import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/o
 import MyForm from '#shared/MyForm';
 import MainHeader from '#shared/MainHeader';
 
-const TalkCard = ({ assigned, description, name, onSchedule }) => (
-  <Box
-    justify="between"
-    background="white"
-    elevation="small"
-    fill
-    pad="medium"
-    round
-    overflow="hidden"
-    gap="small"
-  >
-    <Box>
-      <Heading level="3" margin="none" size="small">
-        {name}
-      </Heading>
-      <Text color="dark-5" size="small" truncate>
-        {description}
-      </Text>
-    </Box>
-    {assigned ? (
-      <Box
-        border={{ side: 'all', color: 'status-ok', size: 'small' }}
-        round
-        alignSelf="center"
-        pad={{ horizontal: 'small', vertical: 'xsmall' }}
-      >
-        Agendada
+const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
+  const [open, setOpen] = useState(false);
+
+  const onSubmit = ({ value: { time, room } }) => {
+    scheduleTalk(id, room.id, time).then(onSchedule);
+  };
+
+  return (
+    <Box
+      background="white"
+      elevation="small"
+      fill
+      gap="small"
+      justify="between"
+      overflow="hidden"
+      pad="medium"
+      round
+    >
+      <Box>
+        <Heading level="3" margin="none" size="small">
+          {name}
+        </Heading>
+        <Text color="dark-5" size="small" truncate>
+          {description}
+        </Text>
       </Box>
-    ) : (
-      <Button
-        alignSelf="center"
-        color="accent-4"
-        label="Agendar"
-        primary
-        margin={{ top: 'medium' }}
-        onClick={onSchedule}
-      />
-    )}
-  </Box>
-);
-TalkCard.propTypes = {
+      {assigned ? (
+        <Box
+          alignSelf="center"
+          border={{ side: 'all', color: 'status-ok', size: 'small' }}
+          pad={{ horizontal: 'small', vertical: 'xsmall' }}
+          round
+        >
+          Agendada
+        </Box>
+      ) : (
+        <Button
+          alignSelf="center"
+          color="accent-4"
+          label="Agendar"
+          margin={{ top: 'medium' }}
+          onClick={() => setOpen(true)}
+          primary
+        />
+      )}
+      {open && freeSlots && (
+        <SelectSlot
+          freeSlots={freeSlots}
+          name={name}
+          onExit={() => setOpen(false)}
+          onSubmit={onSubmit}
+        />
+      )}
+    </Box>
+  );
+};
+Talk.propTypes = {
   assigned: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
+  freeSlots: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   onSchedule: PropTypes.func.isRequired,
 };
 
-const SelectSlotLayout = ({ name, onExit, freeSlots, onSubmit }) => {
+const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
   const [freeHours, setFreeHours] = useState([]);
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -77,14 +95,18 @@ const SelectSlotLayout = ({ name, onExit, freeSlots, onSubmit }) => {
               setFreeHours(freeSlots[selected].second.map(String));
             }}
           />
-          <MyForm.Select label="Horario" name="time" options={freeHours} />
+          <MyForm.Select
+            label="Horario"
+            emptySearchMessage="No hay horarios disponibles para esta sala"
+            name="time"
+            options={freeHours}
+          />
         </MyForm>
       </Box>
     </Layer>
   );
 };
-
-SelectSlotLayout.propTypes = {
+SelectSlot.propTypes = {
   name: PropTypes.string.isRequired,
   onExit: PropTypes.func.isRequired,
   freeSlots: PropTypes.arrayOf(
@@ -95,51 +117,49 @@ SelectSlotLayout.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
+const Talks = ({ children }) => (
+  <Grid columns="small" gap="small" margin={{ bottom: 'medium' }}>
+    {children}
+  </Grid>
+);
+Talks.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
+    .isRequired,
+};
+
 const MyTalks = ({
   match: {
     params: { id },
   },
   history,
 }) => {
-  const [os] = useGetOS(id);
+  const [{ freeSlots = [], name }] = useGetOS(id);
   const [slots] = useGetSlots(id);
   const [talks] = useGetTalks(id);
-  const [talkSch, setTalkSch] = useState(null);
-
-  const onSubmit = ({ value: { time, room } }) => {
-    scheduleTalk(talkSch.id, room.id, time).then(() => history.push(`/os/${id}`));
-  };
 
   const isAssigned = idTalk => !!slots.find(s => s.talk.id === idTalk);
 
   return (
     <>
       <MainHeader>
-        <MainHeader.TitleLink label={os.name} onClick={() => history.push(`/os/${id}`)} />
+        <MainHeader.TitleLink label={name} onClick={() => history.push(`/os/${id}`)} />
         <MainHeader.SubTitle label="MIS CHARLAS" />
         <MainHeader.ButtonNew
           label="Charla"
           onClick={() => history.push(`/newTalk/${id}`)}
         />
       </MainHeader>
-      <Grid columns="small" gap="small" margin={{ bottom: 'medium' }}>
+      <Talks>
         {talks.map(talk => (
-          <TalkCard
+          <Talk
             assigned={isAssigned(talk.id)}
+            freeSlots={freeSlots}
             key={talk.id}
-            onSchedule={() => setTalkSch(talk)}
+            onSchedule={() => history.push(`/os/${id}`)}
             {...talk}
           />
         ))}
-      </Grid>
-      {talkSch && os.freeSlots && (
-        <SelectSlotLayout
-          name={talkSch.name}
-          onExit={() => setTalkSch(null)}
-          freeSlots={os.freeSlots}
-          onSubmit={onSubmit}
-        />
-      )}
+      </Talks>
     </>
   );
 };

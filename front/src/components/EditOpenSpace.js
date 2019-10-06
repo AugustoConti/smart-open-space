@@ -152,8 +152,14 @@ const initialValues = {
 };
 
 const EditOpenSpace = ({ history }) => {
-  const onSubmit = ({ value: { date, name, rooms, time } }) => {
-    const [start, end] = time;
+  const onSubmit = ({
+    value: {
+      date,
+      name,
+      rooms,
+      time: [start, end],
+    },
+  }) => {
     createOS({
       date: new Date(date),
       endTime: `${pad(end)}:00`,

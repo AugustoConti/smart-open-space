@@ -33,9 +33,8 @@ const sliderSettings = {
   ],
 };
 
-const TalkSlider = ({ children }) => <Slider {...sliderSettings}>{children}</Slider>;
-
-TalkSlider.propTypes = {
+const Talks = ({ children }) => <Slider {...sliderSettings}>{children}</Slider>;
+Talks.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
     .isRequired,
 };
@@ -50,7 +49,6 @@ const LayerInfo = ({ info, onClose }) => (
     </Box>
   </Layer>
 );
-
 LayerInfo.propTypes = {
   info: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -65,16 +63,12 @@ const ButtonMoreInfo = ({ onClick }) => (
     onClick={onClick}
   />
 );
-
 ButtonMoreInfo.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-const Talk = ({ talk, room }) => {
+const Talk = ({ talk: { name, description }, room }) => {
   const [open, setOpen] = useState(false);
-  const onOpen = () => setOpen(true);
-  const onClose = () => setOpen(false);
-
   return (
     <Box
       justify="between"
@@ -89,21 +83,23 @@ const Talk = ({ talk, room }) => {
     >
       <Box>
         <Heading level="4" margin="none" size="small">
-          {talk.name}
+          {name}
         </Heading>
         <Text color="dark-5" size="medium">
           {room.name}
         </Text>
       </Box>
-      {talk.description && <ButtonMoreInfo onClick={onOpen} />}
-      {open && <LayerInfo info={talk.description} onClose={onClose} />}
+      {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+      {open && <LayerInfo info={description} onClose={() => setOpen(false)} />}
     </Box>
   );
 };
-
 Talk.propTypes = {
   room: PropTypes.shape().isRequired,
-  talk: PropTypes.shape().isRequired,
+  talk: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+  }).isRequired,
 };
 
 const Dots = ({ gridArea }) => (
@@ -113,7 +109,6 @@ const Dots = ({ gridArea }) => (
     border={{ size: 'xsmall', style: 'dashed' }}
   />
 );
-
 Dots.propTypes = {
   gridArea: PropTypes.string.isRequired,
 };
@@ -131,7 +126,6 @@ const HourHeader = ({ hour }) => (
     <Dots gridArea="right" />
   </Grid>
 );
-
 HourHeader.propTypes = {
   hour: PropTypes.number.isRequired,
 };
@@ -139,11 +133,11 @@ HourHeader.propTypes = {
 const TimeSpan = ({ hour, slots }) => (
   <>
     <HourHeader hour={hour} />
-    <TalkSlider>
+    <Talks>
       {slots.map(({ talk, room }) => (
         <Talk key={talk.id} talk={talk} room={room} />
       ))}
-    </TalkSlider>
+    </Talks>
   </>
 );
 

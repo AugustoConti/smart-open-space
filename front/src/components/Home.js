@@ -38,7 +38,6 @@ const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
     )}
   </Button>
 );
-
 OpenSpaceCard.propTypes = {
   date: PropTypes.string.isRequired,
   endTime: PropTypes.string.isRequired,
@@ -48,16 +47,25 @@ OpenSpaceCard.propTypes = {
   startTime: PropTypes.string.isRequired,
 };
 
+const OpenSpaces = ({ children }) => (
+  <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
+    {children}
+  </Grid>
+);
+OpenSpaces.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
+    .isRequired,
+};
+
 const HomeLogged = ({ history }) => {
   const [openSpaces] = useGetAllOS();
-
   return (
     <>
       <MainHeader>
         <MainHeader.Title label="Mis Open Spaces" />
         <MainHeader.ButtonNew onClick={() => history.push('/new')} />
       </MainHeader>
-      <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
+      <OpenSpaces>
         {openSpaces.map(openSpace => (
           <OpenSpaceCard
             key={openSpace.id}
@@ -65,26 +73,20 @@ const HomeLogged = ({ history }) => {
             {...openSpace}
           />
         ))}
-      </Grid>
+      </OpenSpaces>
     </>
   );
 };
-
 HomeLogged.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 const Home = ({ history }) => {
   const user = useUser();
   return user ? <HomeLogged history={history} /> : <Redirect to="/login" />;
 };
-
 Home.propTypes = {
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
 
 export default Home;

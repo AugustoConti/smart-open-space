@@ -22,6 +22,16 @@ const MyFieldSelect = props => (
   <FormField label="Elegir" name="select" component={Select} required {...props} />
 );
 
+const Footer = ({ children }) => (
+  <RowBetween margin={{ vertical: 'medium' }} justify="evenly">
+    {children}
+  </RowBetween>
+);
+Footer.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
+    .isRequired,
+};
+
 const MyForm = ({
   children,
   onSecondary,
@@ -31,10 +41,10 @@ const MyForm = ({
 }) => (
   <Form messages={{ invalid: 'Inválido', required: 'Obligatorio' }} {...props}>
     {children}
-    <RowBetween margin={{ vertical: 'medium' }} justify="evenly">
+    <Footer>
       {onSecondary && <Button label={secondaryLabel} onClick={onSecondary} />}
       <Button label={primaryLabel} primary type="submit" />
-    </RowBetween>
+    </Footer>
   </Form>
 );
 MyForm.propTypes = {

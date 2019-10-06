@@ -17,8 +17,8 @@ const SmallMenu = ({ color }) => (
 );
 SmallMenu.propTypes = { color: PropTypes.string.isRequired };
 
-const LargeMenu = ({ color, name = '' }) => (
-  <Box direction="row" gap="xsmall" pad="small">
+const LargeMenu = ({ color, name, pad }) => (
+  <Box direction="row" gap="xsmall" pad={pad}>
     <Text color={color}>{name}</Text>
     <FormDown color={color} />
   </Box>
@@ -26,6 +26,7 @@ const LargeMenu = ({ color, name = '' }) => (
 LargeMenu.propTypes = {
   color: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  pad: PropTypes.string.isRequired,
 };
 
 const LogoSmall = () => (
@@ -34,7 +35,24 @@ const LogoSmall = () => (
   </Box>
 );
 
-const Header = ({ history, location: { pathname } }) => {
+const HomeButton = ({ onClick }) => {
+  const size = useSize();
+  return (
+    <Button fill="vertical" hoverIndicator onClick={onClick} plain>
+      <RowBetween pad="xxsmall" fill="vertical">
+        <LogoSmall />
+        {size !== 'small' && (
+          <Text color="light-1" size="xlarge" margin={{ left: 'xsmall' }}>
+            Smart-OS
+          </Text>
+        )}
+      </RowBetween>
+    </Button>
+  );
+};
+HomeButton.propTypes = { onClick: PropTypes.func.isRequired };
+
+const MyMenu = ({ history, location: { pathname } }) => {
   const size = useSize();
   const { logout } = useAuth();
   const user = useUser();
@@ -49,69 +67,52 @@ const Header = ({ history, location: { pathname } }) => {
     // },
     {
       label: (
-        <Box alignSelf="center" pad={size === 'small' ? 'medium' : 'xsmall'}>
+        <Box
+          alignSelf="center"
+          direction="row"
+          pad={size === 'small' ? 'medium' : 'xsmall'}
+        >
+          <Run color="status-critical" />
           Salir
         </Box>
       ),
-      icon: (
-        <Box alignSelf="center">
-          <Run color="status-critical" />
-        </Box>
-      ),
-      onClick: () => {
-        logout().then(() => history.push('/login'));
-      },
+      onClick: () => logout().then(() => history.push('/login')),
     },
   ];
-
-  const ButtonHome = () => (
-    <Button
-      fill="vertical"
-      hoverIndicator
-      label={
-        // eslint-disable-next-line react/jsx-wrap-multilines
-        <RowBetween pad="xxsmall" fill="vertical">
-          <LogoSmall />
-          {size !== 'small' && (
-            <Text color="light-1" size="xlarge" margin={{ left: 'xsmall' }}>
-              Smart-OS
-            </Text>
-          )}
-        </RowBetween>
-      }
-      onClick={() => history.push('/')}
-      plain
-    />
-  );
-
-  const MyMenu = () =>
-    isLogged ? (
-      <Menu plain items={menuItems} size="medium">
-        {({ drop, hover }) => {
-          // eslint-disable-next-line no-nested-ternary
-          const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
-          return size === 'small' && !drop ? (
-            <SmallMenu color={color} />
-          ) : (
-            <LargeMenu color={color} name={user.name} />
-          );
-        }}
-      </Menu>
-    ) : (
-      !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
-    );
-
-  return (
-    <RowBetween as="header" fill>
-      <ButtonHome />
-      <MyMenu />
-    </RowBetween>
+  return isLogged ? (
+    <Menu plain items={menuItems} size="medium">
+      {({ drop, hover }) => {
+        // eslint-disable-next-line no-nested-ternary
+        const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
+        return size === 'small' && !drop ? (
+          <SmallMenu color={color} />
+        ) : (
+          <LargeMenu
+            color={color}
+            name={user.name}
+            pad={size === 'small' ? 'medium' : 'small'}
+          />
+        );
+      }}
+    </Menu>
+  ) : (
+    !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
   );
 };
-
-Header.propTypes = {
+MyMenu.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
+};
+
+const Header = ({ history, location }) => (
+  <RowBetween as="header" fill>
+    <HomeButton onClick={() => history.push('/')} />
+    <MyMenu history={history} location={location} />
+  </RowBetween>
+);
+Header.propTypes = {
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  location: PropTypes.shape().isRequired,
 };
 
 export default Header;
