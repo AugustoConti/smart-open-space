@@ -4,11 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { Box, Button, Grid, Heading, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import ButtonNew from './shared/ButtonNew';
-import RowBetween from './shared/RowBetween';
-
-import { useGetAllOS } from '../helpers/api/os-client';
-import { useUser } from '../helpers/useAuth';
+import { useGetAllOS } from '#helpers/api/os-client';
+import { useUser } from '#helpers/useAuth';
+import MainHeader from '#shared/MainHeader';
 
 const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
   <Button fill onClick={onClick} plain>
@@ -55,10 +53,10 @@ const HomeLogged = ({ history }) => {
 
   return (
     <>
-      <RowBetween>
-        <Heading level="2">Mis Open Spaces</Heading>
-        <ButtonNew onClick={() => history.push('/new')} />
-      </RowBetween>
+      <MainHeader>
+        <MainHeader.Title label="Mis Open Spaces" />
+        <MainHeader.ButtonNew onClick={() => history.push('/new')} />
+      </MainHeader>
       <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
         {openSpaces.map(openSpace => (
           <OpenSpaceCard

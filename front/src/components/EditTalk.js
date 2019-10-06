@@ -1,10 +1,10 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Heading, Text, Box } from 'grommet';
 
-import MyForm from './shared/MyForm';
-import { useGetOS, createTalk } from '../helpers/api/os-client';
+import MainHeader from '#shared/MainHeader';
+import MyForm from '#shared/MyForm';
+import { useGetOS, createTalk } from '#helpers/api/os-client';
 
 const EditTalk = ({
   match: {
@@ -22,12 +22,10 @@ const EditTalk = ({
 
   return (
     <>
-      <Box margin={{ vertical: 'medium' }}>
-        <Heading level={2} margin="none">
-          Nueva Charla
-        </Heading>
-        <Text color="dark-5">{os.name}</Text>
-      </Box>
+      <MainHeader>
+        <MainHeader.Title label="Nueva Charla" />
+        <MainHeader.SubTitle label={os.name} />
+      </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text label="Título" />
         <MyForm.TextArea />

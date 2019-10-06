@@ -22,22 +22,21 @@ const MyFieldSelect = props => (
   <FormField label="Elegir" name="select" component={Select} required {...props} />
 );
 
-const MyForm = ({ children, onSecondary, primaryLabel, secondaryLabel, ...props }) => (
+const MyForm = ({
+  children,
+  onSecondary,
+  primaryLabel = 'Aceptar',
+  secondaryLabel = 'Cancelar',
+  ...props
+}) => (
   <Form messages={{ invalid: 'Inválido', required: 'Obligatorio' }} {...props}>
     {children}
     <RowBetween margin={{ vertical: 'medium' }} justify="evenly">
-      {!!secondaryLabel && <Button label={secondaryLabel} onClick={onSecondary} />}
+      {onSecondary && <Button label={secondaryLabel} onClick={onSecondary} />}
       <Button label={primaryLabel} primary type="submit" />
     </RowBetween>
   </Form>
 );
-
-MyForm.defaultProps = {
-  onSecondary: () => {},
-  primaryLabel: 'Aceptar',
-  secondaryLabel: 'Cancelar',
-};
-
 MyForm.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
     .isRequired,

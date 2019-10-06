@@ -47,9 +47,6 @@ const BoxBrand = ({ children, ...props }) => (
     {children}
   </Box>
 );
-
-BoxBrand.defaultProps = { children: [] };
-
 BoxBrand.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };

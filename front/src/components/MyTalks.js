@@ -3,15 +3,9 @@ import React, { useState } from 'react';
 import { Heading, Grid, Box, Text, Button, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
-import RowBetween from './shared/RowBetween';
-import ButtonNew from './shared/ButtonNew';
-import {
-  scheduleTalk,
-  useGetTalks,
-  useGetOS,
-  useGetSlots,
-} from '../helpers/api/os-client';
-import MyForm from './shared/MyForm';
+import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
+import MyForm from '#shared/MyForm';
+import MainHeader from '#shared/MainHeader';
 
 const TalkCard = ({ assigned, description, name, onSchedule }) => (
   <Box
@@ -53,11 +47,8 @@ const TalkCard = ({ assigned, description, name, onSchedule }) => (
     )}
   </Box>
 );
-
-TalkCard.defaultProps = { assigned: false };
-
 TalkCard.propTypes = {
-  assigned: PropTypes.bool,
+  assigned: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onSchedule: PropTypes.func.isRequired,
@@ -123,25 +114,14 @@ const MyTalks = ({
 
   return (
     <>
-      <RowBetween>
-        <Box margin={{ vertical: 'medium' }}>
-          <Button
-            hoverIndicator
-            label={
-              // eslint-disable-next-line react/jsx-wrap-multilines
-              <Heading level="2" margin="none">
-                {os.name}
-              </Heading>
-            }
-            onClick={() => history.push(`/os/${id}`)}
-            plain
-          />
-          <Text color="dark-5" size="large">
-            Mis charlas
-          </Text>
-        </Box>
-        <ButtonNew label="Charla" onClick={() => history.push(`/newTalk/${id}`)} />
-      </RowBetween>
+      <MainHeader>
+        <MainHeader.TitleLink label={os.name} onClick={() => history.push(`/os/${id}`)} />
+        <MainHeader.SubTitle label="MIS CHARLAS" />
+        <MainHeader.ButtonNew
+          label="Charla"
+          onClick={() => history.push(`/newTalk/${id}`)}
+        />
+      </MainHeader>
       <Grid columns="small" gap="small" margin={{ bottom: 'medium' }}>
         {talks.map(talk => (
           <TalkCard

@@ -13,9 +13,9 @@ const Login = ({ history, location: { pathname } }) => {
   const isRegister = pathname === '/register';
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',
-    toTitle: isRegister ? null : 'Registrarse',
-    toPath: isRegister ? '/login' : '/register',
-    actionTitle: isRegister ? 'Registrarme' : 'Ingresar',
+    secondaryLabel: isRegister ? undefined : 'Registrarse',
+    onSecondary: isRegister ? undefined : () => history.push('/register'),
+    primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
 
@@ -30,9 +30,9 @@ const Login = ({ history, location: { pathname } }) => {
     <>
       <Heading>{data.title}</Heading>
       <MyForm
-        onSecondary={() => history.push(data.toPath)}
-        primaryLabel={data.actionTitle}
-        secondaryLabel={data.toTitle}
+        onSecondary={data.onSecondary}
+        primaryLabel={data.primaryLabel}
+        secondaryLabel={data.secondaryLabel}
         onSubmit={onSubmit}
         value={initialValues}
       >

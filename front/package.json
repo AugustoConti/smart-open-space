@@ -70,6 +70,7 @@
   "alias": {
     "#root": "./src",
     "#assets": "./src/assets",
-    "#helpers": "./src/helpers"
+    "#helpers": "./src/helpers",
+    "#shared": "./src/components/shared"
   }
 }

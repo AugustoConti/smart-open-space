@@ -29,7 +29,7 @@ LargeMenu.propTypes = {
 };
 
 const LogoSmall = () => (
-  <Box height="xxsmall" width="xxsmall" round="small" pad="xxsmall" background="accent-1">
+  <Box height="xxsmall" width="xxsmall" round="large" pad="xxsmall" background="accent-1">
     <Image fit="cover" src={logo} />
   </Box>
 );

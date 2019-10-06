@@ -5,10 +5,10 @@ import { Box, Button, Grid, Heading, Layer, Text } from 'grommet';
 import { FormClose } from 'grommet-icons';
 import Slider from 'react-slick';
 
-import RowBetween from './shared/RowBetween';
-import { useGetOS } from '../helpers/api/os-client';
-import { useUser } from '../helpers/useAuth';
-import useSlots from '../helpers/schedule-socket';
+import { useGetOS } from '#helpers/api/os-client';
+import { useUser } from '#helpers/useAuth';
+import useSlots from '#helpers/schedule-socket';
+import MainHeader from '#shared/MainHeader';
 
 const sliderSettings = {
   centerMode: true,
@@ -24,17 +24,11 @@ const sliderSettings = {
   responsive: [
     {
       breakpoint: 960,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
+      settings: { slidesToShow: 1, slidesToScroll: 1 },
     },
     {
       breakpoint: 600,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1,
-      },
+      settings: { slidesToShow: 1, slidesToScroll: 1 },
     },
   ],
 };
@@ -91,9 +85,10 @@ const Talk = ({ talk, room }) => {
       overflow="hidden"
       gap="medium"
       margin="xsmall"
+      height="small"
     >
       <Box>
-        <Heading level="3" margin="none" size="small">
+        <Heading level="4" margin="none" size="small">
           {talk.name}
         </Heading>
         <Text color="dark-5" size="medium">
@@ -178,32 +173,25 @@ const OpenSpace = ({
   history,
   location: { pathname },
 }) => {
-  const [{ name, ...os }] = useGetOS(id, () => history.push('/'));
+  const [{ name, startTime = '1', endTime = '0' }] = useGetOS(id, () =>
+    history.push('/')
+  );
   const user = useUser();
   const slots = useSlots(id);
 
-  const ButtonMyTalks = () => (
-    <Box>
-      <Button
-        color="accent-1"
-        fill="vertical"
-        label="Mis charlas"
-        onClick={() => history.push(user ? `${pathname}/mis-charlas` : '/login')}
-        primary
-      />
-    </Box>
-  );
-
   return (
     <>
-      <RowBetween>
-        <Heading level="2">{name}</Heading>
-        <ButtonMyTalks />
-      </RowBetween>
+      <MainHeader>
+        <MainHeader.Title label={name} />
+        <MainHeader.SubTitle label="AGENDA" />
+        <MainHeader.Button
+          color="accent-1"
+          label="Mis charlas"
+          onClick={() => history.push(user ? `${pathname}/mis-charlas` : '/login')}
+        />
+      </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        {os.startTime && (
-          <Schedule slots={slots} startTime={os.startTime} endTime={os.endTime} />
-        )}
+        <Schedule slots={slots} startTime={startTime} endTime={endTime} />
       </Box>
     </>
   );

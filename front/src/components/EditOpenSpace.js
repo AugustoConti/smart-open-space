@@ -6,7 +6,6 @@ import {
   Calendar,
   DropButton,
   FormField,
-  Heading,
   RangeSelector,
   Stack,
   Text,
@@ -15,10 +14,11 @@ import {
 import { Add, FormDown, FormTrash } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
-import RowBetween from './shared/RowBetween';
-import MyForm from './shared/MyForm';
+import MainHeader from '#shared/MainHeader';
+import MyForm from '#shared/MyForm';
+import RowBetween from '#shared/RowBetween';
 
-import { createOS } from '../helpers/api/os-client';
+import { createOS } from '#helpers/api/os-client';
 
 const MyCalendar = ({ onChange, value, ...props }) => {
   const [open, setOpen] = useState(false);
@@ -165,7 +165,9 @@ const EditOpenSpace = ({ history }) => {
 
   return (
     <>
-      <Heading level={2}>Nuevo Open Space</Heading>
+      <MainHeader>
+        <MainHeader.Title label="Nuevo Open Space" />
+      </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
         <MyForm.Text />
         <FormField
