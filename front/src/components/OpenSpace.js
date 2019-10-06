@@ -71,15 +71,15 @@ const Talk = ({ talk: { name, description }, room }) => {
   const [open, setOpen] = useState(false);
   return (
     <Box
-      justify="between"
-      background="white"
+      background="light-1"
       elevation="small"
+      gap="medium"
+      height="small"
+      justify="between"
+      margin="xsmall"
+      overflow="hidden"
       pad="medium"
       round
-      overflow="hidden"
-      gap="medium"
-      margin="xsmall"
-      height="small"
     >
       <Box>
         <Heading level="4" margin="none" size="small">
@@ -105,8 +105,8 @@ Talk.propTypes = {
 const Dots = ({ gridArea }) => (
   <Box
     alignSelf="center"
-    gridArea={gridArea}
     border={{ size: 'xsmall', style: 'dashed' }}
+    gridArea={gridArea}
   />
 );
 Dots.propTypes = {

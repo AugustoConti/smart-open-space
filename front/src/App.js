@@ -53,18 +53,19 @@ BoxBrand.propTypes = {
 
 const MainLayout = ({ children }) => {
   const { areas, columns, pad } = useMainLayout();
-
   return (
-    <Grid areas={areas} columns={columns} fill rows={['xxsmall', 'flex']}>
-      <BoxBrand gridArea="headerL" />
-      <BoxBrand gridArea="headerR" />
-      <BoxBrand gridArea="header" pad={pad}>
-        <Route path="/" component={Header} />
-      </BoxBrand>
-      <Box gridArea="main" pad={pad}>
-        <div>{children}</div>
-      </Box>
-    </Grid>
+    <Box fill background="light-3" overflow="auto">
+      <Grid areas={areas} columns={columns} fill rows={['xxsmall', 'flex']}>
+        <BoxBrand gridArea="headerL" />
+        <BoxBrand gridArea="headerR" />
+        <BoxBrand gridArea="header" pad={pad}>
+          <Route path="/" component={Header} />
+        </BoxBrand>
+        <Box gridArea="main" pad={pad}>
+          <div>{children}</div>
+        </Box>
+      </Grid>
+    </Box>
   );
 };
 
@@ -74,7 +75,7 @@ MainLayout.propTypes = {
 };
 
 const App = () => (
-  <Grommet full theme={grommet} style={{ backgroundColor: 'hsl(24, 20%, 95%)' }}>
+  <Grommet full theme={grommet}>
     <Router>
       <AuthProvider>
         <MainLayout>

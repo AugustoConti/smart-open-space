@@ -16,7 +16,7 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
 
   return (
     <Box
-      background="white"
+      background="light-1"
       elevation="small"
       fill
       gap="small"

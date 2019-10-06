@@ -12,7 +12,7 @@ const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
   <Button fill onClick={onClick} plain>
     {({ hover }) => (
       <Box
-        background="white"
+        background="light-1"
         border={hover ? { color: 'brand', size: 'medium', style: 'outset' } : undefined}
         elevation="small"
         fill
