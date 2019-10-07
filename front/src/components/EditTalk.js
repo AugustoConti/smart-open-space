@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Announce } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import MainHeader from '#shared/MainHeader';
@@ -23,7 +24,7 @@ const EditTalk = ({
   return (
     <>
       <MainHeader>
-        <MainHeader.Title label="Nueva Charla" />
+        <MainHeader.Title icon={<Announce />} label="Nueva Charla" />
         <MainHeader.SubTitle label={os.name} />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>

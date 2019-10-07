@@ -5,13 +5,12 @@ import {
   Button,
   Calendar,
   DropButton,
-  FormField,
   RangeSelector,
   Stack,
   Text,
   TextInput,
 } from 'grommet';
-import { Add, FormDown, FormTrash } from 'grommet-icons';
+import { Add, FormDown, FormTrash, Plan, Clock, Home, Workshop } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import MainHeader from '#shared/MainHeader';
@@ -142,7 +141,7 @@ Rooms.propTypes = {
 
 const pad = n => (n < 10 ? '0' : '') + n;
 
-const beforeYesterday = date =>
+const beforeToday = date =>
   new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
 
 const initialValues = {
@@ -172,26 +171,28 @@ const EditOpenSpace = ({ history }) => {
   return (
     <>
       <MainHeader>
-        <MainHeader.Title label="Nuevo Open Space" />
+        <MainHeader.Title icon={<Workshop />} label="Nuevo Open Space" />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
         <MyForm.Text placeholder="¿Como se va a llamar?" />
-        <FormField
+        <MyForm.Field
           component={MyCalendar}
+          icon={<Plan />}
           label="Fecha"
           name="date"
-          required
-          validate={
-            date => beforeYesterday(date) && 'Ingresa una fecha mayor o igual a hoy'
-            // eslint-disable-next-line react/jsx-curly-newline
-          }
+          validate={date => beforeToday(date) && 'Ingresa una fecha mayor o igual a hoy'}
         />
-        <FormField component={TimeSelector} label="Horario" name="time" required />
-        <FormField
+        <MyForm.Field
+          component={TimeSelector}
+          icon={<Clock />}
+          label="Horario"
+          name="time"
+        />
+        <MyForm.Field
           component={Rooms}
+          icon={<Home />}
           label="Salas"
           name="rooms"
-          required
           validate={rooms => rooms.length < 1 && 'Ingresa al menos una sala'}
         />
       </MyForm>

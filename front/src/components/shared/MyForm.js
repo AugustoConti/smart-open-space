@@ -1,25 +1,56 @@
 import React from 'react';
 
-import { Form, Button, FormField, TextArea, Select } from 'grommet';
+import { Form, Button, FormField, TextArea, Select, Box } from 'grommet';
+import { Article, DocumentText, MailOption, Lock } from 'grommet-icons';
 import PropTypes from 'prop-types';
+
 import RowBetween from './RowBetween';
 
-const MyFieldText = props => <FormField label="Nombre" name="name" required {...props} />;
+const MyField = ({ icon, label, ...props }) => (
+  <FormField
+    label={
+      <Box direction="row" gap="small">
+        {icon}
+        {label}
+      </Box>
+    }
+    required
+    {...props}
+  />
+);
+MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string.isRequired };
+
+const MyFieldText = props => (
+  <MyField icon={<Article />} label="Nombre" name="name" {...props} />
+);
 
 const MyFieldTextArea = props => (
-  <FormField label="Descripción" name="description" component={TextArea} {...props} />
+  <MyField
+    icon={<DocumentText />}
+    label="Descripción"
+    name="description"
+    component={TextArea}
+    required={false}
+    {...props}
+  />
 );
 
 const MyFieldEmail = props => (
-  <FormField label="Email" name="email" type="email" required {...props} />
+  <MyField icon={<MailOption />} label="Email" name="email" type="email" {...props} />
 );
 
 const MyFieldPassword = props => (
-  <FormField label="Contraseña" name="password" type="password" required {...props} />
+  <MyField
+    icon={<Lock />}
+    label="Contraseña"
+    name="password"
+    type="password"
+    {...props}
+  />
 );
 
 const MyFieldSelect = props => (
-  <FormField label="Elegir" name="select" component={Select} required {...props} />
+  <MyField label="Elegir" name="select" component={Select} {...props} />
 );
 
 const Footer = ({ children }) => (
@@ -58,6 +89,7 @@ MyForm.propTypes = {
 MyForm.Text = MyFieldText;
 MyForm.TextArea = MyFieldTextArea;
 MyForm.Email = MyFieldEmail;
+MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
 MyForm.Select = MyFieldSelect;
 

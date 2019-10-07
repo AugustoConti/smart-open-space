@@ -12,17 +12,30 @@ const useTextAlign = () => {
   return size === 'small' ? 'center' : 'start';
 };
 
-const MyTitle = ({ children, label, ...props }) => {
+const Row = ({ children, ...props }) => (
+  <Box align="center" direction="row" gap="small" {...props}>
+    {children}
+  </Box>
+);
+Row.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
+
+const MyTitle = ({ children, icon, label, ...props }) => {
   const textAlign = useTextAlign();
   return (
     <Heading level="2" margin="none" textAlign={textAlign} {...props}>
-      {label}
-      {children}
+      <Row>
+        {icon}
+        {label}
+        {children}
+      </Row>
     </Heading>
   );
 };
 MyTitle.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  icon: PropTypes.node,
   label: PropTypes.string,
 };
 
@@ -32,17 +45,21 @@ const MyTitleLink = props => (
   </MyTitle>
 );
 
-const MySubTitle = ({ children, label, ...props }) => {
+const MySubTitle = ({ children, icon, label, ...props }) => {
   const textAlign = useTextAlign();
   return (
     <Text color="dark-5" size="large" textAlign={textAlign} {...props}>
-      {label}
-      {children}
+      <Row>
+        {icon}
+        {label}
+        {children}
+      </Row>
     </Text>
   );
 };
 MySubTitle.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  icon: PropTypes.node,
   label: PropTypes.string,
 };
 

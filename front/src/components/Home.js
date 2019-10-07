@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { Box, Button, Grid, Heading, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
+import { Workshop } from 'grommet-icons';
 import preparationImg from '#assets/preparation.svg';
 import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
@@ -75,7 +76,7 @@ const HomeLogged = ({ history }) => {
   return (
     <>
       <MainHeader>
-        <MainHeader.Title label="Mis Open Spaces" />
+        <MainHeader.Title icon={<Workshop />} label="Mis Open Spaces" />
         {openSpaces.length > 0 && <MainHeader.ButtonNew onClick={onNew} />}
       </MainHeader>
       {openSpaces.length === 0 ? (

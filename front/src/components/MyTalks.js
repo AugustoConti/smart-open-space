@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { Heading, Grid, Box, Text, Button, Layer } from 'grommet';
+import { Announce, Home, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import takingNotesImg from '#assets/taking_notes.svg';
@@ -89,6 +90,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
         </Box>
         <MyForm onSecondary={onExit} onSubmit={onSubmit}>
           <MyForm.Select
+            icon={<Home />}
             label="Sala"
             name="room"
             options={freeSlots.map(p => p.first)}
@@ -98,6 +100,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
             }}
           />
           <MyForm.Select
+            icon={<Clock />}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala"
             name="time"
@@ -157,7 +160,7 @@ const MyTalks = ({
     <>
       <MainHeader>
         <MainHeader.TitleLink label={name} onClick={toOS} />
-        <MainHeader.SubTitle label="MIS CHARLAS" />
+        <MainHeader.SubTitle icon={<Announce />} label="MIS CHARLAS" />
         {talks.length > 0 && <MainHeader.ButtonNew label="Charla" onClick={onNew} />}
       </MainHeader>
       {talks.length === 0 ? (

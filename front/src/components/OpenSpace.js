@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Box, Button, Grid, Heading, Layer, Text } from 'grommet';
-import { FormClose } from 'grommet-icons';
+import { FormClose, Schedules } from 'grommet-icons';
 import Slider from 'react-slick';
 
 import { useGetOS } from '#helpers/api/os-client';
@@ -180,7 +180,7 @@ const OpenSpace = ({
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.SubTitle label="AGENDA" />
+        <MainHeader.SubTitle icon={<Schedules />} label="AGENDA" />
         <MainHeader.Button
           color="accent-1"
           label="Mis charlas"
