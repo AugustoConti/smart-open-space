@@ -27,8 +27,8 @@ const EditTalk = ({
         <MainHeader.SubTitle label={os.name} />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
-        <MyForm.Text label="Título" />
-        <MyForm.TextArea />
+        <MyForm.Text label="Título" placeholder="¿De que trata tu charla?" />
+        <MyForm.TextArea placeholder="Describí tu charla con mas detalle..." />
       </MyForm>
     </>
   );

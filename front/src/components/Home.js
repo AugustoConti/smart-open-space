@@ -4,11 +4,13 @@ import { Redirect } from 'react-router-dom';
 import { Box, Button, Grid, Heading, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
+import preparationImg from '#assets/preparation.svg';
 import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
+import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
 
-const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
+const OpenSpace = ({ date, endTime, name, onClick, rooms, startTime }) => (
   <Button fill onClick={onClick} plain>
     {({ hover }) => (
       <Box
@@ -38,7 +40,7 @@ const OpenSpaceCard = ({ date, endTime, name, onClick, rooms, startTime }) => (
     )}
   </Button>
 );
-OpenSpaceCard.propTypes = {
+OpenSpace.propTypes = {
   date: PropTypes.string.isRequired,
   endTime: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -57,23 +59,34 @@ OpenSpaces.propTypes = {
     .isRequired,
 };
 
+const EmptyOpenSpaces = ({ onClick }) => (
+  <EmptyData
+    buttonText="Cargar OpenSpace"
+    img={preparationImg}
+    onClick={onClick}
+    text="Cargá tu primer Open Space y aprovecha toda la inteligencia de Smart-OS"
+  />
+);
+EmptyOpenSpaces.propTypes = { onClick: PropTypes.func.isRequired };
+
 const HomeLogged = ({ history }) => {
   const [openSpaces] = useGetAllOS();
+  const onNew = () => history.push('/new');
   return (
     <>
       <MainHeader>
         <MainHeader.Title label="Mis Open Spaces" />
-        <MainHeader.ButtonNew onClick={() => history.push('/new')} />
+        {openSpaces.length > 0 && <MainHeader.ButtonNew onClick={onNew} />}
       </MainHeader>
-      <OpenSpaces>
-        {openSpaces.map(openSpace => (
-          <OpenSpaceCard
-            key={openSpace.id}
-            onClick={() => history.push(`/os/${openSpace.id}`)}
-            {...openSpace}
-          />
-        ))}
-      </OpenSpaces>
+      {openSpaces.length === 0 ? (
+        <EmptyOpenSpaces onClick={onNew} />
+      ) : (
+        <OpenSpaces>
+          {openSpaces.map(os => (
+            <OpenSpace key={os.id} onClick={() => history.push(`/os/${os.id}`)} {...os} />
+          ))}
+        </OpenSpaces>
+      )}
     </>
   );
 };

@@ -109,7 +109,7 @@ const Rooms = ({ value, onChange }) => {
       <RowBetween>
         <TextInput
           onChange={event => setTextValue(event.target.value)}
-          placeholder="nombre de sala"
+          placeholder="Nombre de sala"
           value={textValue}
         />
         <Button
@@ -175,7 +175,7 @@ const EditOpenSpace = ({ history }) => {
         <MainHeader.Title label="Nuevo Open Space" />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
-        <MyForm.Text />
+        <MyForm.Text placeholder="¿Como se va a llamar?" />
         <FormField
           component={MyCalendar}
           label="Fecha"

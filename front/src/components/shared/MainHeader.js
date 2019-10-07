@@ -7,12 +7,20 @@ import useSize from '#helpers/useSize';
 import RowBetween from './RowBetween';
 import ButtonNew from './ButtonNew';
 
-const MyTitle = ({ children, label, ...props }) => (
-  <Heading level="2" margin="none" {...props}>
-    {label}
-    {children}
-  </Heading>
-);
+const useTextAlign = () => {
+  const size = useSize();
+  return size === 'small' ? 'center' : 'start';
+};
+
+const MyTitle = ({ children, label, ...props }) => {
+  const textAlign = useTextAlign();
+  return (
+    <Heading level="2" margin="none" textAlign={textAlign} {...props}>
+      {label}
+      {children}
+    </Heading>
+  );
+};
 MyTitle.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   label: PropTypes.string,
@@ -24,12 +32,15 @@ const MyTitleLink = props => (
   </MyTitle>
 );
 
-const MySubTitle = ({ children, label, ...props }) => (
-  <Text color="dark-5" size="large" {...props}>
-    {label}
-    {children}
-  </Text>
-);
+const MySubTitle = ({ children, label, ...props }) => {
+  const textAlign = useTextAlign();
+  return (
+    <Text color="dark-5" size="large" textAlign={textAlign} {...props}>
+      {label}
+      {children}
+    </Text>
+  );
+};
 MySubTitle.propTypes = {
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   label: PropTypes.string,
@@ -50,7 +61,11 @@ const MainHeader = ({ children, ...props }) => {
       direction={size === 'small' ? 'column' : 'row'}
       margin={{ vertical: size === 'small' ? 'large' : 'medium' }}
     >
-      <Box margin={{ bottom: size === 'small' ? 'large' : undefined }} {...props}>
+      <Box
+        align={size === 'small' ? 'center' : undefined}
+        margin={{ bottom: size === 'small' && button ? 'large' : undefined }}
+        {...props}
+      >
         {title}
         {subtitle}
       </Box>

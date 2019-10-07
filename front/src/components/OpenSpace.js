@@ -39,7 +39,7 @@ Talks.propTypes = {
     .isRequired,
 };
 
-const LayerInfo = ({ info, onClose }) => (
+const DescriptionInfo = ({ info, onClose }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Box direction="row" justify="end">
@@ -49,7 +49,7 @@ const LayerInfo = ({ info, onClose }) => (
     </Box>
   </Layer>
 );
-LayerInfo.propTypes = {
+DescriptionInfo.propTypes = {
   info: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
 };
@@ -90,7 +90,7 @@ const Talk = ({ talk: { name, description }, room }) => {
         </Text>
       </Box>
       {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
-      {open && <LayerInfo info={description} onClose={() => setOpen(false)} />}
+      {open && <DescriptionInfo info={description} onClose={() => setOpen(false)} />}
     </Box>
   );
 };
@@ -133,14 +133,17 @@ HourHeader.propTypes = {
 const TimeSpan = ({ hour, slots }) => (
   <>
     <HourHeader hour={hour} />
-    <Talks>
-      {slots.map(({ talk, room }) => (
-        <Talk key={talk.id} talk={talk} room={room} />
-      ))}
-    </Talks>
+    {slots.length === 0 ? (
+      <Box height="small" />
+    ) : (
+      <Talks>
+        {slots.map(({ talk, room }) => (
+          <Talk key={talk.id} talk={talk} room={room} />
+        ))}
+      </Talks>
+    )}
   </>
 );
-
 TimeSpan.propTypes = {
   hour: PropTypes.number.isRequired,
   slots: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -190,7 +193,6 @@ const OpenSpace = ({
     </>
   );
 };
-
 OpenSpace.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   location: PropTypes.shape({

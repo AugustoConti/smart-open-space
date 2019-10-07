@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { Heading, Grid, Box, Text, Button, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
+import takingNotesImg from '#assets/taking_notes.svg';
 import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
+import EmptyData from '#shared/EmptyData';
 import MyForm from '#shared/MyForm';
 import MainHeader from '#shared/MainHeader';
 
@@ -36,7 +38,7 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
       {assigned ? (
         <Box
           alignSelf="center"
-          border={{ side: 'all', color: 'status-ok', size: 'small' }}
+          background={{ color: 'status-ok', opacity: 'medium' }}
           pad={{ horizontal: 'small', vertical: 'xsmall' }}
           round
         >
@@ -77,7 +79,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
-        <Box alignSelf="center" margin={{ vertical: 'medium' }}>
+        <Box align="center" alignSelf="center" margin={{ vertical: 'medium' }}>
           <Heading level="2" margin="none">
             Agendate!
           </Heading>
@@ -127,6 +129,16 @@ Talks.propTypes = {
     .isRequired,
 };
 
+const EmptyTalk = ({ onClick }) => (
+  <EmptyData
+    buttonText="Cargar charla"
+    img={takingNotesImg}
+    onClick={onClick}
+    text="Cargá tu charla para este Open Space"
+  />
+);
+EmptyTalk.propTypes = { onClick: PropTypes.func.isRequired };
+
 const MyTalks = ({
   match: {
     params: { id },
@@ -137,29 +149,32 @@ const MyTalks = ({
   const [slots] = useGetSlots(id);
   const [talks] = useGetTalks(id);
 
+  const toOS = () => history.push(`/os/${id}`);
+  const onNew = () => history.push(`/newTalk/${id}`);
   const isAssigned = idTalk => !!slots.find(s => s.talk.id === idTalk);
 
   return (
     <>
       <MainHeader>
-        <MainHeader.TitleLink label={name} onClick={() => history.push(`/os/${id}`)} />
+        <MainHeader.TitleLink label={name} onClick={toOS} />
         <MainHeader.SubTitle label="MIS CHARLAS" />
-        <MainHeader.ButtonNew
-          label="Charla"
-          onClick={() => history.push(`/newTalk/${id}`)}
-        />
+        {talks.length > 0 && <MainHeader.ButtonNew label="Charla" onClick={onNew} />}
       </MainHeader>
-      <Talks>
-        {talks.map(talk => (
-          <Talk
-            assigned={isAssigned(talk.id)}
-            freeSlots={freeSlots}
-            key={talk.id}
-            onSchedule={() => history.push(`/os/${id}`)}
-            {...talk}
-          />
-        ))}
-      </Talks>
+      {talks.length === 0 ? (
+        <EmptyTalk onClick={onNew} />
+      ) : (
+        <Talks>
+          {talks.map(talk => (
+            <Talk
+              assigned={isAssigned(talk.id)}
+              freeSlots={freeSlots}
+              key={talk.id}
+              onSchedule={toOS}
+              {...talk}
+            />
+          ))}
+        </Talks>
+      )}
     </>
   );
 };
