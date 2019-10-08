@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 import takingNotesImg from '#assets/taking_notes.svg';
 import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
 import EmptyData from '#shared/EmptyData';
-import MyForm from '#shared/MyForm';
 import MainHeader from '#shared/MainHeader';
+import MyForm from '#shared/MyForm';
 
 const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   const [open, setOpen] = useState(false);

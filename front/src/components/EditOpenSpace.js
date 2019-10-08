@@ -13,11 +13,10 @@ import {
 import { Add, FormDown, FormTrash, Plan, Clock, Home, Workshop } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
+import { createOS } from '#helpers/api/os-client';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import RowBetween from '#shared/RowBetween';
-
-import { createOS } from '#helpers/api/os-client';
 
 const MyCalendar = ({ onChange, value, ...props }) => {
   const [open, setOpen] = useState(false);

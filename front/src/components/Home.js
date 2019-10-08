@@ -10,7 +10,7 @@ import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
-import Row from './shared/Row';
+import Row from '#shared/Row';
 
 const getHour = time => Number(time.slice(0, 2));
 

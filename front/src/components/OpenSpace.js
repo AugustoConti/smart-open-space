@@ -9,7 +9,7 @@ import { useGetOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
 import useSlots from '#helpers/schedule-socket';
 import MainHeader from '#shared/MainHeader';
-import Row from './shared/Row';
+import Row from '#shared/Row';
 
 const sliderSettings = {
   centerMode: true,

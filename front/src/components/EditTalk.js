@@ -3,9 +3,9 @@ import React from 'react';
 import { Announce } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
+import { useGetOS, createTalk } from '#helpers/api/os-client';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
-import { useGetOS, createTalk } from '#helpers/api/os-client';
 
 const EditTalk = ({
   match: {
