@@ -3,6 +3,8 @@ import React from 'react';
 import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 
+import MyProps from '#helpers/MyProps';
+
 const Card = ({ borderColor, borderSide = 'top', children, ...props }) => (
   <Box
     background="light-1"
@@ -19,8 +21,7 @@ const Card = ({ borderColor, borderSide = 'top', children, ...props }) => (
 Card.propTypes = {
   borderColor: PropTypes.string,
   borderSide: PropTypes.string,
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
+  children: MyProps.children.isRequired,
 };
 
 export default Card;

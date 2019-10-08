@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { Announce } from 'grommet-icons';
-import PropTypes from 'prop-types';
 
 import { useGetOS, createTalk } from '#helpers/api/os-client';
+import MyProps from '#helpers/MyProps';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 
@@ -34,12 +34,6 @@ const EditTalk = ({
     </>
   );
 };
-
-EditTalk.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
-  }).isRequired,
-  history: PropTypes.shape({ goBack: PropTypes.func, push: PropTypes.func }).isRequired,
-};
+EditTalk.propTypes = { match: MyProps.match, history: MyProps.history };
 
 export default EditTalk;

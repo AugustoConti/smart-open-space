@@ -2,9 +2,9 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Heading } from 'grommet';
-import PropTypes from 'prop-types';
 
 import useAuth, { useUser } from '#helpers/useAuth';
+import MyProps from '#helpers/MyProps';
 import MyForm from '#shared/MyForm';
 
 const Login = ({ history, location: { pathname } }) => {
@@ -43,10 +43,6 @@ const Login = ({ history, location: { pathname } }) => {
     </>
   );
 };
-
-Login.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
-};
+Login.propTypes = { history: MyProps.history, location: MyProps.location };
 
 export default Login;

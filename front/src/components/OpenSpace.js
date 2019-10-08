@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
-import { Box, Button, Grid, Heading, Layer, Text } from 'grommet';
+import { Box, Button, Grid, Layer } from 'grommet';
 import { FormClose, Schedules, Home, User } from 'grommet-icons';
 import Slider from 'react-slick';
 
 import { useGetOS } from '#helpers/api/os-client';
-import { useUser } from '#helpers/useAuth';
+import MyProps from '#helpers/MyProps';
 import useSlots from '#helpers/schedule-socket';
+import { useUser } from '#helpers/useAuth';
 import Card from '#shared/Card';
+import Detail from '#shared/Detail';
 import MainHeader from '#shared/MainHeader';
 import Row from '#shared/Row';
+import Title from '#shared/Title';
 
 const sliderSettings = {
   centerMode: true,
@@ -35,18 +38,15 @@ const sliderSettings = {
 };
 
 const Talks = ({ children }) => <Slider {...sliderSettings}>{children}</Slider>;
-Talks.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
+Talks.propTypes = { children: MyProps.children.isRequired };
 
 const DescriptionInfo = ({ info, onClose }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
-      <Box direction="row" justify="end">
+      <Row justify="end">
         <Button icon={<FormClose />} onClick={onClose} plain />
-      </Box>
-      <Text>{info}</Text>
+      </Row>
+      {info}
     </Box>
   </Layer>
 );
@@ -66,17 +66,6 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Detail = ({ icon: Icon, text }) => (
-  <Row gap="xsmall">
-    <Icon color="dark-5" />
-    <Text color="dark-5">{text}</Text>
-  </Row>
-);
-Detail.propTypes = {
-  icon: PropTypes.func,
-  text: PropTypes.string.isRequired,
-};
-
 const Talk = ({ talk: { description, name, speaker }, room }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -84,14 +73,12 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
       <Card borderColor="accent-3" height="230px" margin="xsmall">
         <Box>
           <Box overflow="hidden">
-            <Heading alignSelf="center" level="4" margin="none" textAlign="center">
-              {name}
-            </Heading>
+            <Title>{name}</Title>
           </Box>
           <Detail icon={User} text={speaker.name} />
           <Detail icon={Home} text={room.name} />
         </Box>
-        <Box>{description && <ButtonMoreInfo onClick={() => setOpen(true)} />}</Box>
+        {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
       {open && <DescriptionInfo info={description} onClose={() => setOpen(false)} />}
     </>
@@ -197,13 +184,9 @@ const OpenSpace = ({
   );
 };
 OpenSpace.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  match: PropTypes.shape({
-    params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
-  }).isRequired,
+  history: MyProps.history,
+  location: MyProps.location,
+  match: MyProps.match,
 };
 
 export default OpenSpace;

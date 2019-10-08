@@ -1,12 +1,14 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Box, Heading, Text, Button } from 'grommet';
+import { Box, Text, Button } from 'grommet';
 
+import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
 import ButtonNew from './ButtonNew';
 import Row from './Row';
 import RowBetween from './RowBetween';
+import Title from './Title';
 
 const useTextAlign = () => {
   const size = useSize();
@@ -16,17 +18,17 @@ const useTextAlign = () => {
 const MyTitle = ({ children, icon, label, ...props }) => {
   const textAlign = useTextAlign();
   return (
-    <Heading level="2" margin="none" textAlign={textAlign} {...props}>
+    <Title level="2" textAlign={textAlign} {...props}>
       <Row>
         {icon}
         {label}
         {children}
       </Row>
-    </Heading>
+    </Title>
   );
 };
 MyTitle.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  children: MyProps.children,
   icon: PropTypes.node,
   label: PropTypes.string,
 };
@@ -50,7 +52,7 @@ const MySubTitle = ({ children, icon, label, ...props }) => {
   );
 };
 MySubTitle.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  children: MyProps.children,
   icon: PropTypes.node,
   label: PropTypes.string,
 };
@@ -82,10 +84,7 @@ const MainHeader = ({ children, ...props }) => {
     </RowBetween>
   );
 };
-MainHeader.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
+MainHeader.propTypes = { children: MyProps.children.isRequired };
 
 MainHeader.Title = MyTitle;
 MainHeader.TitleLink = MyTitleLink;

@@ -1,17 +1,13 @@
 import React from 'react';
 
-import { Box } from 'grommet';
-import PropTypes from 'prop-types';
+import MyProps from '#helpers/MyProps';
+import Row from './Row';
 
 const RowBetween = ({ children, ...props }) => (
-  <Box align="center" direction="row" justify="between" {...props}>
+  <Row justify="between" {...props}>
     {children}
-  </Box>
+  </Row>
 );
-
-RowBetween.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
+RowBetween.propTypes = { children: MyProps.children.isRequired };
 
 export default RowBetween;

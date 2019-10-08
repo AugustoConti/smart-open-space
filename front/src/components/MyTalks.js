@@ -1,16 +1,42 @@
 import React, { useState } from 'react';
 
-import { Heading, Box, Text, Button, Layer } from 'grommet';
-import { Announce, Home, Clock } from 'grommet-icons';
+import { Box, Button, Layer } from 'grommet';
+import { Announce, Clock, Home } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import takingNotesImg from '#assets/taking_notes.svg';
 import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
+import MyProps from '#helpers/MyProps';
 import Card from '#shared/Card';
+import Detail from '#shared/Detail';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
 import MyForm from '#shared/MyForm';
+import Title from '#shared/Title';
+
+const Badge = ({ text }) => (
+  <Box
+    alignSelf="center"
+    background={{ color: 'status-ok', opacity: 'medium' }}
+    pad={{ horizontal: 'small', vertical: 'xsmall' }}
+    round
+  >
+    {text}
+  </Box>
+);
+Badge.propTypes = { text: PropTypes.string };
+
+const ButtonAgendar = props => (
+  <Button
+    alignSelf="center"
+    color="accent-4"
+    label="Agendar"
+    margin={{ top: 'medium' }}
+    primary
+    {...props}
+  />
+);
 
 const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   const [open, setOpen] = useState(false);
@@ -22,31 +48,13 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   return (
     <Card borderColor={color}>
       <Box>
-        <Heading level="3" margin="none" size="small">
-          {name}
-        </Heading>
-        <Text color="dark-5" size="small" truncate>
-          {description}
-        </Text>
+        <Title>{name}</Title>
+        <Detail size="small" text={description} truncate />
       </Box>
       {assigned ? (
-        <Box
-          alignSelf="center"
-          background={{ color: 'status-ok', opacity: 'medium' }}
-          pad={{ horizontal: 'small', vertical: 'xsmall' }}
-          round
-        >
-          Agendada
-        </Box>
+        <Badge text="Agendada" />
       ) : (
-        <Button
-          alignSelf="center"
-          color="accent-4"
-          label="Agendar"
-          margin={{ top: 'medium' }}
-          onClick={() => setOpen(true)}
-          primary
-        />
+        <ButtonAgendar onClick={() => setOpen(true)} />
       )}
       {open && freeSlots && (
         <SelectSlot
@@ -73,13 +81,9 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
-        <Box align="center" alignSelf="center" margin={{ vertical: 'medium' }}>
-          <Heading level="2" margin="none">
-            Agendate!
-          </Heading>
-          <Text color="dark-5" size="large">
-            {name}
-          </Text>
+        <Box margin={{ vertical: 'medium' }}>
+          <Title level="2">Agendate!</Title>
+          <Detail size="large" text={name} textAlign="center" />
         </Box>
         <MyForm onSecondary={onExit} onSubmit={onSubmit}>
           <MyForm.Select
@@ -164,12 +168,6 @@ const MyTalks = ({
     </>
   );
 };
-
-MyTalks.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
-  }).isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
+MyTalks.propTypes = { match: MyProps.match, history: MyProps.history };
 
 export default MyTalks;

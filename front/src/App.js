@@ -5,17 +5,17 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { toast } from 'react-toastify';
 import { Box, Grid, grommet, Grommet } from 'grommet';
-import PropTypes from 'prop-types';
 
-import { AuthProvider } from './helpers/useAuth';
-import EditOpenSpace from './components/EditOpenSpace';
-import Header from './components/shared/Header';
-import Home from './components/Home';
-import Login from './components/Login';
-import OpenSpace from './components/OpenSpace';
-import EditTalk from './components/EditTalk';
-import useSize from './helpers/useSize';
-import MyTalks from './components/MyTalks';
+import EditOpenSpace from '#components/EditOpenSpace';
+import Home from '#components/Home';
+import Login from '#components/Login';
+import OpenSpace from '#components/OpenSpace';
+import EditTalk from '#components/EditTalk';
+import MyTalks from '#components/MyTalks';
+import MyProps from '#helpers/MyProps';
+import { AuthProvider } from '#helpers/useAuth';
+import useSize from '#helpers/useSize';
+import Header from '#shared/Header';
 
 toast.configure();
 
@@ -47,9 +47,7 @@ const BoxBrand = ({ children, ...props }) => (
     {children}
   </Box>
 );
-BoxBrand.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
-};
+BoxBrand.propTypes = { children: MyProps.children };
 
 const MainLayout = ({ children }) => {
   const { areas, columns, pad } = useMainLayout();
@@ -68,10 +66,7 @@ const MainLayout = ({ children }) => {
     </Box>
   );
 };
-MainLayout.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
+MainLayout.propTypes = { children: MyProps.children.isRequired };
 
 const App = () => (
   <Grommet full theme={grommet}>

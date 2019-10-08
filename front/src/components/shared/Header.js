@@ -4,23 +4,25 @@ import { Box, Button, Menu, Text, Image } from 'grommet';
 import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
-import RowBetween from './RowBetween';
 import logo from '#assets/logo.svg';
+import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
+import Row from './Row';
+import RowBetween from './RowBetween';
 
 const SmallMenu = ({ color }) => (
-  <Box direction="row" pad="medium" justify="end">
+  <Box pad="medium">
     <MenuIcon color={color} />
   </Box>
 );
 SmallMenu.propTypes = { color: PropTypes.string.isRequired };
 
 const LargeMenu = ({ color, name, pad }) => (
-  <Box direction="row" gap="xsmall" pad={pad}>
+  <Row gap="xsmall" pad={pad}>
     <Text color={color}>{name}</Text>
     <FormDown color={color} />
-  </Box>
+  </Row>
 );
 LargeMenu.propTypes = {
   color: PropTypes.string.isRequired,
@@ -51,12 +53,9 @@ const HomeButton = ({ onClick }) => {
 };
 HomeButton.propTypes = { onClick: PropTypes.func.isRequired };
 
-const MyMenu = ({ history, location: { pathname } }) => {
+const MyMenu = ({ history, user }) => {
   const size = useSize();
   const { logout } = useAuth();
-  const user = useUser();
-  const isLogged = !!user;
-  const inLogin = pathname === '/login';
   const menuItems = [
     // {
     //   label: 'Help',
@@ -66,19 +65,15 @@ const MyMenu = ({ history, location: { pathname } }) => {
     // },
     {
       label: (
-        <Box
-          alignSelf="center"
-          direction="row"
-          pad={size === 'small' ? 'medium' : 'xsmall'}
-        >
+        <Row pad={size === 'small' ? 'medium' : 'xsmall'}>
           <Run color="status-critical" />
           Salir
-        </Box>
+        </Row>
       ),
       onClick: () => logout().then(() => history.push('/login')),
     },
   ];
-  return isLogged ? (
+  return (
     <Menu plain items={menuItems} size="medium">
       {({ drop, hover }) => {
         // eslint-disable-next-line no-nested-ternary
@@ -94,24 +89,28 @@ const MyMenu = ({ history, location: { pathname } }) => {
         );
       }}
     </Menu>
-  ) : (
-    !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
   );
 };
 MyMenu.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  location: PropTypes.shape({ pathname: PropTypes.string.isRequired }).isRequired,
+  history: MyProps.history,
+  user: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
 };
 
-const Header = ({ history, location }) => (
-  <RowBetween as="header" fill>
-    <HomeButton onClick={() => history.push('/')} />
-    <MyMenu history={history} location={location} />
-  </RowBetween>
-);
-Header.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  location: PropTypes.shape().isRequired,
+const Header = ({ history, location: { pathname } }) => {
+  const user = useUser();
+  const isLogged = !!user;
+  const inLogin = pathname === '/login';
+  return (
+    <RowBetween as="header" fill>
+      <HomeButton onClick={() => history.push('/')} />
+      {isLogged ? (
+        <MyMenu history={history} user={user} />
+      ) : (
+        !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
+      )}
+    </RowBetween>
+  );
 };
+Header.propTypes = { history: MyProps.history, location: MyProps.location };
 
 export default Header;

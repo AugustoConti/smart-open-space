@@ -1,18 +1,20 @@
 import React from 'react';
 
-import { Form, Button, FormField, TextArea, Select, Box } from 'grommet';
-import { Article, DocumentText, MailOption, Lock } from 'grommet-icons';
+import { Button, Form, FormField, Select, TextArea } from 'grommet';
+import { Article, DocumentText, Lock, MailOption } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
+import MyProps from '#helpers/MyProps';
+import Row from './Row';
 import RowBetween from './RowBetween';
 
 const MyField = ({ icon, label, ...props }) => (
   <FormField
     label={
-      <Box direction="row" gap="small">
+      <Row>
         {icon}
         {label}
-      </Box>
+      </Row>
     }
     required
     {...props}
@@ -58,10 +60,7 @@ const Footer = ({ children }) => (
     {children}
   </RowBetween>
 );
-Footer.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
+Footer.propTypes = { children: MyProps.children.isRequired };
 
 const MyForm = ({
   children,
@@ -79,8 +78,7 @@ const MyForm = ({
   </Form>
 );
 MyForm.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
+  children: MyProps.children.isRequired,
   onSecondary: PropTypes.func,
   primaryLabel: PropTypes.string,
   secondaryLabel: PropTypes.string,

@@ -7,15 +7,16 @@ import {
   DropButton,
   RangeSelector,
   Stack,
-  Text,
   TextInput,
 } from 'grommet';
 import { Add, FormDown, FormTrash, Plan, Clock, Home, Workshop } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import { createOS } from '#helpers/api/os-client';
+import MyProps from '#helpers/MyProps';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
+import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
 
 const MyCalendar = ({ onChange, value, ...props }) => {
@@ -33,14 +34,13 @@ const MyCalendar = ({ onChange, value, ...props }) => {
       onOpen={() => setOpen(true)}
       open={open}
     >
-      <Box align="center" direction="row" pad="small">
-        <Text>{value ? new Date(value).toLocaleDateString() : 'Elegir fecha'}</Text>
+      <Row pad="small">
+        {value ? new Date(value).toLocaleDateString() : 'Elegir fecha'}
         <FormDown />
-      </Box>
+      </Row>
     </DropButton>
   );
 };
-
 MyCalendar.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
@@ -59,7 +59,7 @@ const TimeSelector = ({ onChange, value, ...props }) => (
           pad="small"
           width="xxsmall"
         >
-          <Text>{v + 8}</Text>
+          {v + 8}
         </Box>
       ))}
     </RowBetween>
@@ -75,7 +75,6 @@ const TimeSelector = ({ onChange, value, ...props }) => (
     />
   </Stack>
 );
-
 TimeSelector.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.number).isRequired,
@@ -89,11 +88,10 @@ const ListItem = props => <RowBetween as="li" border="top" pad="xxsmall" {...pro
 
 const RoomItem = ({ room, onRemove }) => (
   <ListItem>
-    <Text alignSelf="center">{room}</Text>
+    {room}
     <Button icon={<FormTrash />} onClick={onRemove} />
   </ListItem>
 );
-
 RoomItem.propTypes = {
   onRemove: PropTypes.func.isRequired,
   room: PropTypes.string.isRequired,
@@ -132,7 +130,6 @@ const Rooms = ({ value, onChange }) => {
     </Box>
   );
 };
-
 Rooms.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -198,9 +195,6 @@ const EditOpenSpace = ({ history }) => {
     </>
   );
 };
-
-EditOpenSpace.propTypes = {
-  history: PropTypes.shape({ goBack: PropTypes.func, push: PropTypes.func }).isRequired,
-};
+EditOpenSpace.propTypes = { history: MyProps.history };
 
 export default EditOpenSpace;

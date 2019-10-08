@@ -1,18 +1,20 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Button, Heading, Text } from 'grommet';
+import { Button } from 'grommet';
 import { Workshop, Plan, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import preparationImg from '#assets/preparation.svg';
 import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
+import MyProps from '#helpers/MyProps';
 import Card from '#shared/Card';
+import Detail from '#shared/Detail';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
-import Row from '#shared/Row';
+import Title from '#shared/Title';
 
 const getHour = time => Number(time.slice(0, 2));
 
@@ -25,19 +27,12 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
         fill
         gap="small"
       >
-        <Heading textAlign="center" level="3" margin="none">
-          {name}
-        </Heading>
-        <Row>
-          <Plan color="dark-5" />
-          <Text color="dark-5">{date}</Text>
-        </Row>
-        <Row>
-          <Clock color="dark-5" />
-          <Text color="dark-5">
-            {`${getHour(startTime)} a ${getHour(endTime) + 1} hs`}
-          </Text>
-        </Row>
+        <Title level="3">{name}</Title>
+        <Detail icon={Plan} text={date} />
+        <Detail
+          icon={Clock}
+          text={`${getHour(startTime)} a ${getHour(endTime) + 1} hs`}
+        />
       </Card>
     )}
   </Button>
@@ -81,16 +76,12 @@ const HomeLogged = ({ history }) => {
     </>
   );
 };
-HomeLogged.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
+HomeLogged.propTypes = { history: MyProps.history };
 
 const Home = ({ history }) => {
   const user = useUser();
   return user ? <HomeLogged history={history} /> : <Redirect to="/login" />;
 };
-Home.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-};
+Home.propTypes = { history: MyProps.history };
 
 export default Home;
