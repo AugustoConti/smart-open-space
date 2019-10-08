@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Box, Button, Grid, Heading, Layer, Text } from 'grommet';
-import { FormClose, Schedules } from 'grommet-icons';
+import { FormClose, Schedules, Home, User } from 'grommet-icons';
 import Slider from 'react-slick';
 
 import { useGetOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
 import useSlots from '#helpers/schedule-socket';
 import MainHeader from '#shared/MainHeader';
+import Row from './shared/Row';
 
 const sliderSettings = {
   centerMode: true,
@@ -20,7 +21,6 @@ const sliderSettings = {
   slidesToScroll: 1,
   focusOnSelect: true,
   adaptiveHeight: true,
-  className: 'sarlanga',
   responsive: [
     {
       breakpoint: 960,
@@ -58,40 +58,51 @@ const ButtonMoreInfo = ({ onClick }) => (
   <Button
     alignSelf="center"
     color="accent-3"
-    label="Mas info"
-    primary
+    label="Mas Info"
     onClick={onClick}
+    primary
   />
 );
-ButtonMoreInfo.propTypes = {
-  onClick: PropTypes.func.isRequired,
+ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
+
+const Detail = ({ icon: Icon, text }) => (
+  <Row gap="xsmall">
+    <Icon color="dark-5" />
+    <Text color="dark-5">{text}</Text>
+  </Row>
+);
+Detail.propTypes = {
+  icon: PropTypes.func,
+  text: PropTypes.string.isRequired,
 };
 
-const Talk = ({ talk: { name, description }, room }) => {
+const Talk = ({ talk: { description, name, speaker }, room }) => {
   const [open, setOpen] = useState(false);
   return (
-    <Box
-      background="light-1"
-      elevation="small"
-      gap="medium"
-      height="small"
-      justify="between"
-      margin="xsmall"
-      overflow="hidden"
-      pad="medium"
-      round
-    >
-      <Box>
-        <Heading level="4" margin="none" size="small">
-          {name}
-        </Heading>
-        <Text color="dark-5" size="medium">
-          {room.name}
-        </Text>
+    <>
+      <Box
+        background="light-1"
+        border={{ color: 'accent-3', size: 'medium', side: 'top' }}
+        elevation="small"
+        height="230px"
+        justify="between"
+        margin="xsmall"
+        pad="small"
+        round
+      >
+        <Box overflow="hidden">
+          <Heading alignSelf="center" level="4" margin="none" textAlign="center">
+            {name}
+          </Heading>
+        </Box>
+        <Box>
+          <Detail icon={User} text={speaker.name} />
+          <Detail icon={Home} text={room.name} />
+          {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+        </Box>
       </Box>
-      {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       {open && <DescriptionInfo info={description} onClose={() => setOpen(false)} />}
-    </Box>
+    </>
   );
 };
 Talk.propTypes = {
@@ -99,6 +110,7 @@ Talk.propTypes = {
   talk: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
+    speaker: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
   }).isRequired,
 };
 
@@ -175,12 +187,11 @@ const OpenSpace = ({
   );
   const user = useUser();
   const slots = useSlots(id);
-
   return (
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.SubTitle icon={<Schedules />} label="AGENDA" />
+        <MainHeader.SubTitle icon={<Schedules color="dark-5" />} label="AGENDA" />
         <MainHeader.Button
           color="accent-1"
           label="Mis charlas"

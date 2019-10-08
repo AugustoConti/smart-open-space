@@ -2,41 +2,48 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Box, Button, Grid, Heading, Text } from 'grommet';
+import { Workshop, Plan, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
-import { Workshop } from 'grommet-icons';
 import preparationImg from '#assets/preparation.svg';
 import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
+import Row from './shared/Row';
 
-const OpenSpace = ({ date, endTime, name, onClick, rooms, startTime }) => (
+const getHour = time => Number(time.slice(0, 2));
+
+const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
   <Button fill onClick={onClick} plain>
     {({ hover }) => (
       <Box
         background="light-1"
-        border={hover ? { color: 'brand', size: 'medium', style: 'outset' } : undefined}
+        border={
+          hover
+            ? { color: 'accent-1', size: 'medium', style: 'outset' }
+            : { color: 'brand', size: 'medium', side: 'top' }
+        }
         elevation="small"
         fill
+        gap="small"
+        overflow="hidden"
         pad="small"
         round
-        overflow="hidden"
       >
-        <Heading level="3" margin="none">
+        <Heading textAlign="center" level="3" margin="none">
           {name}
         </Heading>
-        {`${rooms.length} Salas`}
-        <Text color="dark-5" size="small">
-          {date}
-          <br />
-          {startTime}
-          &#8226;
-          {endTime}
-        </Text>
-        {/* <Text size="small" color="dark-5" margin={{ vertical: 'small' }} truncate>
-          description
-        </Text> */}
+        <Row>
+          <Plan color="dark-5" />
+          <Text color="dark-5">{date}</Text>
+        </Row>
+        <Row>
+          <Clock color="dark-5" />
+          <Text color="dark-5">
+            {`${getHour(startTime)} a ${getHour(endTime) + 1} hs`}
+          </Text>
+        </Row>
       </Box>
     )}
   </Button>
@@ -46,7 +53,6 @@ OpenSpace.propTypes = {
   endTime: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  rooms: PropTypes.arrayOf(PropTypes.object).isRequired,
   startTime: PropTypes.string.isRequired,
 };
 

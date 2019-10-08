@@ -4,21 +4,13 @@ import PropTypes from 'prop-types';
 import { Box, Heading, Text, Button } from 'grommet';
 
 import useSize from '#helpers/useSize';
-import RowBetween from './RowBetween';
 import ButtonNew from './ButtonNew';
+import Row from './Row';
+import RowBetween from './RowBetween';
 
 const useTextAlign = () => {
   const size = useSize();
   return size === 'small' ? 'center' : 'start';
-};
-
-const Row = ({ children, ...props }) => (
-  <Box align="center" direction="row" gap="small" {...props}>
-    {children}
-  </Box>
-);
-Row.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
 };
 
 const MyTitle = ({ children, icon, label, ...props }) => {

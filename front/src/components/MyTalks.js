@@ -20,11 +20,9 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   return (
     <Box
       background="light-1"
+      border={{ color: assigned ? 'status-ok' : 'accent-4', size: 'medium', side: 'top' }}
       elevation="small"
-      fill
-      gap="small"
       justify="between"
-      overflow="hidden"
       pad="medium"
       round
     >
@@ -160,7 +158,7 @@ const MyTalks = ({
     <>
       <MainHeader>
         <MainHeader.TitleLink label={name} onClick={toOS} />
-        <MainHeader.SubTitle icon={<Announce />} label="MIS CHARLAS" />
+        <MainHeader.SubTitle icon={<Announce color="dark-5" />} label="MIS CHARLAS" />
         {talks.length > 0 && <MainHeader.ButtonNew label="Charla" onClick={onNew} />}
       </MainHeader>
       {talks.length === 0 ? (
