@@ -8,6 +8,7 @@ import Slider from 'react-slick';
 import { useGetOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
 import useSlots from '#helpers/schedule-socket';
+import Card from '#shared/Card';
 import MainHeader from '#shared/MainHeader';
 import Row from '#shared/Row';
 
@@ -80,27 +81,18 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Box
-        background="light-1"
-        border={{ color: 'accent-3', size: 'medium', side: 'top' }}
-        elevation="small"
-        height="230px"
-        justify="between"
-        margin="xsmall"
-        pad="small"
-        round
-      >
-        <Box overflow="hidden">
-          <Heading alignSelf="center" level="4" margin="none" textAlign="center">
-            {name}
-          </Heading>
-        </Box>
+      <Card borderColor="accent-3" height="230px" margin="xsmall">
         <Box>
+          <Box overflow="hidden">
+            <Heading alignSelf="center" level="4" margin="none" textAlign="center">
+              {name}
+            </Heading>
+          </Box>
           <Detail icon={User} text={speaker.name} />
           <Detail icon={Home} text={room.name} />
-          {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
         </Box>
-      </Box>
+        <Box>{description && <ButtonMoreInfo onClick={() => setOpen(true)} />}</Box>
+      </Card>
       {open && <DescriptionInfo info={description} onClose={() => setOpen(false)} />}
     </>
   );

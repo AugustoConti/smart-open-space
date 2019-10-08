@@ -1,31 +1,26 @@
 import React, { useState } from 'react';
 
-import { Heading, Grid, Box, Text, Button, Layer } from 'grommet';
+import { Heading, Box, Text, Button, Layer } from 'grommet';
 import { Announce, Home, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import takingNotesImg from '#assets/taking_notes.svg';
 import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
+import Card from '#shared/Card';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
+import MyGrid from '#shared/MyGrid';
 import MyForm from '#shared/MyForm';
 
 const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   const [open, setOpen] = useState(false);
-
+  const color = assigned ? 'status-ok' : 'accent-4';
   const onSubmit = ({ value: { time, room } }) => {
     scheduleTalk(id, room.id, time).then(onSchedule);
   };
 
   return (
-    <Box
-      background="light-1"
-      border={{ color: assigned ? 'status-ok' : 'accent-4', size: 'medium', side: 'top' }}
-      elevation="small"
-      justify="between"
-      pad="medium"
-      round
-    >
+    <Card borderColor={color}>
       <Box>
         <Heading level="3" margin="none" size="small">
           {name}
@@ -61,7 +56,7 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
           onSubmit={onSubmit}
         />
       )}
-    </Box>
+    </Card>
   );
 };
 Talk.propTypes = {
@@ -120,16 +115,6 @@ SelectSlot.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-const Talks = ({ children }) => (
-  <Grid columns="small" gap="small" margin={{ bottom: 'medium' }}>
-    {children}
-  </Grid>
-);
-Talks.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
-};
-
 const EmptyTalk = ({ onClick }) => (
   <EmptyData
     buttonText="Cargar charla"
@@ -164,7 +149,7 @@ const MyTalks = ({
       {talks.length === 0 ? (
         <EmptyTalk onClick={onNew} />
       ) : (
-        <Talks>
+        <MyGrid>
           {talks.map(talk => (
             <Talk
               assigned={isAssigned(talk.id)}
@@ -174,7 +159,7 @@ const MyTalks = ({
               {...talk}
             />
           ))}
-        </Talks>
+        </MyGrid>
       )}
     </>
   );

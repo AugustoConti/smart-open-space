@@ -1,15 +1,17 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Box, Button, Grid, Heading, Text } from 'grommet';
+import { Button, Heading, Text } from 'grommet';
 import { Workshop, Plan, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import preparationImg from '#assets/preparation.svg';
 import { useGetAllOS } from '#helpers/api/os-client';
 import { useUser } from '#helpers/useAuth';
+import Card from '#shared/Card';
 import EmptyData from '#shared/EmptyData';
 import MainHeader from '#shared/MainHeader';
+import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
 
 const getHour = time => Number(time.slice(0, 2));
@@ -17,19 +19,11 @@ const getHour = time => Number(time.slice(0, 2));
 const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
   <Button fill onClick={onClick} plain>
     {({ hover }) => (
-      <Box
-        background="light-1"
-        border={
-          hover
-            ? { color: 'accent-1', size: 'medium', style: 'outset' }
-            : { color: 'brand', size: 'medium', side: 'top' }
-        }
-        elevation="small"
+      <Card
+        borderColor={hover ? 'accent-1' : 'brand'}
+        borderSide={hover ? 'all' : undefined}
         fill
         gap="small"
-        overflow="hidden"
-        pad="small"
-        round
       >
         <Heading textAlign="center" level="3" margin="none">
           {name}
@@ -44,7 +38,7 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
             {`${getHour(startTime)} a ${getHour(endTime) + 1} hs`}
           </Text>
         </Row>
-      </Box>
+      </Card>
     )}
   </Button>
 );
@@ -54,16 +48,6 @@ OpenSpace.propTypes = {
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   startTime: PropTypes.string.isRequired,
-};
-
-const OpenSpaces = ({ children }) => (
-  <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
-    {children}
-  </Grid>
-);
-OpenSpaces.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
-    .isRequired,
 };
 
 const EmptyOpenSpaces = ({ onClick }) => (
@@ -88,11 +72,11 @@ const HomeLogged = ({ history }) => {
       {openSpaces.length === 0 ? (
         <EmptyOpenSpaces onClick={onNew} />
       ) : (
-        <OpenSpaces>
+        <MyGrid>
           {openSpaces.map(os => (
             <OpenSpace key={os.id} onClick={() => history.push(`/os/${os.id}`)} {...os} />
           ))}
-        </OpenSpaces>
+        </MyGrid>
       )}
     </>
   );
