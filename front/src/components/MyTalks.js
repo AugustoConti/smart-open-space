@@ -40,13 +40,12 @@ const ButtonAgendar = props => (
 
 const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   const [open, setOpen] = useState(false);
-  const color = assigned ? 'status-ok' : 'accent-4';
   const onSubmit = ({ value: { time, room } }) => {
     scheduleTalk(id, room.id, time).then(onSchedule);
   };
 
   return (
-    <Card borderColor={color}>
+    <Card borderColor={assigned ? 'status-ok' : 'accent-4'}>
       <Box>
         <Title>{name}</Title>
         <Detail size="small" text={description} truncate />

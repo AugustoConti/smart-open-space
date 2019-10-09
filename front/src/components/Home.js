@@ -17,6 +17,7 @@ import MyGrid from '#shared/MyGrid';
 import Title from '#shared/Title';
 
 const getHour = time => Number(time.slice(0, 2));
+const getTime = (start, end) => `${getHour(start)} a ${getHour(end) + 1} hs`;
 
 const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
   <Button fill onClick={onClick} plain>
@@ -29,10 +30,7 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
       >
         <Title level="3">{name}</Title>
         <Detail icon={Plan} text={date} />
-        <Detail
-          icon={Clock}
-          text={`${getHour(startTime)} a ${getHour(endTime) + 1} hs`}
-        />
+        <Detail icon={Clock} text={getTime(startTime, endTime)} />
       </Card>
     )}
   </Button>
@@ -78,10 +76,7 @@ const HomeLogged = ({ history }) => {
 };
 HomeLogged.propTypes = { history: MyProps.history };
 
-const Home = ({ history }) => {
-  const user = useUser();
-  return user ? <HomeLogged history={history} /> : <Redirect to="/login" />;
-};
+const Home = props => (useUser() ? <HomeLogged {...props} /> : <Redirect to="/login" />);
 Home.propTypes = { history: MyProps.history };
 
 export default Home;

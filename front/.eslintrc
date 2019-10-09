@@ -1,8 +1,8 @@
 {
-  "env": { "browser": true },
+  "env": { "browser": true, "jest/globals": true },
   "extends": ["airbnb", "plugin:prettier/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["prettier", "react-hooks"],
+  "plugins": ["jest", "prettier", "react-hooks"],
   "rules": {
     "import/no-unresolved": [2, { "ignore": ["#"] }],
     "prettier/prettier": "error",

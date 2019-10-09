@@ -37,12 +37,12 @@ const LogoSmall = () => (
 );
 
 const HomeButton = ({ onClick }) => {
-  const size = useSize();
+  const isSmall = useSize() === 'small';
   return (
     <Button fill="vertical" hoverIndicator onClick={onClick} plain>
       <RowBetween pad="xxsmall" fill="vertical">
         <LogoSmall />
-        {size !== 'small' && (
+        {!isSmall && (
           <Text color="light-1" size="xlarge" margin={{ left: 'xsmall' }}>
             Smart-OS
           </Text>
@@ -54,7 +54,7 @@ const HomeButton = ({ onClick }) => {
 HomeButton.propTypes = { onClick: PropTypes.func.isRequired };
 
 const MyMenu = ({ history, user }) => {
-  const size = useSize();
+  const isSmall = useSize() === 'small';
   const { logout } = useAuth();
   const menuItems = [
     // {
@@ -65,7 +65,7 @@ const MyMenu = ({ history, user }) => {
     // },
     {
       label: (
-        <Row pad={size === 'small' ? 'medium' : 'xsmall'}>
+        <Row pad={isSmall ? 'medium' : 'xsmall'}>
           <Run color="status-critical" />
           Salir
         </Row>
@@ -78,14 +78,10 @@ const MyMenu = ({ history, user }) => {
       {({ drop, hover }) => {
         // eslint-disable-next-line no-nested-ternary
         const color = hover && !drop ? 'accent-1' : !drop ? 'light-2' : '';
-        return size === 'small' && !drop ? (
+        return isSmall && !drop ? (
           <SmallMenu color={color} />
         ) : (
-          <LargeMenu
-            color={color}
-            name={user.name}
-            pad={size === 'small' ? 'medium' : 'small'}
-          />
+          <LargeMenu color={color} name={user.name} pad={isSmall ? 'medium' : 'small'} />
         );
       }}
     </Menu>

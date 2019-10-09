@@ -9,7 +9,6 @@ import MyForm from '#shared/MyForm';
 
 const Login = ({ history, location: { pathname } }) => {
   const { login, register } = useAuth();
-  const user = useUser();
   const isRegister = pathname === '/register';
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',
@@ -18,13 +17,10 @@ const Login = ({ history, location: { pathname } }) => {
     primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
-
   const onSubmit = ({ value: userData }) =>
     data.action(userData).then(() => history.push('/'));
 
-  const initialValues = { name: '', email: '', password: '' };
-
-  return user ? (
+  return useUser() ? (
     <Redirect to="/" />
   ) : (
     <>
@@ -34,7 +30,7 @@ const Login = ({ history, location: { pathname } }) => {
         primaryLabel={data.primaryLabel}
         secondaryLabel={data.secondaryLabel}
         onSubmit={onSubmit}
-        value={initialValues}
+        value={{ name: '', email: '', password: '' }}
       >
         {isRegister && <MyForm.Text />}
         <MyForm.Email />

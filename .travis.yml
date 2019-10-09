@@ -2,7 +2,7 @@ sudo: false
 
 jobs:
   include:
-    - stage: Test
+    - stage: TestBack
       language: java
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -15,6 +15,13 @@ jobs:
       script: ./gradlew testCoverage
       after_success:
         - bash <(curl -s https://codecov.io/bash)
+
+    - stage: TestFront
+      language: node_js
+      node_js: node
+      cache: yarn
+      before_install: cd front
+      install: yarn
 
     - stage: DeployBack
       language: java
@@ -40,6 +47,7 @@ jobs:
       node_js: node
       cache: yarn
       before_script: cd front
+      script: skip
       deploy:
         provider: heroku
         skip_cleanup: true

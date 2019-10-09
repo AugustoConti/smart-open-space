@@ -10,23 +10,17 @@ import Row from './Row';
 import RowBetween from './RowBetween';
 import Title from './Title';
 
-const useTextAlign = () => {
-  const size = useSize();
-  return size === 'small' ? 'center' : 'start';
-};
+const useTextAlign = () => (useSize() === 'small' ? 'center' : 'start');
 
-const MyTitle = ({ children, icon, label, ...props }) => {
-  const textAlign = useTextAlign();
-  return (
-    <Title level="2" textAlign={textAlign} {...props}>
-      <Row>
-        {icon}
-        {label}
-        {children}
-      </Row>
-    </Title>
-  );
-};
+const MyTitle = ({ children, icon, label, ...props }) => (
+  <Title level="2" textAlign={useTextAlign()} {...props}>
+    <Row>
+      {icon}
+      {label}
+      {children}
+    </Row>
+  </Title>
+);
 MyTitle.propTypes = {
   children: MyProps.children,
   icon: PropTypes.node,
@@ -39,18 +33,15 @@ const MyTitleLink = props => (
   </MyTitle>
 );
 
-const MySubTitle = ({ children, icon, label, ...props }) => {
-  const textAlign = useTextAlign();
-  return (
-    <Text color="dark-5" size="large" textAlign={textAlign} {...props}>
-      <Row>
-        {icon}
-        {label}
-        {children}
-      </Row>
-    </Text>
-  );
-};
+const MySubTitle = ({ children, icon, label, ...props }) => (
+  <Text color="dark-5" size="large" textAlign={useTextAlign()} {...props}>
+    <Row>
+      {icon}
+      {label}
+      {children}
+    </Row>
+  </Text>
+);
 MySubTitle.propTypes = {
   children: MyProps.children,
   icon: PropTypes.node,
@@ -62,19 +53,19 @@ const MyButton = props => <Button fill="vertical" primary {...props} />;
 const getByType = (children, type) => children.find(c => c.type === type);
 
 const MainHeader = ({ children, ...props }) => {
-  const size = useSize();
+  const isSmall = useSize() === 'small';
   const childs = React.Children.toArray(children);
   const title = getByType(childs, MyTitle) || getByType(childs, MyTitleLink);
   const subtitle = getByType(childs, MySubTitle);
   const button = getByType(childs, MyButton) || getByType(childs, ButtonNew);
   return (
     <RowBetween
-      direction={size === 'small' ? 'column' : 'row'}
-      margin={{ vertical: size === 'small' ? 'large' : 'medium' }}
+      direction={isSmall ? 'column' : 'row'}
+      margin={{ vertical: isSmall ? 'large' : 'medium' }}
     >
       <Box
-        align={size === 'small' ? 'center' : undefined}
-        margin={{ bottom: size === 'small' && button ? 'large' : undefined }}
+        align={isSmall ? 'center' : undefined}
+        margin={{ bottom: isSmall && button ? 'large' : undefined }}
         {...props}
       >
         {title}

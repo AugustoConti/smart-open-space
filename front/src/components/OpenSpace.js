@@ -141,18 +141,15 @@ TimeSpan.propTypes = {
 };
 
 const getHour = time => Number(time.slice(0, 2));
-const getRangeHours = (start, end) => [getHour(start), getHour(end) + 1];
+const getRangeHours = (start, end) =>
+  [...Array(getHour(end) + 1).keys()].slice(getHour(start));
 
-const Schedule = ({ slots, startTime, endTime }) => {
-  const slotsOf = hour => slots.filter(s => s.hour === hour);
-  const [start, end] = getRangeHours(startTime, endTime);
-  return [...Array(end - start).keys()].map(i => {
-    const hour = i + start;
-    const slotsHour = slotsOf(hour);
+const Schedule = ({ slots, startTime, endTime }) =>
+  getRangeHours(startTime, endTime).map(hour => {
+    const slotsHour = slots.filter(s => s.hour === hour);
     const key = `${hour}-${slotsHour.map(s => s.id).join('-')}`;
     return <TimeSpan hour={hour} key={key} slots={slotsHour} />;
   });
-};
 
 const OpenSpace = ({
   match: {
