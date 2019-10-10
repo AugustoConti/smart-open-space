@@ -65,14 +65,16 @@ cd front && yarn && yarn watch
 
 ![Diagrama de arquitectura](/other/Arquitectura.png)
 
-- **App.js**: Punto de entrada de la aplicación.
-- **Routes**: Detecta la ruta, y elige que componente que corresponde renderizar.
-- **OpenSpace.js**: Renderiza la pantalla con los datos del Open Space.
-- **os-client.js**: Conseguir los datos del Open Space, conectandose con el backend.
-- **OpenSpaceServiceREST**: Exponer los endpoints del OpenSpaceService, como REST-Json.
-- **OpenSpaceService**: Exponer un servicio para manipular un Open Space.
-- **OpenSpaceRepository**: Persistir y recuperar objetos OpenSpace de la base de datos.
-- **OpenSpace**: Objeto que representa un Open Space.
+- Frontend:
+  - **App.js**: Punto de entrada de la aplicación.
+  - **Routes**: Detecta la ruta, y elige que componente que corresponde renderizar.
+  - **OpenSpace.js**: Renderiza la pantalla con los datos del Open Space.
+  - **os-client.js**: Conseguir los datos del Open Space, conectandose con el backend.
+- Backend:
+  - **OpenSpaceServiceREST**: Exponer los endpoints del OpenSpaceService, como REST-Json.
+  - **OpenSpaceService**: Exponer un servicio para manipular un Open Space.
+  - **OpenSpaceRepository**: Persistir y recuperar objetos OpenSpace de la base de datos.
+  - **OpenSpace**: Objeto que representa un Open Space.
 
 ### Casos de uso
 #### Entrega 1
