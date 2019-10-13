@@ -5,7 +5,12 @@ import { Announce, Clock, Home } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import takingNotesImg from '#assets/taking_notes.svg';
-import { scheduleTalk, useGetTalks, useGetOS, useGetSlots } from '#helpers/api/os-client';
+import {
+  scheduleTalk,
+  useGetTalksByUser,
+  useGetOS,
+  useGetSlots,
+} from '#helpers/api/os-client';
 import MyProps from '#helpers/MyProps';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
@@ -38,7 +43,15 @@ const ButtonAgendar = props => (
   />
 );
 
-const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
+const Talk = ({
+  activeQueue,
+  assigned,
+  description,
+  freeSlots,
+  id,
+  name,
+  onSchedule,
+}) => {
   const [open, setOpen] = useState(false);
   const onSubmit = ({ value: { time, room } }) => {
     scheduleTalk(id, room.id, time).then(onSchedule);
@@ -53,7 +66,7 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
       {assigned ? (
         <Badge text="Agendada" />
       ) : (
-        <ButtonAgendar onClick={() => setOpen(true)} />
+        activeQueue && <ButtonAgendar onClick={() => setOpen(true)} />
       )}
       {open && freeSlots && (
         <SelectSlot
@@ -67,6 +80,7 @@ const Talk = ({ assigned, description, freeSlots, id, name, onSchedule }) => {
   );
 };
 Talk.propTypes = {
+  activeQueue: PropTypes.bool.isRequired,
   assigned: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
   freeSlots: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
@@ -134,9 +148,9 @@ const MyTalks = ({
   },
   history,
 }) => {
-  const [{ freeSlots = [], name }] = useGetOS(id);
+  const [{ activeQueue, freeSlots, name }] = useGetOS(id);
   const [slots] = useGetSlots(id);
-  const [talks] = useGetTalks(id);
+  const [talks] = useGetTalksByUser(id);
 
   const toOS = () => history.push(`/os/${id}`);
   const onNew = () => history.push(`/newTalk/${id}`);
@@ -155,6 +169,7 @@ const MyTalks = ({
         <MyGrid>
           {talks.map(talk => (
             <Talk
+              activeQueue={activeQueue}
               assigned={isAssigned(talk.id)}
               freeSlots={freeSlots}
               key={talk.id}

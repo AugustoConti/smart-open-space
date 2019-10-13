@@ -36,8 +36,11 @@ class OpenSpaceService(
   }
 
   @Transactional(readOnly = true)
-  fun findTalks(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
+  fun findTalksByUser(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
 
   @Transactional(readOnly = true)
   fun findSlotsById(id: Long) = findById(id).slots.toList()
+
+  @Transactional(readOnly = true)
+  fun findTalks(id: Long) = findById(id).talks.toList()
 }

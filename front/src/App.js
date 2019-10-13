@@ -10,6 +10,7 @@ import OpenSpace from '#components/OpenSpace';
 import EditTalk from '#components/EditTalk';
 import MyTalks from '#components/MyTalks';
 import MyProps from '#helpers/MyProps';
+import { AuthProvider } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 import Header from '#shared/Header';
 
@@ -57,17 +58,19 @@ MainLayout.propTypes = { children: MyProps.children.isRequired };
 const App = () => (
   <Grommet full theme={grommet}>
     <Router>
-      <MainLayout>
-        <Switch>
-          <Route path="/os/:id/mis-charlas" exact component={MyTalks} />
-          <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
-          <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
-          <Route path="/os/:id" exact component={OpenSpace} />
-          <Route path={['/login', '/register']} exact component={Login} />
-          <Route path="/" exact component={Home} />
-          {/* <Route component={Page404} /> */}
-        </Switch>
-      </MainLayout>
+      <AuthProvider>
+        <MainLayout>
+          <Switch>
+            <Route path="/os/:id/mis-charlas" exact component={MyTalks} />
+            <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
+            <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
+            <Route path="/os/:id" exact component={OpenSpace} />
+            <Route path={['/login', '/register']} exact component={Login} />
+            <Route path="/" exact component={Home} />
+            {/* <Route component={Page404} /> */}
+          </Switch>
+        </MainLayout>
+      </AuthProvider>
     </Router>
   </Grommet>
 );

@@ -1,26 +1,30 @@
 import { post, put, useGet } from './api-client';
 import { useUser, getUser } from '../useAuth';
 
-const createOS = osData => {
-  const { id } = getUser();
-  return post(`/openSpace/${id}`, osData);
-};
+const withUser = fn => fn(getUser());
+
+const createOS = osData => withUser(({ id }) => post(`/openSpace/${id}`, osData));
 
 const useGetAllOS = onError => {
   const { id } = useUser();
   return useGet(`/openSpace/user/${id}`, [], onError);
 };
 
-const useGetOS = (id, onError) => useGet(`/openSpace/${id}`, { talks: [] }, onError);
+const useGetOS = (id, onError) =>
+  useGet(
+    `/openSpace/${id}`,
+    { activeQueue: false, endTime: '0', freeSlots: [], startTime: '1', talks: [] },
+    onError
+  );
 
 const useGetSlots = (id, onError) => useGet(`/openSpace/slots/${id}`, [], onError);
 
-const createTalk = (osID, talkData) => {
-  const { id } = getUser();
-  return post(`/openSpace/talk/${id}/${osID}`, talkData);
-};
+const createTalk = (osID, talkData) =>
+  withUser(({ id }) => post(`/openSpace/talk/${id}/${osID}`, talkData));
 
-const useGetTalks = (osID, onError) => {
+const useGetTalks = (id, onError) => useGet(`/openSpace/talks/${id}`, [], onError);
+
+const useGetTalksByUser = (osID, onError) => {
   const { id } = useUser();
   return useGet(`/openSpace/talks/${id}/${osID}`, [], onError);
 };
@@ -36,4 +40,5 @@ export {
   useGetOS,
   useGetSlots,
   useGetTalks,
+  useGetTalksByUser,
 };

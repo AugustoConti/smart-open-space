@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Box, Button, Grid, Layer } from 'grommet';
-import { FormClose, Schedules, Home, User } from 'grommet-icons';
+import { FormClose, Schedules, Home, User, Announce } from 'grommet-icons';
 import Slider from 'react-slick';
 
-import { useGetOS } from '#helpers/api/os-client';
+import { useGetOS, useGetTalks } from '#helpers/api/os-client';
 import MyProps from '#helpers/MyProps';
 import useSlots from '#helpers/schedule-socket';
 import { useUser } from '#helpers/useAuth';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import MainHeader from '#shared/MainHeader';
+import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
 
@@ -70,13 +71,18 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Card borderColor="accent-3" height="230px" margin="xsmall">
+      <Card
+        borderColor="accent-3"
+        height={room ? '230px' : undefined}
+        margin="xsmall"
+        gap="small"
+      >
         <Box>
           <Box overflow="hidden">
             <Title>{name}</Title>
           </Box>
           <Detail icon={User} text={speaker.name} />
-          <Detail icon={Home} text={room.name} />
+          {room && <Detail icon={Home} text={room.name} />}
         </Box>
         {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
@@ -85,7 +91,7 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
   );
 };
 Talk.propTypes = {
-  room: PropTypes.shape().isRequired,
+  room: PropTypes.shape(),
   talk: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -144,12 +150,26 @@ const getHour = time => Number(time.slice(0, 2));
 const getRangeHours = (start, end) =>
   [...Array(getHour(end) + 1).keys()].slice(getHour(start));
 
-const Schedule = ({ slots, startTime, endTime }) =>
-  getRangeHours(startTime, endTime).map(hour => {
+const Schedule = ({ id, startTime, endTime }) => {
+  const slots = useSlots(id);
+  return getRangeHours(startTime, endTime).map(hour => {
     const slotsHour = slots.filter(s => s.hour === hour);
     const key = `${hour}-${slotsHour.map(s => s.id).join('-')}`;
     return <TimeSpan hour={hour} key={key} slots={slotsHour} />;
   });
+};
+
+const TalksGrid = ({ id }) => {
+  const [talks] = useGetTalks(id);
+  return (
+    <MyGrid>
+      {talks.map(talk => (
+        <Talk key={talk.id} talk={talk} />
+      ))}
+    </MyGrid>
+  );
+};
+TalksGrid.propTypes = { id: PropTypes.string.isRequired };
 
 const OpenSpace = ({
   match: {
@@ -158,16 +178,19 @@ const OpenSpace = ({
   history,
   location: { pathname },
 }) => {
-  const [{ name, startTime = '1', endTime = '0' }] = useGetOS(id, () =>
+  const [{ activeQueue, name, startTime, endTime }] = useGetOS(id, () =>
     history.push('/')
   );
   const user = useUser();
-  const slots = useSlots(id);
   return (
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.SubTitle icon={<Schedules color="dark-5" />} label="AGENDA" />
+        {activeQueue ? (
+          <MainHeader.SubTitle icon={<Schedules color="dark-5" />} label="AGENDA" />
+        ) : (
+          <MainHeader.SubTitle icon={<Announce color="dark-5" />} label="CHARLAS" />
+        )}
         <MainHeader.Button
           color="accent-1"
           label="Mis charlas"
@@ -175,7 +198,11 @@ const OpenSpace = ({
         />
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        <Schedule slots={slots} startTime={startTime} endTime={endTime} />
+        {activeQueue ? (
+          <Schedule id={id} startTime={startTime} endTime={endTime} />
+        ) : (
+          <TalksGrid id={id} />
+        )}
       </Box>
     </>
   );

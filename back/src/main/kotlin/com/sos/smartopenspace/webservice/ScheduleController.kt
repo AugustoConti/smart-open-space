@@ -30,7 +30,8 @@ class ScheduleHandler(private val openSpaceService: OpenSpaceService) : TextWebS
   }
 
   fun sendFor(os: OpenSpace) {
-    sessionList.filterValues { it == os.id }.forEach { (s, _) -> emit(s, os.slots.toList()) }
+    val slots = os.slots.toList()
+    sessionList.filterValues { it == os.id }.keys.forEach { emit(it, slots) }
   }
 
   private fun emit(session: WebSocketSession, slots: List<Slot>) =

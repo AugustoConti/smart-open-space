@@ -28,7 +28,4 @@ class UserServiceREST(private val userService: UserService) {
 
   @PostMapping("/auth")
   fun auth(@Valid @RequestBody user: UserData) = userService.auth(user.email, user.password)
-
-  @GetMapping
-  fun findAll() = userService.findAll()
 }

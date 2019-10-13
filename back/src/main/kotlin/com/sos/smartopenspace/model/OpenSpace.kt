@@ -46,6 +46,8 @@ class OpenSpace(
     talks.forEach { it.openSpace = this }
   }
 
+  var activeQueue = false
+
   @JsonIgnore
   @ManyToOne
   lateinit var organizer: User
@@ -62,10 +64,14 @@ class OpenSpace(
 
   private fun isBusySlot(room: Room, hour: Int) = slots.any { it.hour == hour && it.room == room }
 
-  fun scheduleTalk(talk: Talk, hour: Int, room: Room): Slot {
+  private fun checkScheduleTalk(talk: Talk, hour: Int, room: Room) {
     talks.contains(talk) || throw TalkDoesntBelongException()
     slots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
     isBusySlot(room, hour) && throw BusySlotException()
+  }
+
+  fun scheduleTalk(talk: Talk, hour: Int, room: Room): Slot {
+    checkScheduleTalk(talk, hour, room)
     val slot = Slot(talk, hour, room)
     slots.add(slot)
     return slot

@@ -20,7 +20,7 @@ const useGet = (path, initial = {}, onError = () => {}) => {
     doFetch(axios.get, path)
       .then(setData)
       .catch(onError);
-  }, [onError, path]);
+  }, [path]); // eslint-disable-line react-hooks/exhaustive-deps
   return [data, setData];
 };
 

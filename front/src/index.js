@@ -7,13 +7,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { toast } from 'react-toastify';
 
 import App from './App';
-import { AuthProvider } from '#helpers/useAuth';
 
 toast.configure();
 
-render(
-  <AuthProvider>
-    <App />
-  </AuthProvider>,
-  document.getElementById('root')
-);
+render(<App />, document.getElementById('root'));
