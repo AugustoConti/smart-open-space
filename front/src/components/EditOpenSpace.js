@@ -9,10 +9,18 @@ import {
   Stack,
   TextInput,
 } from 'grommet';
-import { Add, FormDown, FormTrash, Plan, Clock, Home, Workshop } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import { createOS } from '#helpers/api/os-client';
+import {
+  AddIcon,
+  CalendarIcon,
+  ClockIcon,
+  DownIcon,
+  HomeIcon,
+  OpenSpaceIcon,
+  TrashIcon,
+} from '#shared/icons';
 import MyProps from '#helpers/MyProps';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
@@ -36,7 +44,7 @@ const MyCalendar = ({ onChange, value, ...props }) => {
     >
       <Row pad="small">
         {value ? new Date(value).toLocaleDateString() : 'Elegir fecha'}
-        <FormDown />
+        <DownIcon />
       </Row>
     </DropButton>
   );
@@ -89,7 +97,7 @@ const ListItem = props => <RowBetween as="li" border="top" pad="xxsmall" {...pro
 const RoomItem = ({ room, onRemove }) => (
   <ListItem>
     {room}
-    <Button icon={<FormTrash />} onClick={onRemove} />
+    <Button icon={<TrashIcon />} onClick={onRemove} />
   </ListItem>
 );
 RoomItem.propTypes = {
@@ -109,7 +117,7 @@ const Rooms = ({ value, onChange }) => {
           value={textValue}
         />
         <Button
-          icon={<Add />}
+          icon={<AddIcon />}
           onClick={() => {
             if (!textValue) return;
             onChange({ value: [...value, textValue] });
@@ -167,26 +175,26 @@ const EditOpenSpace = ({ history }) => {
   return (
     <>
       <MainHeader>
-        <MainHeader.Title icon={<Workshop />} label="Nuevo Open Space" />
+        <MainHeader.Title icon={OpenSpaceIcon} label="Nuevo Open Space" />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
         <MyForm.Text placeholder="¿Como se va a llamar?" />
         <MyForm.Field
           component={MyCalendar}
-          icon={<Plan />}
+          icon={<CalendarIcon />}
           label="Fecha"
           name="date"
           validate={date => beforeToday(date) && 'Ingresa una fecha mayor o igual a hoy'}
         />
         <MyForm.Field
           component={TimeSelector}
-          icon={<Clock />}
+          icon={<ClockIcon />}
           label="Horario"
           name="time"
         />
         <MyForm.Field
           component={Rooms}
-          icon={<Home />}
+          icon={<HomeIcon />}
           label="Salas"
           name="rooms"
           validate={rooms => rooms.length < 1 && 'Ingresa al menos una sala'}

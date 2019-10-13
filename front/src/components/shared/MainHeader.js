@@ -12,10 +12,10 @@ import Title from './Title';
 
 const useTextAlign = () => (useSize() === 'small' ? 'center' : 'start');
 
-const MyTitle = ({ children, icon, label, ...props }) => (
+const MyTitle = ({ children, icon: Icon, label, ...props }) => (
   <Title level="2" textAlign={useTextAlign()} {...props}>
     <Row>
-      {icon}
+      {Icon && <Icon />}
       {label}
       {children}
     </Row>
@@ -23,7 +23,7 @@ const MyTitle = ({ children, icon, label, ...props }) => (
 );
 MyTitle.propTypes = {
   children: MyProps.children,
-  icon: PropTypes.node,
+  icon: PropTypes.func,
   label: PropTypes.string,
 };
 
@@ -33,10 +33,10 @@ const MyTitleLink = props => (
   </MyTitle>
 );
 
-const MySubTitle = ({ children, icon, label, ...props }) => (
+const MySubTitle = ({ children, icon: Icon, label, ...props }) => (
   <Text color="dark-5" size="large" textAlign={useTextAlign()} {...props}>
     <Row>
-      {icon}
+      {Icon && <Icon color="dark-5" />}
       {label}
       {children}
     </Row>
@@ -44,7 +44,7 @@ const MySubTitle = ({ children, icon, label, ...props }) => (
 );
 MySubTitle.propTypes = {
   children: MyProps.children,
-  icon: PropTypes.node,
+  icon: PropTypes.func,
   label: PropTypes.string,
 };
 

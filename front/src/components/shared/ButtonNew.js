@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Button } from 'grommet';
-import { Add } from 'grommet-icons';
+import { AddIcon } from '#shared/icons';
 
-const ButtonNew = props => <Button label="Nuevo" icon={<Add />} primary {...props} />;
+const ButtonNew = props => <Button label="Nuevo" icon={<AddIcon />} primary {...props} />;
 
 export default ButtonNew;

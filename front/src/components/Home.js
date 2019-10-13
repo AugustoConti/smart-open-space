@@ -2,7 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Button } from 'grommet';
-import { Workshop, Plan, Clock } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import preparationImg from '#assets/preparation.svg';
@@ -12,6 +11,7 @@ import MyProps from '#helpers/MyProps';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import EmptyData from '#shared/EmptyData';
+import { CalendarIcon, ClockIcon, OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
 import Title from '#shared/Title';
@@ -29,8 +29,8 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
         gap="small"
       >
         <Title level="3">{name}</Title>
-        <Detail icon={Plan} text={date} />
-        <Detail icon={Clock} text={getTime(startTime, endTime)} />
+        <Detail icon={CalendarIcon} text={date} />
+        <Detail icon={ClockIcon} text={getTime(startTime, endTime)} />
       </Card>
     )}
   </Button>
@@ -59,7 +59,7 @@ const HomeLogged = ({ history }) => {
   return (
     <>
       <MainHeader>
-        <MainHeader.Title icon={<Workshop />} label="Mis Open Spaces" />
+        <MainHeader.Title icon={OpenSpaceIcon} label="Mis Open Spaces" />
         {openSpaces.length > 0 && <MainHeader.ButtonNew onClick={onNew} />}
       </MainHeader>
       {openSpaces.length === 0 ? (

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { Box, Button, Layer } from 'grommet';
-import { Announce, Clock, Home } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import takingNotesImg from '#assets/taking_notes.svg';
@@ -15,6 +14,7 @@ import MyProps from '#helpers/MyProps';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import EmptyData from '#shared/EmptyData';
+import { ClockIcon, HomeIcon, TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
 import MyForm from '#shared/MyForm';
@@ -100,7 +100,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
         </Box>
         <MyForm onSecondary={onExit} onSubmit={onSubmit}>
           <MyForm.Select
-            icon={<Home />}
+            icon={<HomeIcon />}
             label="Sala"
             name="room"
             options={freeSlots.map(p => p.first)}
@@ -110,7 +110,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
             }}
           />
           <MyForm.Select
-            icon={<Clock />}
+            icon={<ClockIcon />}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala"
             name="time"
@@ -160,7 +160,7 @@ const MyTalks = ({
     <>
       <MainHeader>
         <MainHeader.TitleLink label={name} onClick={toOS} />
-        <MainHeader.SubTitle icon={<Announce color="dark-5" />} label="MIS CHARLAS" />
+        <MainHeader.SubTitle icon={TalkIcon} label="MIS CHARLAS" />
         {talks.length > 0 && <MainHeader.ButtonNew label="Charla" onClick={onNew} />}
       </MainHeader>
       {talks.length === 0 ? (

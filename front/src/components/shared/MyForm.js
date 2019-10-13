@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Button, Form, FormField, Select, TextArea } from 'grommet';
-import { Article, DocumentText, Lock, MailOption } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import MyProps from '#helpers/MyProps';
+import { EmailIcon, PasswordIcon, TextIcon, TextAreaIcon } from '#shared/icons';
 import Row from './Row';
 import RowBetween from './RowBetween';
 
@@ -23,12 +23,12 @@ const MyField = ({ icon, label, ...props }) => (
 MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string.isRequired };
 
 const MyFieldText = props => (
-  <MyField icon={<Article />} label="Nombre" name="name" {...props} />
+  <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />
 );
 
 const MyFieldTextArea = props => (
   <MyField
-    icon={<DocumentText />}
+    icon={<TextAreaIcon />}
     label="Descripción"
     name="description"
     component={TextArea}
@@ -38,12 +38,12 @@ const MyFieldTextArea = props => (
 );
 
 const MyFieldEmail = props => (
-  <MyField icon={<MailOption />} label="Email" name="email" type="email" {...props} />
+  <MyField icon={<EmailIcon />} label="Email" name="email" type="email" {...props} />
 );
 
 const MyFieldPassword = props => (
   <MyField
-    icon={<Lock />}
+    icon={<PasswordIcon />}
     label="Contraseña"
     name="password"
     type="password"

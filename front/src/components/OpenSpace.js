@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 import PropTypes from 'prop-types';
 import { Box, Button, Grid, Layer } from 'grommet';
-import { FormClose, Schedules, Home, User, Announce } from 'grommet-icons';
 import Slider from 'react-slick';
 
 import { useGetOS, useGetTalks } from '#helpers/api/os-client';
@@ -11,6 +10,7 @@ import useSlots from '#helpers/schedule-socket';
 import { useUser } from '#helpers/useAuth';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
+import { FormCloseIcon, HomeIcon, ScheduleIcon, TalkIcon, UserIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
@@ -45,7 +45,7 @@ const DescriptionInfo = ({ info, onClose }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Row justify="end">
-        <Button icon={<FormClose />} onClick={onClose} plain />
+        <Button icon={<FormCloseIcon />} onClick={onClose} plain />
       </Row>
       {info}
     </Box>
@@ -81,8 +81,8 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
           <Box overflow="hidden">
             <Title>{name}</Title>
           </Box>
-          <Detail icon={User} text={speaker.name} />
-          {room && <Detail icon={Home} text={room.name} />}
+          <Detail icon={UserIcon} text={speaker.name} />
+          {room && <Detail icon={HomeIcon} text={room.name} />}
         </Box>
         {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
@@ -187,9 +187,9 @@ const OpenSpace = ({
       <MainHeader>
         <MainHeader.Title label={name} />
         {activeQueue ? (
-          <MainHeader.SubTitle icon={<Schedules color="dark-5" />} label="AGENDA" />
+          <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         ) : (
-          <MainHeader.SubTitle icon={<Announce color="dark-5" />} label="CHARLAS" />
+          <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
         )}
         <MainHeader.Button
           color="accent-1"

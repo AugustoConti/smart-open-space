@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { Box, Button, Menu, Text, Image } from 'grommet';
-import { FormDown, Menu as MenuIcon, Run } from 'grommet-icons';
 import PropTypes from 'prop-types';
 
 import logo from '#assets/logo.svg';
 import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
+import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
 import Row from './Row';
 import RowBetween from './RowBetween';
 
@@ -21,7 +21,7 @@ SmallMenu.propTypes = { color: PropTypes.string.isRequired };
 const LargeMenu = ({ color, name, pad }) => (
   <Row gap="xsmall" pad={pad}>
     <Text color={color}>{name}</Text>
-    <FormDown color={color} />
+    <DownIcon color={color} />
   </Row>
 );
 LargeMenu.propTypes = {
@@ -66,7 +66,7 @@ const MyMenu = ({ history, user }) => {
     {
       label: (
         <Row pad={isSmall ? 'medium' : 'xsmall'}>
-          <Run color="status-critical" />
+          <ExitIcon color="status-critical" />
           Salir
         </Row>
       ),

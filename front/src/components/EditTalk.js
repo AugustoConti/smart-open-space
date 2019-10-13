@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { Announce } from 'grommet-icons';
-
 import { useGetOS, createTalk } from '#helpers/api/os-client';
 import MyProps from '#helpers/MyProps';
+import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 
@@ -24,7 +23,7 @@ const EditTalk = ({
   return (
     <>
       <MainHeader>
-        <MainHeader.Title icon={<Announce />} label="Nueva Charla" />
+        <MainHeader.Title icon={TalkIcon} label="Nueva Charla" />
         <MainHeader.SubTitle label={os.name} />
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
