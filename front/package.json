@@ -16,7 +16,7 @@
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "test": "jest",
+    "test": "jest --config .jest.config.json",
     "start": "serve -s dist",
     "watch": "parcel src/index.html --open",
     "clean": "rm -rf dist/*",
@@ -60,42 +60,11 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^4.3.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.+(js|jsx)": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.+(json|css|md)": [
-      "prettier --write",
-      "git add"
-    ]
-  },
   "alias": {
     "#root": "./src",
     "#assets": "./src/assets",
     "#components": "./src/components",
     "#helpers": "./src/helpers",
     "#shared": "./src/components/shared"
-  },
-  "jest": {
-    "transform": {
-      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
-      "^.+\\.js$": "babel-jest"
-    },
-    "moduleNameMapper": {
-      "#assets(.*)$": "<rootDir>/src/assets/$1",
-      "#components(.*)$": "<rootDir>/src/components/$1",
-      "#helpers(.*)$": "<rootDir>/src/helpers/$1",
-      "#shared(.*)$": "<rootDir>/src/components/shared/$1",
-      "^.+.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub"
-    },
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.js"
-    ]
   }
 }
