@@ -30,9 +30,10 @@ class OpenSpaceService(
   @Transactional(readOnly = true)
   fun findById(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
 
-  fun createTalk(userID: Long, osID: Long, talk: Talk) {
+  fun createTalk(userID: Long, osID: Long, talk: Talk): Talk {
     findById(osID).addTalk(talk)
     userService.findById(userID).addTalk(talk)
+    return talk
   }
 
   @Transactional(readOnly = true)

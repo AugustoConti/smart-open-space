@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { Box } from 'grommet';
 
@@ -7,6 +8,7 @@ import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
 import { ScheduleIcon, TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
+import Spinner from '#shared/Spinner';
 
 import Schedule from './Schedule';
 import TalksGrid from './TalksGrid';
@@ -18,10 +20,16 @@ const OpenSpace = ({
   history,
   location: { pathname },
 }) => {
-  const [{ activeQueue, name, startTime, endTime }] = useGetOS(id, () =>
-    history.push('/')
-  );
   const user = useUser();
+  const {
+    data: { activeQueue, name, startTime, endTime } = {},
+    isPending,
+    isRejected,
+  } = useGetOS(id);
+
+  if (isPending) return <Spinner />;
+  if (isRejected) return <Redirect to="/" />;
+
   return (
     <>
       <MainHeader>

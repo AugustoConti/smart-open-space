@@ -7,20 +7,23 @@ import MyProps from '#helpers/MyProps';
 import { OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
+import Spinner from '#shared/Spinner';
 
 import EmptyOpenSpaces from './EmptyOpenSpaces';
 import OpenSpace from './OpenSpace';
 
 const HomeLogged = ({ history }) => {
-  const [openSpaces] = useGetAllOS();
+  const { data: openSpaces, isPending } = useGetAllOS();
   const onNew = () => history.push('/new');
   return (
     <>
       <MainHeader>
         <MainHeader.Title icon={OpenSpaceIcon} label="Mis Open Spaces" />
-        {openSpaces.length > 0 && <MainHeader.ButtonNew onClick={onNew} />}
+        {openSpaces && openSpaces.length > 0 && <MainHeader.ButtonNew onClick={onNew} />}
       </MainHeader>
-      {openSpaces.length === 0 ? (
+      {isPending || !openSpaces ? (
+        <Spinner />
+      ) : openSpaces.length === 0 ? (
         <EmptyOpenSpaces onClick={onNew} />
       ) : (
         <MyGrid>
@@ -35,6 +38,5 @@ const HomeLogged = ({ history }) => {
 HomeLogged.propTypes = { history: MyProps.history };
 
 const Home = props => (useUser() ? <HomeLogged {...props} /> : <Redirect to="/login" />);
-Home.propTypes = { history: MyProps.history };
 
 export default Home;

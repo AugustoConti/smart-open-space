@@ -21,8 +21,5 @@ class UserService(private val userRepository: UserRepository) {
     userRepository.findByEmailAndPassword(email, password) ?: throw UserNotFoundException()
 
   @Transactional(readOnly = true)
-  fun findAll() = userRepository.findAll().toList()
-
-  @Transactional(readOnly = true)
   fun findById(id: Long) = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
 }

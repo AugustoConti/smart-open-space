@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.service
 
+import com.sos.smartopenspace.model.OpenSpace
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.webservice.ScheduleHandler
@@ -18,8 +19,9 @@ class ScheduleService(
 
   private fun findRoom(id: Long) = roomRepository.findByIdOrNull(id) ?: throw RoomNotFoundException()
 
-  fun scheduleTalk(talkID: Long, roomID: Long, hour: Int) {
+  fun scheduleTalk(talkID: Long, roomID: Long, hour: Int): OpenSpace {
     val os = findTalk(talkID).schedule(hour, findRoom(roomID))
     scheduleHandler.sendFor(os)
+    return os
   }
 }

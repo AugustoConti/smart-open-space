@@ -1,30 +1,22 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const logError = err => {
-  console.error(err.response);
-  const errorMsg = err.response ? err.response.data.message : 'Oops, ocurrió un error!';
-  toast.error(errorMsg, { position: toast.POSITION.TOP_CENTER });
-  throw err;
+const doFetch = async (method, endpoint, body) => {
+  const config = {
+    method,
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  };
+  const r = await window.fetch(`${process.env.API_URL}/${endpoint}`, config);
+  const r1 = await r.json();
+  if (!r1.error) return r1;
+  console.error(r1);
+  // const errorMsg = err.response ? err.response.data.message : 'Oops, ocurrió un error!';
+  toast.error(r1.message, { position: toast.POSITION.TOP_CENTER });
+  throw new Error(r1.message);
 };
 
-const doFetch = (fetch, path, body = {}) =>
-  fetch(`${process.env.API_URL}${path}`, body)
-    .then(r => r.data)
-    .catch(logError);
+const get = endpoint => doFetch('GET', endpoint);
+const put = (endpoint, body) => doFetch('PUT', endpoint, body);
+const post = (endpoint, body) => doFetch('POST', endpoint, body);
 
-const useGet = (path, initial = {}, onError = () => {}) => {
-  const [data, setData] = useState(initial);
-  useEffect(() => {
-    doFetch(axios.get, path)
-      .then(setData)
-      .catch(onError);
-  }, [path]); // eslint-disable-line react-hooks/exhaustive-deps
-  return [data, setData];
-};
-
-const put = (path, body) => doFetch(axios.put, path, body);
-const post = (path, body) => doFetch(axios.post, path, body);
-
-export { useGet, put, post };
+export { get, put, post };

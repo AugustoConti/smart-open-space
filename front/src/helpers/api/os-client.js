@@ -1,44 +1,42 @@
-import { post, put, useGet } from './api-client';
-import { useUser, getUser } from '../useAuth';
+import { useAsync } from 'react-async';
+
+import { get, post, put } from './api-client';
+import { getUser } from '../useAuth';
 
 const withUser = fn => fn(getUser());
 
-const createOS = osData => withUser(({ id }) => post(`/openSpace/${id}`, osData));
+const createOS = osData => withUser(({ id }) => post(`openSpace/${id}`, osData));
 
-const useGetAllOS = onError => {
-  const { id } = useUser();
-  return useGet(`/openSpace/user/${id}`, [], onError);
-};
+const createTalk = (osId, talkData) =>
+  withUser(({ id }) => post(`openSpace/talk/${id}/${osId}`, talkData));
 
-const useGetOS = (id, onError) =>
-  useGet(
-    `/openSpace/${id}`,
-    { activeQueue: false, endTime: '0', freeSlots: [], startTime: '1', talks: [] },
-    onError
-  );
+const getAllOS = () => withUser(({ id }) => get(`openSpace/user/${id}`));
+const useGetAllOS = () => useAsync({ promiseFn: getAllOS });
 
-const useGetSlots = (id, onError) => useGet(`/openSpace/slots/${id}`, [], onError);
+const getOS = ({ osId }) => get(`openSpace/${osId}`);
+const useGetOS = osId => useAsync({ promiseFn: getOS, osId });
 
-const createTalk = (osID, talkData) =>
-  withUser(({ id }) => post(`/openSpace/talk/${id}/${osID}`, talkData));
-
-const useGetTalks = (id, onError) => useGet(`/openSpace/talks/${id}`, [], onError);
-
-const useGetTalksByUser = (osID, onError) => {
-  const { id } = useUser();
-  return useGet(`/openSpace/talks/${id}/${osID}`, [], onError);
-};
+const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
+const useGetTalks = osId => useAsync({ promiseFn: getTalks, osId });
 
 const scheduleTalk = (talkID, roomID, hour) =>
-  put(`/schedule/${talkID}/${roomID}/${hour}`);
+  put(`schedule/${talkID}/${roomID}/${hour}`);
+
+const getMyTalks = ({ osId }) =>
+  withUser(({ id }) => {
+    const os = getOS({ osId });
+    const slots = get(`openSpace/slots/${osId}`);
+    const talks = get(`openSpace/talks/${id}/${osId}`);
+    return Promise.all([os, slots, talks]);
+  });
+const useGetMyTalks = osId => useAsync({ promiseFn: getMyTalks, osId });
 
 export {
   createOS,
   createTalk,
-  scheduleTalk,
   useGetAllOS,
   useGetOS,
-  useGetSlots,
   useGetTalks,
-  useGetTalksByUser,
+  useGetMyTalks,
+  scheduleTalk,
 };

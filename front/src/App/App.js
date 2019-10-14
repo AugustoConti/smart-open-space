@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import { grommet, Grommet } from 'grommet';
 
+import { AuthProvider } from '#helpers/useAuth';
+
 import EditOpenSpace from './EditOpenSpace';
 import EditTalk from './EditTalk';
 import Home from './Home';
@@ -10,8 +12,6 @@ import Login from './Login';
 import MainLayout from './MainLayout';
 import MyTalks from './MyTalks';
 import OpenSpace from './OpenSpace';
-
-import { AuthProvider } from '#helpers/useAuth';
 
 const App = () => (
   <Grommet full theme={grommet}>
