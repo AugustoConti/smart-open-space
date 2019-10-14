@@ -1,16 +1,9 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
-import { Box, Grid, grommet, Grommet } from 'grommet';
+import { Box, Grid } from 'grommet';
 
-import EditOpenSpace from '#components/EditOpenSpace';
-import Home from '#components/Home';
-import Login from '#components/Login';
-import OpenSpace from '#components/OpenSpace';
-import EditTalk from '#components/EditTalk';
-import MyTalks from '#components/MyTalks';
 import MyProps from '#helpers/MyProps';
-import { AuthProvider } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 import Header from '#shared/Header';
 
@@ -55,24 +48,4 @@ const MainLayout = ({ children }) => {
 };
 MainLayout.propTypes = { children: MyProps.children.isRequired };
 
-const App = () => (
-  <Grommet full theme={grommet}>
-    <Router>
-      <AuthProvider>
-        <MainLayout>
-          <Switch>
-            <Route path="/os/:id/mis-charlas" exact component={MyTalks} />
-            <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
-            <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
-            <Route path="/os/:id" exact component={OpenSpace} />
-            <Route path={['/login', '/register']} exact component={Login} />
-            <Route path="/" exact component={Home} />
-            {/* <Route component={Page404} /> */}
-          </Switch>
-        </MainLayout>
-      </AuthProvider>
-    </Router>
-  </Grommet>
-);
-
-export default App;
+export default MainLayout;
