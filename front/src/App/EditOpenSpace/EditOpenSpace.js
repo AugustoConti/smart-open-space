@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { createOS } from '#helpers/api/os-client';
+import { createOS } from '#api/os-client';
 import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
 import MyProps from '#helpers/MyProps';
 import MainHeader from '#shared/MainHeader';

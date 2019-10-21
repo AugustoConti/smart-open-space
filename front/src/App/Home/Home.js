@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { useGetAllOS } from '#helpers/api/os-client';
+import { useGetAllOS } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
 import MyProps from '#helpers/MyProps';
 import { OpenSpaceIcon } from '#shared/icons';

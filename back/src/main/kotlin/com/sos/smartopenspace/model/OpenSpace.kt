@@ -11,13 +11,20 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.persistence.OrderColumn
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
+class AnotherTalkIsEnqueuedException : RuntimeException("Existe otra charla encolada")
 class BusySlotException : RuntimeException("Slot ocupado")
-class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
+class CantFinishTalkException : RuntimeException("No podes terminar la charla actual")
+class InactiveQueueException : RuntimeException("No está activo el encolamiento")
+class NotOrganizerException : RuntimeException("No sos el organizador")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
+class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
+class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
+class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
 
 @Entity
 class OpenSpace(
@@ -38,6 +45,7 @@ class OpenSpace(
   @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
+  var isActiveQueue: Boolean = false,
   @Id @GeneratedValue
   val id: Long = 0
 ) {
@@ -46,15 +54,20 @@ class OpenSpace(
     talks.forEach { it.openSpace = this }
   }
 
-  var activeQueue = false
-
-  @JsonIgnore
   @ManyToOne
   lateinit var organizer: User
 
   @JsonIgnore
   @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
   val slots: MutableSet<Slot> = mutableSetOf()
+
+  @OrderColumn
+  @JsonIgnore
+  @OneToMany(fetch = FetchType.EAGER)
+  val queue: MutableList<Talk> = mutableListOf()
+
+  @OneToMany(fetch = FetchType.EAGER)
+  val toSchedule: MutableSet<Talk> = mutableSetOf()
 
   fun addTalk(talk: Talk): OpenSpace {
     talk.openSpace = this
@@ -64,9 +77,12 @@ class OpenSpace(
 
   private fun isBusySlot(room: Room, hour: Int) = slots.any { it.hour == hour && it.room == room }
 
+  private fun checkTalkBelongs(talk: Talk) = talks.contains(talk) || throw TalkDoesntBelongException()
+
   private fun checkScheduleTalk(talk: Talk, hour: Int, room: Room) {
-    talks.contains(talk) || throw TalkDoesntBelongException()
+    checkTalkBelongs(talk)
     slots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
+    !toSchedule.contains(talk) && throw TalkIsNotForScheduledException()
     isBusySlot(room, hour) && throw BusySlotException()
   }
 
@@ -81,4 +97,29 @@ class OpenSpace(
 
   @JsonProperty
   fun freeSlots() = rooms.map { room -> room to slotsHours().filter { !isBusySlot(room, it) } }
+
+  fun activeQueue(user: User): OpenSpace {
+    user !== organizer && throw NotOrganizerException()
+    isActiveQueue = true
+    return this
+  }
+
+  fun currentTalk() = queue.firstOrNull()
+
+  fun enqueueTalk(talk: Talk): OpenSpace {
+    !isActiveQueue && throw InactiveQueueException()
+    checkTalkBelongs(talk)
+    queue.contains(talk) && throw TalkAlreadyEnqueuedException()
+    queue.any { it.speaker == talk.speaker } && throw AnotherTalkIsEnqueuedException()
+    queue.add(talk)
+    return this
+  }
+
+  fun nextTalk(user: User): OpenSpace {
+    val isSpeaker = user == currentTalk()?.speaker
+    val isOrganizer = user == organizer
+    !isSpeaker && !isOrganizer && throw CantFinishTalkException()
+    toSchedule.add(queue.removeAt(0))
+    return this
+  }
 }

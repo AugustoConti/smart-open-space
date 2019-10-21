@@ -56,13 +56,9 @@ class DataService(private val userRepository: UserRepository) {
       LocalTime.of(14, 0),
       LocalTime.of(23, 0),
       setOf(room213),
-      mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js)
+      mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js),
+      true
     )
-    cpi.scheduleTalk(dessAgil, 14, room213)
-    cpi.scheduleTalk(proy, 16, room213)
-    cpi.scheduleTalk(desSinJefe, 18, room213)
-    cpi.scheduleTalk(cuis, 20, room213)
-    cpi.scheduleTalk(api, 22, room213)
 
     val master = Talk(
       "TODOS HACIA MASTER",
@@ -90,30 +86,34 @@ class DataService(private val userRepository: UserRepository) {
       LocalTime.of(19, 0),
       LocalTime.of(21, 0),
       setOf(roja, amarilla, verde, naranja),
-      mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter)
+      mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter),
+      true
     )
-    practicas.scheduleTalk(master, 19, roja)
-    practicas.scheduleTalk(front, 19, amarilla)
-    practicas.scheduleTalk(judo, 19, verde)
-    practicas.scheduleTalk(testear, 19, naranja)
-    practicas.scheduleTalk(contrato, 20, roja)
-    practicas.scheduleTalk(appLenta, 20, amarilla)
-    practicas.scheduleTalk(troika, 20, verde)
-    practicas.scheduleTalk(flutter, 20, naranja)
 
+    val charla1 = Talk("Charla 1")
+    val os1 = OpenSpace(
+      "OS 1",
+      LocalDate.now().plusDays(5),
+      LocalTime.of(19, 0),
+      LocalTime.of(21, 0),
+      setOf(Room("Sala 1")),
+      mutableSetOf(charla1)
+    )
+
+    val augusto = User(
+      "augusto@sos.sos", "augusto", "Augusto",
+      mutableSetOf(practicas), mutableSetOf(master, winter, agileMeetings, contrato)
+    )
+    val fede = User(
+      "fede@sos.sos", "fede", "Fede",
+      mutableSetOf(cpi), mutableSetOf(dessAgil, front, proy, appLenta)
+    )
     userRepository.saveAll(
       setOf(
-        User(
-          "augusto@sos.sos", "augusto", "Augusto",
-          mutableSetOf(cpi), mutableSetOf(master, winter, agileMeetings, contrato)
-        ),
-        User(
-          "fede@sos.sos", "fede", "Fede",
-          mutableSetOf(practicas), mutableSetOf(dessAgil, front, proy, appLenta)
-        ),
+        augusto, fede,
         User(
           "juan@sos.sos", "juan", "Juan",
-          mutableSetOf(), mutableSetOf(testear, desSinJefe, troika)
+          mutableSetOf(os1), mutableSetOf(testear, desSinJefe, troika, charla1)
         ),
         User(
           "maria@sos.sos", "maria", "Maria",
@@ -125,5 +125,21 @@ class DataService(private val userRepository: UserRepository) {
         )
       )
     )
+
+    judo.enqueue()
+    front.enqueue()
+    master.enqueue()
+
+    schedule(cpi, dessAgil, 14, room213)
+    schedule(cpi, proy, 16, room213)
+    schedule(cpi, desSinJefe, 18, room213)
+    schedule(cpi, cuis, 20, room213)
+    schedule(cpi, api, 22, room213)
+  }
+
+  private fun schedule(os: OpenSpace, talk: Talk, hour: Int, room: Room) {
+    talk.enqueue()
+    os.nextTalk(os.organizer)
+    talk.schedule(hour, room)
   }
 }

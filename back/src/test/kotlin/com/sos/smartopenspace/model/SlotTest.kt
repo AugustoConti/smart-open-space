@@ -13,12 +13,33 @@ class SlotTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) = OpenSpace(
     "os", LocalDate.now(), LocalTime.of(9, 0),
-    LocalTime.of(11, 0), setOf(room1), talks
+    LocalTime.of(11, 0), setOf(room1), talks, true
   )
+
+  private fun anyUser(talk: Talk) = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
+
+  private fun anyOsWithQueued(talks: Set<Talk>): OpenSpace {
+    val os = anyOS(talks.toMutableSet())
+    val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(os))
+    talks.forEach {
+      anyUser(it)
+      it.enqueue()
+      os.nextTalk(organizer)
+    }
+    return os
+  }
+
+  @Test
+  fun `Si una charla no esta para agendar, no se puede agendar`() {
+    val os = anyOS()
+    assertThrows(TalkIsNotForScheduledException::class.java) {
+      os.scheduleTalk(talk1, hour1, room1)
+    }
+  }
 
   @Test
   fun `Asignar una charla en un horario y en una sala`() {
-    val os = anyOS()
+    val os = anyOsWithQueued(setOf(talk1))
     val slot = os.scheduleTalk(talk1, hour1, room1)
     assertEquals(hour1, slot.hour)
     assertEquals(room1, slot.room)
@@ -27,7 +48,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charla pero el slot esta ocupado`() {
-    val os = anyOS()
+    val os = anyOsWithQueued(setOf(talk1, talk2))
     os.scheduleTalk(talk1, hour1, room1)
     assertThrows(BusySlotException::class.java) {
       os.scheduleTalk(talk2, hour1, room1)
@@ -44,7 +65,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charla que ya se encuentra asignada`() {
-    val os = anyOS()
+    val os = anyOsWithQueued(setOf(talk1))
     os.scheduleTalk(talk1, hour1, room1)
     assertThrows(TalkAlreadyAssignedException::class.java) {
       os.scheduleTalk(talk1, hour1 + 1, room1)
@@ -60,7 +81,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charlas, ese slot no esta mas libre`() {
-    val os = anyOS()
+    val os = anyOsWithQueued(setOf(talk1))
     os.scheduleTalk(talk1, 10, room1)
     val freeSlots = os.freeSlots()
     assertIterableEquals(listOf(9, 11), freeSlots[0].second)
@@ -69,7 +90,7 @@ class SlotTest {
   @Test
   fun `Todos los slots asignados no quedan lugares libres`() {
     val talk3 = Talk("3")
-    val os = anyOS(mutableSetOf(talk1, talk2, talk3))
+    val os = anyOsWithQueued(setOf(talk1, talk2, talk3))
     os.scheduleTalk(talk1, 9, room1)
     os.scheduleTalk(talk2, 10, room1)
     os.scheduleTalk(talk3, 11, room1)

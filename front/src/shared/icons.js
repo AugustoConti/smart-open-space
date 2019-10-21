@@ -15,6 +15,7 @@ import {
   Run,
   Schedules,
   User,
+  Video,
   Workshop,
 } from 'grommet-icons';
 
@@ -35,6 +36,7 @@ const TextIcon = Article;
 const TextAreaIcon = DocumentText;
 const TrashIcon = FormTrash;
 const UserIcon = User;
+const VideoIcon = Video;
 
 export {
   AddIcon,
@@ -54,4 +56,5 @@ export {
   TextAreaIcon,
   TrashIcon,
   UserIcon,
+  VideoIcon,
 };

@@ -33,4 +33,6 @@ class Talk(
     openSpace.scheduleTalk(this, hour, room)
     return openSpace
   }
+
+  fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 }
