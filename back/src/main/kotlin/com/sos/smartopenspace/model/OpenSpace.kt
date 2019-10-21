@@ -19,6 +19,7 @@ import javax.validation.constraints.NotEmpty
 class AnotherTalkIsEnqueuedException : RuntimeException("Existe otra charla encolada")
 class BusySlotException : RuntimeException("Slot ocupado")
 class CantFinishTalkException : RuntimeException("No podes terminar la charla actual")
+class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
 class InactiveQueueException : RuntimeException("No está activo el encolamiento")
 class NotOrganizerException : RuntimeException("No sos el organizador")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
@@ -116,6 +117,7 @@ class OpenSpace(
   }
 
   fun nextTalk(user: User): OpenSpace {
+    queue.isEmpty() && throw EmptyQueueException()
     val isSpeaker = user == currentTalk()?.speaker
     val isOrganizer = user == organizer
     !isSpeaker && !isOrganizer && throw CantFinishTalkException()

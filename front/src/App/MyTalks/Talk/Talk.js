@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Button } from 'grommet';
+import { Box, Button, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { enqueueTalk, scheduleTalk } from '#api/os-client';
@@ -13,11 +13,14 @@ import SelectSlot from './SelectSlot';
 const Badge = ({ text, color }) => (
   <Box
     alignSelf="center"
-    background={{ color, opacity: 'medium' }}
+    // background={{ color, opacity: 'medium' }}
+    border={{ color, size: 'small' }}
     pad={{ horizontal: 'small', vertical: 'xsmall' }}
     round
   >
-    {text}
+    <Text color={color} weight="bold">
+      {text}
+    </Text>
   </Box>
 );
 Badge.propTypes = { text: PropTypes.string, color: PropTypes.string };

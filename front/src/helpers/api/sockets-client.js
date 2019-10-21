@@ -11,7 +11,7 @@ const getSocket = (endpoint, id, onUpdate) => {
 const useQueue = (id, onUpdate) => {
   const [queue, setQueue] = useState();
   const onUpd = q => {
-    if (queue !== undefined) onUpdate(q);
+    onUpdate();
     setQueue(q);
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps

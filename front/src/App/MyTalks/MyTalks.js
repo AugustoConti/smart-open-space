@@ -4,64 +4,83 @@ import { Redirect } from 'react-router-dom';
 import { Box, Heading, Text, Button } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { useGetMyTalks } from '#api/os-client';
+import { nextTalk, useGetMyTalks } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
-import MyProps from '#helpers/MyProps';
 import { TalkIcon } from '#shared/icons';
+import Detail from '#shared/Detail';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
-import Spinner, { TinySpinner } from '#shared/Spinner';
+import MyProps from '#helpers/MyProps';
 import Row from '#shared/Row';
+import Spinner, { TinySpinner } from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
 import Talk from './Talk';
 
-const MyEnqueuedTalk = ({ place, title }) =>
-  place === 0 ? (
-    <Row justify="center" margin={{ bottom: 'large' }}>
-      <Box
-        align="center"
-        animation={{
-          type: 'slideDown',
-          delay: 0,
-          duration: 1000,
-          size: 'large',
-        }}
-        background="accent-1"
-        elevation="medium"
-        gap="small"
-        margin="none"
-        pad="medium"
-        round
-      >
-        <Heading margin="none">PASÁ!!</Heading>
+const slideDownAnimation = {
+  type: 'slideDown',
+  delay: 0,
+  duration: 1000,
+  size: 'large',
+};
+
+const EnqueuedTalkCard = ({ bgColor, children }) => (
+  <Row justify="center" margin={{ bottom: 'large' }}>
+    <Box
+      align="center"
+      animation={slideDownAnimation}
+      background={bgColor}
+      elevation="medium"
+      gap="medium"
+      margin="none"
+      pad="medium"
+      round
+    >
+      {children}
+    </Box>
+  </Row>
+);
+EnqueuedTalkCard.propTypes = {
+  bgColor: PropTypes.string.isRequired,
+  children: MyProps.children.isRequired,
+};
+
+const MyEnqueuedTalk = ({ description, onFinish, place, title }) => {
+  return place === 0 ? (
+    <EnqueuedTalkCard bgColor="accent-1">
+      <Heading margin={{ horizontal: 'medium', vertical: 'none' }}>PASÁ!!</Heading>
+      <>
         <Title>{title}</Title>
-        <Button color="status-critical" label="Terminé" primary />
-      </Box>
-    </Row>
+        <Detail color="dark-2" text={description} truncate />
+      </>
+      <Button color="status-critical" label="Terminé" onClick={onFinish} primary />
+    </EnqueuedTalkCard>
   ) : (
-    <Row justify="center" margin={{ bottom: 'large' }}>
-      <Box
-        align="center"
-        background="accent-1"
-        elevation="medium"
-        gap="small"
-        margin="none"
-        pad="medium"
-        round
-      >
-        <Text weight="bold">ESPERANDO TURNO</Text>
-        <>
-          Queda
-          {place !== 1 && 'n'}
-          <Heading margin="none">{place}</Heading>
-        </>
+    <EnqueuedTalkCard bgColor="accent-4">
+      <Text margin={{ horizontal: 'small', vertical: 'none' }} weight="bold">
+        ESPERANDO TURNO
+      </Text>
+      <>
+        Queda
+        {place !== 1 && 'n'}
+        <Heading margin="none">{place}</Heading>
+        {place === 1 && (
+          <Text margin={{ horizontal: 'small', vertical: 'none' }} weight="bold">
+            Sos el siguiente!!
+          </Text>
+        )}
+      </>
+      <>
         <Title>{title}</Title>
-      </Box>
-    </Row>
+        <Detail color="dark-2" text={description} truncate />
+      </>
+    </EnqueuedTalkCard>
   );
+};
 MyEnqueuedTalk.propTypes = {
+  description: PropTypes.string,
+  onFinish: PropTypes.func.isRequired,
   place: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
 };
@@ -92,8 +111,6 @@ const MyTalks = ({
   const place = () => queue.findIndex(isMyTalk);
   const isToSchedule = idTalk => os.toSchedule.some(t => t.id === idTalk);
 
-  console.log(os, slots, talks, queue, isPending, isRejected);
-
   return (
     <>
       <MainHeader>
@@ -110,7 +127,12 @@ const MyTalks = ({
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
-            <MyEnqueuedTalk place={place()} title={myEnqueuedTalk().name} />
+            <MyEnqueuedTalk
+              description={myEnqueuedTalk().description}
+              onFinish={() => nextTalk(id)}
+              place={place()}
+              title={myEnqueuedTalk().name}
+            />
           )}
           <MyGrid>
             {talks.map(talk => (

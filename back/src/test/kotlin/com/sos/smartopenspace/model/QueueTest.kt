@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.model
 
+import com.sos.smartopenspace.service.TalkNotFoundException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -46,10 +47,18 @@ class QueueTest {
   }
 
   @Test
+  fun `Os sin charlas encoladas, no puedo pasar a la siguiente charla`() {
+    val os = anyOS(true)
+    val user = anyUser(mutableSetOf(os))
+    assertThrows(EmptyQueueException::class.java) {
+      os.nextTalk(user)
+    }
+  }
+
+  @Test
   fun `Encolar una charla`() {
     val talk = anyTalk()
     val os = anyOS(true, mutableSetOf(talk))
-    // val user = anyUser(mutableSetOf(os), mutableSetOf(talk))
     talk.enqueue()
     assertEquals(talk, os.currentTalk())
   }
@@ -74,7 +83,7 @@ class QueueTest {
   }
 
   @Test
-  fun `No puedo encolar una segunda charla`() {
+  fun `No puedo encolar una segunda charla del mismo speaker`() {
     val talk1 = anyTalk()
     val talk2 = anyTalk()
     val os = anyOS(true, mutableSetOf(talk1, talk2))
