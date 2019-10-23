@@ -1,10 +1,9 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 
 import { Box } from 'grommet';
 
 import { activateQueue, useGetOS } from '#api/os-client';
-import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
 import { ScheduleIcon, TalkIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
@@ -13,13 +12,10 @@ import Spinner from '#shared/Spinner';
 import Schedule from './Schedule';
 import TalksGrid from './TalksGrid';
 
-const OpenSpace = ({
-  match: {
-    params: { id },
-  },
-  history,
-  location: { pathname },
-}) => {
+const OpenSpace = () => {
+  const { id } = useParams();
+  const { pathname } = useLocation();
+  const history = useHistory();
   const user = useUser();
   const {
     data: { activeQueue, name, startTime, endTime, organizer } = {},
@@ -75,11 +71,6 @@ const OpenSpace = ({
       </Box>
     </>
   );
-};
-OpenSpace.propTypes = {
-  history: MyProps.history,
-  location: MyProps.location,
-  match: MyProps.match,
 };
 
 export default OpenSpace;

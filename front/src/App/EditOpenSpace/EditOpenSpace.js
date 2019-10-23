@@ -1,8 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { createOS } from '#api/os-client';
 import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
-import MyProps from '#helpers/MyProps';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 
@@ -21,7 +21,8 @@ const initialValues = {
   rooms: [],
 };
 
-const EditOpenSpace = ({ history }) => {
+const EditOpenSpace = () => {
+  const history = useHistory();
   const onSubmit = ({
     value: {
       date,
@@ -70,6 +71,5 @@ const EditOpenSpace = ({ history }) => {
     </>
   );
 };
-EditOpenSpace.propTypes = { history: MyProps.history };
 
 export default EditOpenSpace;

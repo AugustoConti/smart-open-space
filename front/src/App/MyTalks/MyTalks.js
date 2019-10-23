@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useParams, Redirect } from 'react-router-dom';
 
 import { Box, Heading, Text, Button } from 'grommet';
 import PropTypes from 'prop-types';
@@ -85,12 +85,9 @@ MyEnqueuedTalk.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-const MyTalks = ({
-  match: {
-    params: { id },
-  },
-  history,
-}) => {
+const MyTalks = () => {
+  const { id } = useParams();
+  const history = useHistory();
   const {
     data: [os, slots, talks = []] = [],
     isPending,
@@ -155,6 +152,5 @@ const MyTalks = ({
     </>
   );
 };
-MyTalks.propTypes = { match: MyProps.match, history: MyProps.history };
 
 export default MyTalks;

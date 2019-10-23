@@ -1,10 +1,10 @@
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Box, Button, Menu, Text, Image } from 'grommet';
 import PropTypes from 'prop-types';
 
 import logo from '#assets/logo.svg';
-import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
@@ -53,7 +53,8 @@ const HomeButton = ({ onClick }) => {
 };
 HomeButton.propTypes = { onClick: PropTypes.func.isRequired };
 
-const MyMenu = ({ history, user }) => {
+const MyMenu = ({ user }) => {
+  const history = useHistory();
   const isSmall = useSize() === 'small';
   const { logout } = useAuth();
   const menuItems = [
@@ -88,11 +89,12 @@ const MyMenu = ({ history, user }) => {
   );
 };
 MyMenu.propTypes = {
-  history: MyProps.history,
   user: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
 };
 
-const Header = ({ history, location: { pathname } }) => {
+const Header = () => {
+  const { pathname } = useLocation();
+  const history = useHistory();
   const user = useUser();
   const isLogged = !!user;
   const inLogin = pathname === '/login';
@@ -100,13 +102,12 @@ const Header = ({ history, location: { pathname } }) => {
     <RowBetween as="header" fill>
       <HomeButton onClick={() => history.push('/')} />
       {isLogged ? (
-        <MyMenu history={history} user={user} />
+        <MyMenu user={user} />
       ) : (
         !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
       )}
     </RowBetween>
   );
 };
-Header.propTypes = { history: MyProps.history, location: MyProps.location };
 
 export default Header;

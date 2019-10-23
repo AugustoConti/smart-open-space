@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Button, Text, Box } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { nextTalk } from '#api/os-client';
-import MyProps from '#helpers/MyProps';
 
 const useInterval = (callback, delay) => {
   const savedCallback = useRef();
@@ -44,11 +44,8 @@ const TimeLeft = ({ time }) =>
   );
 TimeLeft.propTypes = { time: PropTypes.number };
 
-const OSProjector = ({
-  match: {
-    params: { id },
-  },
-}) => {
+const OSProjector = () => {
+  const { id } = useParams();
   const [time, setTime] = useState();
 
   useInterval(() => {
@@ -79,6 +76,5 @@ const OSProjector = ({
     </>
   );
 };
-OSProjector.propTypes = { match: MyProps.match };
 
 export default OSProjector;

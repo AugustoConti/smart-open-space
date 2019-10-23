@@ -1,19 +1,15 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useParams, Redirect } from 'react-router-dom';
 
 import { useGetOS, createTalk } from '#api/os-client';
-import MyProps from '#helpers/MyProps';
 import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import { TinySpinner } from '#shared/Spinner';
 
-const EditTalk = ({
-  match: {
-    params: { id },
-  },
-  history,
-}) => {
+const EditTalk = () => {
+  const { id } = useParams();
+  const history = useHistory();
   const { data: os, isPending, isRejected } = useGetOS(id);
 
   if (isRejected) return <Redirect to="/" />;
@@ -35,6 +31,5 @@ const EditTalk = ({
     </>
   );
 };
-EditTalk.propTypes = { match: MyProps.match, history: MyProps.history };
 
 export default EditTalk;
