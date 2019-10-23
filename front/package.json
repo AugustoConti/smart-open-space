@@ -46,7 +46,7 @@
     "prettier": "1.18.2"
   },
   "dependencies": {
-    "grommet": "^2.7.10",
+    "grommet": "^2.7.11",
     "grommet-icons": "^4.3.0",
     "parcel-bundler": "^1.12.4",
     "prop-types": "^15.7.2",
