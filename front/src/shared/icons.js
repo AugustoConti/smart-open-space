@@ -6,6 +6,7 @@ import {
   DocumentText,
   FormClose,
   FormDown,
+  FormNext,
   FormTrash,
   Home,
   Lock,
@@ -19,42 +20,24 @@ import {
   Workshop,
 } from 'grommet-icons';
 
-const AddIcon = Add;
-const CalendarIcon = Plan;
-const ClockIcon = Clock;
-const DownIcon = FormDown;
-const EmailIcon = MailOption;
-const ExitIcon = Run;
-const FormCloseIcon = FormClose;
-const HomeIcon = Home;
-const MenuIcon = Menu;
-const OpenSpaceIcon = Workshop;
-const PasswordIcon = Lock;
-const ScheduleIcon = Schedules;
-const TalkIcon = Announce;
-const TextIcon = Article;
-const TextAreaIcon = DocumentText;
-const TrashIcon = FormTrash;
-const UserIcon = User;
-const VideoIcon = Video;
-
 export {
-  AddIcon,
-  CalendarIcon,
-  ClockIcon,
-  DownIcon,
-  EmailIcon,
-  ExitIcon,
-  FormCloseIcon,
-  HomeIcon,
-  MenuIcon,
-  OpenSpaceIcon,
-  PasswordIcon,
-  ScheduleIcon,
-  TalkIcon,
-  TextIcon,
-  TextAreaIcon,
-  TrashIcon,
-  UserIcon,
-  VideoIcon,
+  Add as AddIcon,
+  Plan as CalendarIcon,
+  Clock as ClockIcon,
+  FormDown as DownIcon,
+  MailOption as EmailIcon,
+  Run as ExitIcon,
+  FormClose as FormCloseIcon,
+  Home as HomeIcon,
+  Menu as MenuIcon,
+  FormNext as NextIcon,
+  Workshop as OpenSpaceIcon,
+  Lock as PasswordIcon,
+  Schedules as ScheduleIcon,
+  Announce as TalkIcon,
+  Article as TextIcon,
+  DocumentText as TextAreaIcon,
+  FormTrash as TrashIcon,
+  User as UserIcon,
+  Video as VideoIcon,
 };

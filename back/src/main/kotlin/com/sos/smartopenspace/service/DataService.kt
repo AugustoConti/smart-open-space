@@ -66,7 +66,7 @@ class DataService(private val userRepository: UserRepository) {
     )
     val front = Talk(
       "FrontEnd 2.0",
-      "La idea es contar algunas experiencias que tuve laburando en tecnologias completamente diferentes como ser C# con WebForms o .NET, Ruby con Ruby on Rails o en Javascript con algo tipo Vue o React y Node o Serveless para backend.\nVamos a hablar en particular sobre el desarrollo del front end utilizando estas tecnlogias."
+      "La idea es contar algunas experiencias que tuve laburando en tecnologias completamente diferentes como ser C# con WebForms o .NET, Ruby con Ruby on Rails o en Javascript con algo tipo Vue o React y Node o Serveless para backend.\nVamos a hablar en particular sobre el desarrollo del front end utilizando estas tecnologias."
     )
     val judo = Talk("JUDO", "BDD en SQL Server")
     val testear = Talk("Testear siendo DEV")
@@ -100,20 +100,19 @@ class DataService(private val userRepository: UserRepository) {
       mutableSetOf(charla1)
     )
 
-    val augusto = User(
-      "augusto@sos.sos", "augusto", "Augusto",
-      mutableSetOf(practicas), mutableSetOf(master, winter, agileMeetings, contrato)
-    )
-    val fede = User(
-      "fede@sos.sos", "fede", "Fede",
-      mutableSetOf(cpi), mutableSetOf(dessAgil, front, proy, appLenta)
-    )
     userRepository.saveAll(
       setOf(
-        augusto, fede,
+        User(
+          "augusto@sos.sos", "augusto", "Augusto",
+          mutableSetOf(practicas), mutableSetOf(master, winter, agileMeetings, contrato)
+        ),
+        User(
+          "fede@sos.sos", "fede", "Fede",
+          mutableSetOf(cpi), mutableSetOf(dessAgil, front, proy, appLenta)
+        ),
         User(
           "juan@sos.sos", "juan", "Juan",
-          mutableSetOf(os1), mutableSetOf(testear, desSinJefe, troika, charla1)
+          mutableSetOf(os1), mutableSetOf(testear, desSinJefe, charla1)
         ),
         User(
           "maria@sos.sos", "maria", "Maria",
@@ -121,12 +120,14 @@ class DataService(private val userRepository: UserRepository) {
         ),
         User(
           "andrea@sos.sos", "andrea", "Andrea",
-          mutableSetOf(), mutableSetOf(dessDeberia, js)
+          mutableSetOf(), mutableSetOf(dessDeberia, js, troika)
         )
       )
     )
 
     judo.enqueue()
+    troika.enqueue()
+    testear.enqueue()
     front.enqueue()
     master.enqueue()
 

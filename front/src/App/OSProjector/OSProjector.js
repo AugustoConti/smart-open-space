@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Text, Box } from 'grommet';
+import { Box, Button, Text, Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { nextTalk } from '#api/os-client';
+import { useQueue } from '#api/sockets-client';
+import Row from '#shared/Row';
+import RowBetween from '#shared/RowBetween';
+import { ClockIcon, NextIcon, UserIcon } from '#shared/icons';
 
 const useInterval = (callback, delay) => {
   const savedCallback = useRef();
@@ -22,57 +26,103 @@ const useInterval = (callback, delay) => {
   }, [delay]);
 };
 
+const BoxCritical = ({ label }) => (
+  <Box alignSelf="center" background="status-critical" pad="medium" round>
+    <Text size="large">{label}</Text>
+  </Box>
+);
+BoxCritical.propTypes = { label: PropTypes.string.isRequired };
+
 const TimeLeft = ({ time }) =>
-  time === undefined ? null : time === 0 ? (
-    <Text color="status-critical" weight="bold">
-      Se acabó tu tiempo!
-    </Text>
+  time === 0 ? (
+    <BoxCritical label="Se acabó tu tiempo!" />
   ) : time <= 5 ? (
-    <>
-      Tiempo
-      <Text color="status-critical" weight="bold">
-        {time}
-      </Text>
-    </>
+    <Box>
+      <BoxCritical label={time} />
+      <Text>Tiempo restante</Text>
+    </Box>
   ) : (
-    <Text>
-      <>
-        Tiempo
-        {time}
-      </>
-    </Text>
+    <Box>
+      {time}
+      Tiempo
+    </Box>
   );
-TimeLeft.propTypes = { time: PropTypes.number };
+TimeLeft.propTypes = { time: PropTypes.number.isRequired };
+
+const StartButton = props => (
+  <Button
+    color="status-warning"
+    icon={<ClockIcon />}
+    label="Comenzar 30''"
+    primary
+    {...props}
+  />
+);
+
+const NextButton = props => (
+  <Button gap="none" icon={<NextIcon />} label="Siguiente" primary reverse {...props} />
+);
+
+const TIME_FOR_SPEAKER = 8;
+
+// - Cola sig 3 + total que restan
 
 const OSProjector = () => {
   const { id } = useParams();
-  const [time, setTime] = useState();
+  const [time, setTime] = useState(8);
+  const queue = useQueue(id);
+
+  const currentTalk = queue ? queue[0] : { speaker: {} };
+  const restTalks = queue ? queue.slice(1, 4) : [];
+
+  console.log(currentTalk);
+  console.log(restTalks);
 
   useInterval(() => {
-    if (!time) return;
-    if (time === 0) return;
+    if (!time || time === 0) return;
     setTime(time - 1);
-  }, 1000);
+  }, 500);
 
   return (
     <>
-      <h1>OSProjector</h1>
-      <Box>
-        <TimeLeft time={time} />
-        <Button
-          color="status-warning"
-          label="Comenzar"
-          onClick={() => setTime(10)}
-          primary
-        />
-        <Button
-          label="Siguiente"
+      <RowBetween margin={{ vertical: 'medium' }}>
+        <StartButton onClick={() => setTime(TIME_FOR_SPEAKER)} />
+        <NextButton
           onClick={() => {
             nextTalk(id);
             setTime(undefined);
           }}
         />
+      </RowBetween>
+      <Box align="center">
+        <Heading margin="small">{currentTalk.name}</Heading>
+        <Text size="large">{currentTalk.description}</Text>
+        <Row margin={{ top: 'small' }}>
+          <UserIcon />
+          <Text>{currentTalk.speaker.name}</Text>
+        </Row>
       </Box>
+      <RowBetween justify="evenly" margin={{ top: 'large' }}>
+        {time !== undefined && <TimeLeft time={time} />}
+        <Box>
+          <Text color="dark-3" textAlign="center">
+            SIGUIENTES
+          </Text>
+          {restTalks.map(t => (
+            <Row
+              direction="row-responsive"
+              border={{ color: 'dark-2' }}
+              key={t.id}
+              margin={{ top: 'small' }}
+              pad="small"
+              round
+            >
+              <Text>{t.name}</Text>
+              <Text color="dark-5">{t.speaker.name}</Text>
+            </Row>
+          ))}
+        </Box>
+      </RowBetween>
     </>
   );
 };

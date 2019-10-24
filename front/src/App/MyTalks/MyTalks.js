@@ -58,19 +58,32 @@ const MyEnqueuedTalk = ({ description, onFinish, place, title }) => {
     </EnqueuedTalkCard>
   ) : (
     <EnqueuedTalkCard bgColor="accent-4">
-      <Text margin={{ horizontal: 'small', vertical: 'none' }} weight="bold">
+      <Text
+        textAlign="center"
+        margin={{ horizontal: 'small', vertical: 'none' }}
+        weight="bold"
+      >
         ESPERANDO TURNO
       </Text>
-      <>
+      <Box
+        border={{
+          color: 'dark-2',
+          size: 'small',
+        }}
+        pad="small"
+        round
+      >
         Queda
         {place !== 1 && 'n'}
-        <Heading margin="none">{place}</Heading>
-        {place === 1 && (
-          <Text margin={{ horizontal: 'small', vertical: 'none' }} weight="bold">
-            Sos el siguiente!!
-          </Text>
-        )}
-      </>
+        <Heading alignSelf="center" margin="none">
+          {place}
+        </Heading>
+      </Box>
+      {place === 1 && (
+        <Text margin={{ horizontal: 'small', vertical: 'none' }} weight="bold">
+          Sos el siguiente!!
+        </Text>
+      )}
       <>
         <Title>{title}</Title>
         <Detail color="dark-2" text={description} truncate />

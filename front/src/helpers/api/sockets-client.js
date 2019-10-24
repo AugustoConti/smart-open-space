@@ -8,7 +8,7 @@ const getSocket = (endpoint, id, onUpdate) => {
   return () => webSocket.close();
 };
 
-const useQueue = (id, onUpdate) => {
+const useQueue = (id, onUpdate = () => {}) => {
   const [queue, setQueue] = useState();
   const onUpd = q => {
     onUpdate();

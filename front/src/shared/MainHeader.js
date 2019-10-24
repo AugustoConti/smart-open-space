@@ -13,7 +13,7 @@ import Title from './Title';
 const useTextAlign = () => (useSize() === 'small' ? 'center' : 'start');
 
 const MyTitle = ({ children, icon: Icon, label, ...props }) => (
-  <Title level="2" textAlign={useTextAlign()} {...props}>
+  <Title level="2" alignSelf={useTextAlign()} {...props}>
     <Row>
       {Icon && <Icon />}
       {label}
