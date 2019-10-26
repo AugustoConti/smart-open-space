@@ -78,7 +78,10 @@ cd front && yarn && yarn watch
 
 ### Casos de uso
 #### Entrega 1
-![Caso de uso principal](/other/CasoDeUso.png)
+![Caso de uso entrega 1](/other/CasoDeUso.png)
+
+#### Entrega 2
+![Caso de uso entrega 2](/other/CasoDeUso2.png)
 
 ## 👮 LICENCIA
 - [GPLv3](LICENSE)
