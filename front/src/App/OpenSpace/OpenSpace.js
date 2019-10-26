@@ -42,15 +42,18 @@ const OpenSpace = () => {
           )}
           <MainHeader.Button
             color="accent-1"
+            icon={<TalkIcon />}
             label="Mis charlas"
             onClick={() => history.push(user ? `${pathname}/myTalks` : '/login')}
           />
-          <MainHeader.Button
-            color="accent-3"
-            icon={<VideoIcon />}
-            label="Modo Proyector"
-            onClick={() => history.push(`${pathname}/projector`)}
-          />
+          {amTheOrganizer() && (
+            <MainHeader.Button
+              color="accent-2"
+              icon={<VideoIcon />}
+              label="Modo Proyector"
+              onClick={() => history.push(`${pathname}/projector`)}
+            />
+          )}
           {!activeQueue && amTheOrganizer() && (
             <MainHeader.Button
               color="accent-4"
