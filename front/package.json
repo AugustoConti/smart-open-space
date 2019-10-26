@@ -63,6 +63,7 @@
   "alias": {
     "#assets": "./src/assets",
     "#helpers": "./src/helpers",
+    "#api": "./src/helpers/api",
     "#shared": "./src/shared"
   }
 }

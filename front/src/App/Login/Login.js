@@ -1,13 +1,14 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
 import { Heading } from 'grommet';
 
 import useAuth, { useUser } from '#helpers/useAuth';
-import MyProps from '#helpers/MyProps';
 import MyForm from '#shared/MyForm';
 
-const Login = ({ history, location: { pathname } }) => {
+const Login = () => {
+  const { pathname } = useLocation();
+  const history = useHistory();
   const { login, register } = useAuth();
   const isRegister = pathname === '/register';
   const data = {
@@ -39,6 +40,5 @@ const Login = ({ history, location: { pathname } }) => {
     </>
   );
 };
-Login.propTypes = { history: MyProps.history, location: MyProps.location };
 
 export default Login;

@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, Grid } from 'grommet';
 import PropTypes from 'prop-types';
 
-import useSlots from '#helpers/schedule-socket';
+import { useSlots } from '#api/sockets-client';
 
 import Talk from './Talk';
 import Talks from './Talks';

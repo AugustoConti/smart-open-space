@@ -1,9 +1,8 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 
-import { useGetAllOS } from '#helpers/api/os-client';
+import { useGetAllOS } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
-import MyProps from '#helpers/MyProps';
 import { OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
@@ -12,7 +11,8 @@ import Spinner from '#shared/Spinner';
 import EmptyOpenSpaces from './EmptyOpenSpaces';
 import OpenSpace from './OpenSpace';
 
-const HomeLogged = ({ history }) => {
+const HomeLogged = () => {
+  const history = useHistory();
   const { data: openSpaces, isPending } = useGetAllOS();
   const onNew = () => history.push('/new');
   return (
@@ -35,8 +35,7 @@ const HomeLogged = ({ history }) => {
     </>
   );
 };
-HomeLogged.propTypes = { history: MyProps.history };
 
-const Home = props => (useUser() ? <HomeLogged {...props} /> : <Redirect to="/login" />);
+const Home = () => (useUser() ? <HomeLogged /> : <Redirect to="/login" />);
 
 export default Home;

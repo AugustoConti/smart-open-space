@@ -20,7 +20,15 @@ const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
 const useGetTalks = osId => useAsync({ promiseFn: getTalks, osId });
 
 const scheduleTalk = (talkID, roomID, hour) =>
-  put(`schedule/${talkID}/${roomID}/${hour}`);
+  put(`ws/schedule/${talkID}/${roomID}/${hour}`);
+
+const activateQueue = osId =>
+  withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
+
+const enqueueTalk = talkId =>
+  withUser(({ id }) => put(`openSpace/enqueueTalk/${id}/${talkId}`));
+
+const nextTalk = osId => withUser(({ id }) => put(`ws/nextTalk/${id}/${osId}`));
 
 const getMyTalks = ({ osId }) =>
   withUser(({ id }) => {
@@ -32,8 +40,11 @@ const getMyTalks = ({ osId }) =>
 const useGetMyTalks = osId => useAsync({ promiseFn: getMyTalks, osId });
 
 export {
+  activateQueue,
   createOS,
   createTalk,
+  enqueueTalk,
+  nextTalk,
   useGetAllOS,
   useGetOS,
   useGetTalks,

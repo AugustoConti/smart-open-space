@@ -1,36 +1,28 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useParams, Redirect } from 'react-router-dom';
 
-import { useGetOS, createTalk } from '#helpers/api/os-client';
-import MyProps from '#helpers/MyProps';
+import { useGetOS, createTalk } from '#api/os-client';
 import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
-import Spinner from '#shared/Spinner';
+import { TinySpinner } from '#shared/Spinner';
 
-const EditTalk = ({
-  match: {
-    params: { id },
-  },
-  history,
-}) => {
+const EditTalk = () => {
+  const { id } = useParams();
+  const history = useHistory();
   const { data: os, isPending, isRejected } = useGetOS(id);
 
   if (isRejected) return <Redirect to="/" />;
 
   const onSubmit = ({ value: { name, description } }) => {
-    createTalk(id, { name, description }).then(() =>
-      history.push(`/os/${id}/mis-charlas`)
-    );
+    createTalk(id, { name, description }).then(() => history.push(`/os/${id}/myTalks`));
   };
 
   return (
     <>
       <MainHeader>
         <MainHeader.Title icon={TalkIcon} label="Nueva Charla" />
-        <MainHeader.SubTitle>
-          {isPending ? <Spinner center={false} size="medium" /> : os.name}
-        </MainHeader.SubTitle>
+        <MainHeader.SubTitle>{isPending ? <TinySpinner /> : os.name}</MainHeader.SubTitle>
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text label="Título" placeholder="¿De que trata tu charla?" />
@@ -39,6 +31,5 @@ const EditTalk = ({
     </>
   );
 };
-EditTalk.propTypes = { match: MyProps.match, history: MyProps.history };
 
 export default EditTalk;

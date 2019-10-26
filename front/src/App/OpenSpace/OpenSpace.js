@@ -1,52 +1,72 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 
 import { Box } from 'grommet';
 
-import { useGetOS } from '#helpers/api/os-client';
-import MyProps from '#helpers/MyProps';
+import { activateQueue, useGetOS } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
-import { ScheduleIcon, TalkIcon } from '#shared/icons';
+import { ScheduleIcon, TalkIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import Spinner from '#shared/Spinner';
 
 import Schedule from './Schedule';
 import TalksGrid from './TalksGrid';
 
-const OpenSpace = ({
-  match: {
-    params: { id },
-  },
-  history,
-  location: { pathname },
-}) => {
+const OpenSpace = () => {
+  const { id } = useParams();
+  const { pathname } = useLocation();
+  const history = useHistory();
   const user = useUser();
   const {
-    data: { activeQueue, name, startTime, endTime } = {},
+    data: { activeQueue, name, startTime, endTime, organizer } = {},
     isPending,
     isRejected,
+    setData,
   } = useGetOS(id);
 
-  if (isPending) return <Spinner />;
   if (isRejected) return <Redirect to="/" />;
+
+  const amTheOrganizer = () => organizer.id === user.id;
 
   return (
     <>
-      <MainHeader>
-        <MainHeader.Title label={name} />
-        {activeQueue ? (
-          <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
-        ) : (
-          <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
-        )}
-        <MainHeader.Button
-          color="accent-1"
-          label="Mis charlas"
-          onClick={() => history.push(user ? `${pathname}/mis-charlas` : '/login')}
-        />
-      </MainHeader>
+      {isPending ? (
+        <Spinner size="medium" />
+      ) : (
+        <MainHeader>
+          <MainHeader.Title label={name} />
+          {activeQueue ? (
+            <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
+          ) : (
+            <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
+          )}
+          <MainHeader.Button
+            color="accent-1"
+            icon={<TalkIcon />}
+            label="Mis charlas"
+            onClick={() => history.push(user ? `${pathname}/myTalks` : '/login')}
+          />
+          {amTheOrganizer() && (
+            <MainHeader.Button
+              color="accent-2"
+              icon={<VideoIcon />}
+              label="Modo Proyector"
+              onClick={() => history.push(`${pathname}/projector`)}
+            />
+          )}
+          {!activeQueue && amTheOrganizer() && (
+            <MainHeader.Button
+              color="accent-4"
+              label="Activar Encolamiento"
+              onClick={() => activateQueue(id).then(setData)}
+            />
+          )}
+        </MainHeader>
+      )}
       <Box margin={{ bottom: 'medium' }}>
-        {activeQueue ? (
+        {isPending ? (
+          <Spinner />
+        ) : activeQueue ? (
           <Schedule id={id} startTime={startTime} endTime={endTime} />
         ) : (
           <TalksGrid id={id} />
@@ -54,11 +74,6 @@ const OpenSpace = ({
       </Box>
     </>
   );
-};
-OpenSpace.propTypes = {
-  history: MyProps.history,
-  location: MyProps.location,
-  match: MyProps.match,
 };
 
 export default OpenSpace;

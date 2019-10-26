@@ -12,6 +12,7 @@ import Login from './Login';
 import MainLayout from './MainLayout';
 import MyTalks from './MyTalks';
 import OpenSpace from './OpenSpace';
+import OSProjector from './OSProjector';
 
 const App = () => (
   <Grommet full theme={grommet}>
@@ -19,7 +20,8 @@ const App = () => (
       <AuthProvider>
         <MainLayout>
           <Switch>
-            <Route path="/os/:id/mis-charlas" exact component={MyTalks} />
+            <Route path="/os/:id/projector" exact component={OSProjector} />
+            <Route path="/os/:id/myTalks" exact component={MyTalks} />
             <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
             <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
             <Route path="/os/:id" exact component={OpenSpace} />

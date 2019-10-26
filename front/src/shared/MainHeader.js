@@ -13,7 +13,7 @@ import Title from './Title';
 const useTextAlign = () => (useSize() === 'small' ? 'center' : 'start');
 
 const MyTitle = ({ children, icon: Icon, label, ...props }) => (
-  <Title level="2" textAlign={useTextAlign()} {...props}>
+  <Title level="2" alignSelf={useTextAlign()} {...props}>
     <Row>
       {Icon && <Icon />}
       {label}
@@ -50,14 +50,16 @@ MySubTitle.propTypes = {
 
 const MyButton = props => <Button fill="vertical" primary {...props} />;
 
-const getByType = (children, type) => children.find(c => c.type === type);
+const getByType = (childs, type) => childs.find(c => c.type === type);
+const getAllByTypes = (childs, type1, type2) =>
+  childs.filter(c => c.type === type1 || c.type === type2);
 
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const childs = React.Children.toArray(children);
   const title = getByType(childs, MyTitle) || getByType(childs, MyTitleLink);
   const subtitle = getByType(childs, MySubTitle);
-  const button = getByType(childs, MyButton) || getByType(childs, ButtonNew);
+  const buttons = getAllByTypes(childs, MyButton, ButtonNew);
   return (
     <RowBetween
       direction={isSmall ? 'column' : 'row'}
@@ -65,13 +67,13 @@ const MainHeader = ({ children, ...props }) => {
     >
       <Box
         align={isSmall ? 'center' : undefined}
-        margin={{ bottom: isSmall && button ? 'large' : undefined }}
+        margin={{ bottom: isSmall && buttons.length > 0 ? 'large' : undefined }}
         {...props}
       >
         {title}
         {subtitle}
       </Box>
-      {button}
+      <Box gap="medium">{buttons}</Box>
     </RowBetween>
   );
 };

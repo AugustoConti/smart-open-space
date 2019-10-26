@@ -31,4 +31,7 @@ const Spinner = ({ center = true, ...props }) => (
 );
 Spinner.propTypes = { center: PropTypes.bool };
 
+const TinySpinner = props => <Spinner center={false} size="medium" {...props} />;
+
+export { TinySpinner };
 export default Spinner;

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Button } from 'grommet';
+import { Box, Button } from 'grommet';
 import PropTypes from 'prop-types';
 
 import Card from '#shared/Card';
@@ -11,22 +11,32 @@ import Title from '#shared/Title';
 const getHour = time => Number(time.slice(0, 2));
 const getTime = (start, end) => `${getHour(start)} a ${getHour(end) + 1} hs`;
 
-const OpenSpace = ({ date, endTime, name, onClick, startTime }) => (
-  <Button fill onClick={onClick} plain>
-    {({ hover }) => (
-      <Card
-        borderColor={hover ? 'accent-1' : 'brand'}
-        borderSide={hover ? 'all' : undefined}
+const OpenSpace = ({ date, endTime, name, onClick, startTime }) => {
+  const [isHover, setIsHover] = useState(false);
+  return (
+    <Box
+      elevation={isHover ? 'xlarge' : 'small'}
+      margin={isHover ? 'none' : 'xsmall'}
+      round
+    >
+      <Button
         fill
-        gap="small"
+        onBlur={() => setIsHover(false)}
+        onClick={onClick}
+        onFocus={() => setIsHover(true)}
+        onMouseOver={() => setIsHover(true)}
+        onMouseOut={() => setIsHover(false)}
+        plain
       >
-        <Title level="3">{name}</Title>
-        <Detail icon={CalendarIcon} text={date} />
-        <Detail icon={ClockIcon} text={getTime(startTime, endTime)} />
-      </Card>
-    )}
-  </Button>
-);
+        <Card borderColor="brand" elevation="none" fill gap="small">
+          <Title level="3">{name}</Title>
+          <Detail icon={CalendarIcon} text={date} />
+          <Detail icon={ClockIcon} text={getTime(startTime, endTime)} />
+        </Card>
+      </Button>
+    </Box>
+  );
+};
 OpenSpace.propTypes = {
   date: PropTypes.string.isRequired,
   endTime: PropTypes.string.isRequired,

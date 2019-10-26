@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 
-import { useGetTalks } from '#helpers/api/os-client';
+import { useGetTalks } from '#api/os-client';
 import MyGrid from '#shared/MyGrid';
 import Spinner from '#shared/Spinner';
 
