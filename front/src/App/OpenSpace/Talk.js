@@ -9,19 +9,23 @@ import { FormCloseIcon, HomeIcon, UserIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
 
-const DescriptionInfo = ({ info, onClose }) => (
+const DescriptionInfo = ({ title, speaker, info, onClose }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
-    <Box pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
+    <Box gap="medium" pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Row justify="end">
         <Button icon={<FormCloseIcon />} onClick={onClose} plain />
       </Row>
-      {info}
+      <Title>{title}</Title>
+      <Detail icon={UserIcon} text={speaker} />
+      <Detail color="dark-1" text={info} />
     </Box>
   </Layer>
 );
 DescriptionInfo.propTypes = {
   info: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
+  speaker: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 const ButtonMoreInfo = ({ onClick }) => (
@@ -54,7 +58,14 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
         </Box>
         {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
-      {open && <DescriptionInfo info={description} onClose={() => setOpen(false)} />}
+      {open && (
+        <DescriptionInfo
+          title={name}
+          speaker={speaker.name}
+          info={description}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </>
   );
 };
