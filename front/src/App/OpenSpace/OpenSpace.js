@@ -46,21 +46,21 @@ const OpenSpace = () => {
             label="Mis charlas"
             onClick={() => history.push(user ? `${pathname}/myTalks` : '/login')}
           />
-          {amTheOrganizer() && (
-            <MainHeader.Button
-              color="accent-2"
-              icon={<VideoIcon />}
-              label="Modo Proyector"
-              onClick={() => history.push(`${pathname}/projector`)}
-            />
-          )}
-          {!activeQueue && amTheOrganizer() && (
-            <MainHeader.Button
-              color="accent-4"
-              label="Activar Encolamiento"
-              onClick={() => activateQueue(id).then(setData)}
-            />
-          )}
+          {amTheOrganizer() &&
+            (activeQueue ? (
+              <MainHeader.Button
+                color="accent-2"
+                icon={<VideoIcon />}
+                label="Modo Proyector"
+                onClick={() => history.push(`${pathname}/projector`)}
+              />
+            ) : (
+              <MainHeader.Button
+                color="accent-4"
+                label="Activar Encolamiento"
+                onClick={() => activateQueue(id).then(setData)}
+              />
+            ))}
         </MainHeader>
       )}
       <Box margin={{ bottom: 'medium' }}>

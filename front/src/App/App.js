@@ -13,12 +13,13 @@ import MainLayout from './MainLayout';
 import MyTalks from './MyTalks';
 import OpenSpace from './OpenSpace';
 import OSProjector from './OSProjector';
+import Header from './Header';
 
 const App = () => (
   <Grommet full theme={grommet}>
     <Router>
       <AuthProvider>
-        <MainLayout>
+        <MainLayout header={<Route path="/" component={Header} />}>
           <Switch>
             <Route path="/os/:id/projector" exact component={OSProjector} />
             <Route path="/os/:id/myTalks" exact component={MyTalks} />

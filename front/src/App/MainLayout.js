@@ -1,11 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 
 import { Box, Grid } from 'grommet';
 
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
-import Header from '#shared/Header';
 
 const smallLayout = {
   areas: [['header'], ['main']],
@@ -29,7 +27,7 @@ const BoxBrand = ({ children, ...props }) => (
 );
 BoxBrand.propTypes = { children: MyProps.children };
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, header }) => {
   const { areas, columns, pad } = useMainLayout();
   return (
     <Box fill background="light-3" overflow="auto">
@@ -37,15 +35,18 @@ const MainLayout = ({ children }) => {
         <BoxBrand gridArea="headerL" />
         <BoxBrand gridArea="headerR" />
         <BoxBrand gridArea="header" pad={pad}>
-          <Route path="/" component={Header} />
+          {header}
         </BoxBrand>
-        <Box gridArea="main" pad={pad}>
+        <Box as="main" gridArea="main" pad={pad}>
           <div>{children}</div>
         </Box>
       </Grid>
     </Box>
   );
 };
-MainLayout.propTypes = { children: MyProps.children.isRequired };
+MainLayout.propTypes = {
+  children: MyProps.children.isRequired,
+  header: MyProps.children.isRequired,
+};
 
 export default MainLayout;

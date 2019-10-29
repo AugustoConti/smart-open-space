@@ -8,8 +8,8 @@ import logo from '#assets/logo.svg';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useSize from '#helpers/useSize';
 import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
-import Row from './Row';
-import RowBetween from './RowBetween';
+import Row from '#shared/Row';
+import RowBetween from '#shared/RowBetween';
 
 const SmallMenu = ({ color }) => (
   <Box pad="medium">
