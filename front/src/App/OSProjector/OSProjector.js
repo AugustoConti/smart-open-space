@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useHistory, useParams, Redirect } from 'react-router-dom';
-import { Box, Button, Text, Heading, CheckBox } from 'grommet';
+import { Box, Button, Text, Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
 import ideasFlow from '#assets/ideas_flow.svg';
@@ -127,7 +127,7 @@ const OSProjector = () => {
   const { id } = useParams();
   const user = useUser();
   const [time, setTime] = useState();
-  const [fast, setFast] = useState(true);
+  // const [fast, setFast] = useState(true);
   const { data: { organizer } = {}, isPending } = useGetOS(id);
   const queue = useQueue(id);
 
@@ -136,7 +136,8 @@ const OSProjector = () => {
       if (!time || time === 0) return;
       setTime(time - 1);
     },
-    fast ? 300 : 1000
+    // fast ? 300 :
+    1000
   );
 
   if (isPending) return <Spinner />;
@@ -151,11 +152,11 @@ const OSProjector = () => {
     <>
       <RowBetween margin={{ vertical: 'medium' }}>
         <StartButton onClick={() => setTime(TIME_FOR_SPEAKER)} />
-        <CheckBox
+        {/* <CheckBox
           checked={fast}
           label="Acelerar?"
           onChange={event => setFast(event.target.checked)}
-        />
+        /> */}
         <NextButton
           onClick={() => {
             nextTalk(id);

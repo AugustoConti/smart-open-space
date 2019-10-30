@@ -13,7 +13,7 @@ class Room(
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
 
-  @Column(columnDefinition="LONGVARCHAR")
+  @Column(columnDefinition="VarChar")
   val description: String = "",
 
   @Id @GeneratedValue

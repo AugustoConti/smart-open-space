@@ -8,8 +8,7 @@ import Detail from '#shared/Detail';
 import { CalendarIcon, ClockIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
-const getHour = time => Number(time.slice(0, 2));
-const getTime = (start, end) => `${getHour(start)} a ${getHour(end) + 1} hs`;
+const getTime = (start, end) => `${start[0]} a ${end[0] + 1} hs`;
 
 const OpenSpace = ({ date, endTime, name, onClick, startTime }) => {
   const [isHover, setIsHover] = useState(false);
@@ -30,7 +29,7 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => {
       >
         <Card borderColor="brand" elevation="none" fill gap="small">
           <Title level="3">{name}</Title>
-          <Detail icon={CalendarIcon} text={date} />
+          <Detail icon={CalendarIcon} text={new Date(date).toLocaleDateString()} />
           <Detail icon={ClockIcon} text={getTime(startTime, endTime)} />
         </Card>
       </Button>
@@ -38,11 +37,11 @@ const OpenSpace = ({ date, endTime, name, onClick, startTime }) => {
   );
 };
 OpenSpace.propTypes = {
-  date: PropTypes.string.isRequired,
-  endTime: PropTypes.string.isRequired,
+  date: PropTypes.arrayOf(PropTypes.number).isRequired,
+  endTime: PropTypes.arrayOf(PropTypes.number).isRequired,
   name: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  startTime: PropTypes.string.isRequired,
+  startTime: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default OpenSpace;

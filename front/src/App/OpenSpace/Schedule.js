@@ -55,13 +55,11 @@ TimeSpan.propTypes = {
   slots: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const getHour = time => Number(time.slice(0, 2));
-const getRangeHours = (start, end) =>
-  [...Array(getHour(end) + 1).keys()].slice(getHour(start));
+const getRangeHours = (start, end) => [...Array(end + 1).keys()].slice(start);
 
 const Schedule = ({ id, startTime, endTime }) => {
   const slots = useSlots(id);
-  return getRangeHours(startTime, endTime).map(hour => {
+  return getRangeHours(startTime[0], endTime[0]).map(hour => {
     const slotsHour = slots.filter(s => s.hour === hour);
     const key = `${hour}-${slotsHour.map(s => s.id).join('-')}`;
     return <TimeSpan hour={hour} key={key} slots={slotsHour} />;

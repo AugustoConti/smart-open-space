@@ -4,6 +4,8 @@ jobs:
   include:
     - stage: TestBack
       language: java
+      services:
+        - postgresql
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
         - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -12,7 +14,9 @@ jobs:
           - $HOME/.gradle/caches/
           - $HOME/.gradle/wrapper/
       before_script: cd back
-      script: ./gradlew testCoverage
+      script:
+        - psql -c 'create database '$DATABASE_NAME';' -U postgres
+        - ./gradlew testCoverage
       after_success:
         - bash <(curl -s https://codecov.io/bash)
 
@@ -33,6 +37,7 @@ jobs:
           - $HOME/.gradle/caches/
           - $HOME/.gradle/wrapper/
       before_script: cd back
+      script: ./gradlew check -x test
       deploy:
         provider: heroku
         skip_cleanup: true

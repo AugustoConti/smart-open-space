@@ -4,8 +4,9 @@ import com.sos.smartopenspace.service.WSService
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
-@ServiceREST
+@RestController
 @RequestMapping("ws")
 class WSServiceREST(private val wsService: WSService) {
   @PutMapping("/schedule/{talkID}/{roomID}/{hour}")
