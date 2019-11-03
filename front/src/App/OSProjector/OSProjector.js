@@ -67,7 +67,7 @@ TimeLeft.propTypes = { time: PropTypes.number.isRequired };
 
 const NextTalks = ({ restTalks, size }) =>
   restTalks.length < 1 ? (
-    <Text>Último orador!</Text>
+    <Text textAlign="center">Último orador!</Text>
   ) : (
     <Box>
       <Text color="dark-3" textAlign="center">

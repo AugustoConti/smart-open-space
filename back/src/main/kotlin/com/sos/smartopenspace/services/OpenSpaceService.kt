@@ -1,10 +1,10 @@
-package com.sos.smartopenspace.service
+package com.sos.smartopenspace.services
 
-import com.sos.smartopenspace.model.OpenSpace
-import com.sos.smartopenspace.model.Talk
+import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.webservice.QueueHandler
+import com.sos.smartopenspace.websocket.QueueSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +19,7 @@ class OpenSpaceService(
   private val openSpaceRepository: OpenSpaceRepository,
   private val talkRepository: TalkRepository,
   private val userService: UserService,
-  private val queueHandler: QueueHandler
+  private val queueSocket: QueueSocket
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
 
@@ -58,7 +58,7 @@ class OpenSpaceService(
     val talk = findTalk(talkID)
     talk.speaker.id != userID && throw TalkNotFoundException()
     val os = talk.enqueue()
-    queueHandler.sendFor(os)
+    queueSocket.sendFor(os)
     return os
   }
 }

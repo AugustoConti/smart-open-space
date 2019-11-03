@@ -1,9 +1,9 @@
-package com.sos.smartopenspace.service
+package com.sos.smartopenspace.services
 
-import com.sos.smartopenspace.model.OpenSpace
-import com.sos.smartopenspace.model.Room
-import com.sos.smartopenspace.model.Talk
-import com.sos.smartopenspace.model.User
+import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Room
+import com.sos.smartopenspace.domain.Talk
+import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.UserRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener

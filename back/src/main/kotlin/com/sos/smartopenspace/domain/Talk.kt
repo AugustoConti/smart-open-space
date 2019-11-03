@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.Column

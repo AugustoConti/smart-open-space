@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

@@ -1,8 +1,8 @@
-package com.sos.smartopenspace.webservice
+package com.sos.smartopenspace.controllers
 
-import com.sos.smartopenspace.model.OpenSpace
-import com.sos.smartopenspace.model.Talk
-import com.sos.smartopenspace.service.OpenSpaceService
+import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Talk
+import com.sos.smartopenspace.services.OpenSpaceService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,7 +14,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("openSpace")
-class OpenSpaceServiceREST(private val openSpaceService: OpenSpaceService) {
+class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   @PostMapping("/{userID}")
   fun create(@PathVariable userID: Long, @Valid @RequestBody openSpace: OpenSpace) = openSpaceService.create(userID, openSpace)
 

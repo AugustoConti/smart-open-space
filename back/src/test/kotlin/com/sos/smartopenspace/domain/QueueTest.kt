@@ -1,6 +1,5 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
-import com.sos.smartopenspace.service.TalkNotFoundException
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate

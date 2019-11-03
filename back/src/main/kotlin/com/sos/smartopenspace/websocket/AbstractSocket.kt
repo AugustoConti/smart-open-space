@@ -1,14 +1,14 @@
-package com.sos.smartopenspace.webservice
+package com.sos.smartopenspace.websocket
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.sos.smartopenspace.model.OpenSpace
+import com.sos.smartopenspace.domain.OpenSpace
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
-abstract class AbstractWSController<T> : TextWebSocketHandler() {
+abstract class AbstractSocket<T> : TextWebSocketHandler() {
   private val sessionList = mutableMapOf<WebSocketSession, Long>()
 
   override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {

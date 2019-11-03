@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -36,14 +36,15 @@ class OpenSpace(
   val startTime: LocalTime,
   val endTime: LocalTime,
 
+  @JsonIgnore
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
-  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @OneToMany(cascade = [CascadeType.ALL])
   val rooms: Set<Room>,
 
-  @field:Valid
   @JsonIgnore
-  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @field:Valid
+  @OneToMany(cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
   var isActiveQueue: Boolean = false,
@@ -59,7 +60,7 @@ class OpenSpace(
   lateinit var organizer: User
 
   @JsonIgnore
-  @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @OneToMany(cascade = [CascadeType.ALL])
   val slots: MutableSet<Slot> = mutableSetOf()
 
   @OrderColumn
@@ -67,7 +68,7 @@ class OpenSpace(
   @OneToMany(fetch = FetchType.EAGER)
   val queue: MutableList<Talk> = mutableListOf()
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   val toSchedule: MutableSet<Talk> = mutableSetOf()
 
   fun addTalk(talk: Talk): OpenSpace {

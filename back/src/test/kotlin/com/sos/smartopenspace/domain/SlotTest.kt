@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

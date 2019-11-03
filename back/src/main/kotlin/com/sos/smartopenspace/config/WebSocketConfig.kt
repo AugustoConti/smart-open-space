@@ -1,5 +1,7 @@
-package com.sos.smartopenspace.webservice
+package com.sos.smartopenspace.config
 
+import com.sos.smartopenspace.websocket.QueueSocket
+import com.sos.smartopenspace.websocket.ScheduleSocket
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer
@@ -7,17 +9,17 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 @Configuration
 @EnableWebSocket
-class WSConfig(
-  private val scheduleHandler: ScheduleHandler,
-  private val queueHandler: QueueHandler
+class WebSocketConfig(
+  private val scheduleSocket: ScheduleSocket,
+  private val queueSocket: QueueSocket
 ) : WebSocketConfigurer {
   override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
     registry
-      .addHandler(scheduleHandler, "/scheduleSocket")
+      .addHandler(scheduleSocket, "/scheduleSocket")
       .setAllowedOrigins("http://localhost:1234", "https://smartopenspace.herokuapp.com")
       .withSockJS()
     registry
-      .addHandler(queueHandler, "/queueSocket")
+      .addHandler(queueSocket, "/queueSocket")
       .setAllowedOrigins("http://localhost:1234", "https://smartopenspace.herokuapp.com")
       .withSockJS()
   }

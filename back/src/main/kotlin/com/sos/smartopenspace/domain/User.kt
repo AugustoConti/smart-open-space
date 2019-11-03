@@ -1,10 +1,9 @@
-package com.sos.smartopenspace.model
+package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.OneToMany
@@ -22,6 +21,7 @@ class User(
 
   @field:NotEmpty(message = "Ingrese una contraseña")
   @field:NotBlank(message = "Contraseña no puede ser vacía")
+  @JsonIgnore
   val password: String,
 
   @field:NotEmpty(message = "Ingrese un nombre")
@@ -30,12 +30,12 @@ class User(
 
   @field:Valid
   @JsonIgnore
-  @OneToMany(mappedBy = "organizer", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @OneToMany(mappedBy = "organizer", cascade = [CascadeType.ALL])
   val openSpaces: MutableSet<OpenSpace> = mutableSetOf(),
 
   @field:Valid
   @JsonIgnore
-  @OneToMany(mappedBy = "speaker", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @OneToMany(mappedBy = "speaker", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
   @Id @GeneratedValue

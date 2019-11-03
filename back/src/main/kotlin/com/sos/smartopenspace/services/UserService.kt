@@ -1,6 +1,6 @@
-package com.sos.smartopenspace.service
+package com.sos.smartopenspace.services
 
-import com.sos.smartopenspace.model.User
+import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

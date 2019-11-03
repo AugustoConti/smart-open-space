@@ -1,7 +1,7 @@
-package com.sos.smartopenspace.webservice
+package com.sos.smartopenspace.controllers
 
-import com.sos.smartopenspace.model.User
-import com.sos.smartopenspace.service.UserService
+import com.sos.smartopenspace.domain.User
+import com.sos.smartopenspace.services.UserService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
