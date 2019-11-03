@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import SockJS from 'sockjs-client';
 
 const getSocket = (endpoint, id, onUpdate) => {
-  // eslint-disable-next-line no-undef
   const webSocket = new SockJS(`${process.env.API_URL}/${endpoint}`);
   webSocket.onmessage = msg => onUpdate(JSON.parse(msg.data));
   webSocket.onopen = () => webSocket.send(id);
