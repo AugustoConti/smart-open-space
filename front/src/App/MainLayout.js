@@ -1,24 +1,22 @@
 import React from 'react';
-
 import { Box, Grid } from 'grommet';
 
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
 
-const smallLayout = {
-  areas: [['header'], ['main']],
-  columns: ['flex'],
-  pad: { horizontal: 'medium' },
-};
-const mediumLayout = {
-  areas: [['headerL', 'header', 'headerR'], ['l', 'main', 'r']],
-  columns: ['flex', 'large', 'flex'],
-  pad: undefined,
-};
-const largeLayout = { ...mediumLayout, columns: ['flex', 'xlarge', 'flex'] };
+const areasThree = [['headerL', 'header', 'headerR'], ['l', 'main', 'r']];
 
-const useMainLayout = () =>
-  ({ small: smallLayout, medium: mediumLayout, large: largeLayout }[useSize()]);
+const layouts = {
+  small: {
+    areas: [['header'], ['main']],
+    columns: ['flex'],
+    pad: { horizontal: 'medium' },
+  },
+  medium: { areas: areasThree, columns: ['flex', 'large', 'flex'] },
+  large: { areas: areasThree, columns: ['flex', 'xlarge', 'flex'] },
+};
+
+const useMainLayout = () => layouts[useSize()];
 
 const BoxBrand = ({ children, ...props }) => (
   <Box background="brand" {...props}>

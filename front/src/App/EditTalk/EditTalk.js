@@ -1,22 +1,22 @@
 import React from 'react';
-import { useHistory, useParams, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useGetOS, createTalk } from '#api/os-client';
 import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import { TinySpinner } from '#shared/Spinner';
+import { RedirectToRoot, usePushToMyTalks } from '#helpers/routes';
 
 const EditTalk = () => {
-  const { id } = useParams();
   const history = useHistory();
-  const { data: os, isPending, isRejected } = useGetOS(id);
+  const pushToMyTalks = usePushToMyTalks();
+  const { data: os, isPending, isRejected } = useGetOS();
 
-  if (isRejected) return <Redirect to="/" />;
+  if (isRejected) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { name, description } }) => {
-    createTalk(id, { name, description }).then(() => history.push(`/os/${id}/myTalks`));
-  };
+  const onSubmit = ({ value: { name, description } }) =>
+    createTalk(os.id, { name, description }).then(pushToMyTalks);
 
   return (
     <>

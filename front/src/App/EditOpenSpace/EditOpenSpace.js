@@ -5,6 +5,7 @@ import { createOS } from '#api/os-client';
 import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
+import { usePushToRoot } from '#helpers/routes';
 
 import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
@@ -23,6 +24,8 @@ const initialValues = {
 
 const EditOpenSpace = () => {
   const history = useHistory();
+  const pushToRoot = usePushToRoot();
+
   const onSubmit = ({
     value: {
       date,
@@ -37,7 +40,7 @@ const EditOpenSpace = () => {
       name,
       rooms: rooms.map(r => ({ name: r })),
       startTime: `${pad(start)}:00`,
-    }).then(() => history.push('/'));
+    }).then(pushToRoot);
   };
 
   return (

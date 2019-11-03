@@ -1,4 +1,5 @@
 import { useAsync } from 'react-async';
+import { useParams } from 'react-router-dom';
 
 import { get, post, put } from './api-client';
 import { getUser } from '../useAuth';
@@ -14,10 +15,10 @@ const getAllOS = () => withUser(({ id }) => get(`openSpace/user/${id}`));
 const useGetAllOS = () => useAsync({ promiseFn: getAllOS });
 
 const getOS = ({ osId }) => get(`openSpace/${osId}`);
-const useGetOS = osId => useAsync({ promiseFn: getOS, osId });
+const useGetOS = () => useAsync({ promiseFn: getOS, osId: useParams().id });
 
 const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
-const useGetTalks = osId => useAsync({ promiseFn: getTalks, osId });
+const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, hour) =>
   put(`ws/schedule/${talkID}/${roomID}/${hour}`);
@@ -37,7 +38,7 @@ const getMyTalks = ({ osId }) =>
     const talks = get(`openSpace/talks/${id}/${osId}`);
     return Promise.all([os, slots, talks]);
   });
-const useGetMyTalks = osId => useAsync({ promiseFn: getMyTalks, osId });
+const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });
 
 export {
   activateQueue,

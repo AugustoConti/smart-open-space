@@ -4,7 +4,9 @@ import { Button, Form, FormField, Select, TextArea } from 'grommet';
 import PropTypes from 'prop-types';
 
 import MyProps from '#helpers/MyProps';
+import useLoading from '#helpers/useLoading';
 import { EmailIcon, PasswordIcon, TextIcon, TextAreaIcon } from '#shared/icons';
+import { TinySpinner } from '#shared/Spinner';
 import Row from './Row';
 import RowBetween from './RowBetween';
 
@@ -65,21 +67,38 @@ Footer.propTypes = { children: MyProps.children.isRequired };
 const MyForm = ({
   children,
   onSecondary,
+  onSubmit,
   primaryLabel = 'Aceptar',
   secondaryLabel = 'Cancelar',
   ...props
-}) => (
-  <Form messages={{ invalid: 'Inválido', required: 'Obligatorio' }} {...props}>
-    {children}
-    <Footer>
-      {onSecondary && <Button label={secondaryLabel} onClick={onSecondary} />}
-      <Button label={primaryLabel} primary type="submit" />
-    </Footer>
-  </Form>
-);
+}) => {
+  const [loading, withLoading] = useLoading();
+  return (
+    <Form
+      messages={{ invalid: 'Inválido', required: 'Obligatorio' }}
+      onSubmit={withLoading(onSubmit)}
+      {...props}
+    >
+      {children}
+      <Footer>
+        {onSecondary && (
+          <Button disabled={loading} label={secondaryLabel} onClick={onSecondary} />
+        )}
+        <Button
+          disabled={loading}
+          icon={loading ? <TinySpinner /> : undefined}
+          label={primaryLabel}
+          primary
+          type="submit"
+        />
+      </Footer>
+    </Form>
+  );
+};
 MyForm.propTypes = {
   children: MyProps.children.isRequired,
   onSecondary: PropTypes.func,
+  onSubmit: PropTypes.func.isRequired,
   primaryLabel: PropTypes.string,
   secondaryLabel: PropTypes.string,
 };

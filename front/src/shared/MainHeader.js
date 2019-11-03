@@ -6,6 +6,7 @@ import { Box, Text, Button } from 'grommet';
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
 import ButtonNew from './ButtonNew';
+import ButtonLoading from './ButtonLoading';
 import Row from './Row';
 import RowBetween from './RowBetween';
 import Title from './Title';
@@ -48,18 +49,18 @@ MySubTitle.propTypes = {
   label: PropTypes.string,
 };
 
-const MyButton = props => <Button fill="vertical" primary {...props} />;
+const MyButton = props => <Button primary {...props} />;
 
 const getByType = (childs, type) => childs.find(c => c.type === type);
-const getAllByTypes = (childs, type1, type2) =>
-  childs.filter(c => c.type === type1 || c.type === type2);
+const getAllByTypes = (childs, ...types) =>
+  childs.filter(c => types.find(t => t === c.type));
 
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const childs = React.Children.toArray(children);
   const title = getByType(childs, MyTitle) || getByType(childs, MyTitleLink);
   const subtitle = getByType(childs, MySubTitle);
-  const buttons = getAllByTypes(childs, MyButton, ButtonNew);
+  const buttons = getAllByTypes(childs, MyButton, ButtonNew, ButtonLoading);
   return (
     <RowBetween
       direction={isSmall ? 'column' : 'row'}
@@ -84,5 +85,6 @@ MainHeader.TitleLink = MyTitleLink;
 MainHeader.SubTitle = MySubTitle;
 MainHeader.Button = MyButton;
 MainHeader.ButtonNew = ButtonNew;
+MainHeader.ButtonLoading = ButtonLoading;
 
 export default MainHeader;

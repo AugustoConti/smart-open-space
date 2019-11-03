@@ -15,7 +15,7 @@ const DescriptionInfo = ({ title, speaker, info, onClose }) => (
       <Row justify="end">
         <Button icon={<FormCloseIcon />} onClick={onClose} plain />
       </Row>
-      <Title>{title}</Title>
+      <Title level="2">{title}</Title>
       <Detail icon={UserIcon} text={speaker} />
       <Detail color="dark-1" text={info} />
     </Box>

@@ -14,25 +14,32 @@ import MyTalks from './MyTalks';
 import OpenSpace from './OpenSpace';
 import OSProjector from './OSProjector';
 import Header from './Header';
+import ErrorBoundary from './ErrorBoundary';
+
+const Routes = () => (
+  <Switch>
+    <Route path="/os/:id/projector" exact component={OSProjector} />
+    <Route path="/os/:id/myTalks" exact component={MyTalks} />
+    <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
+    <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
+    <Route path="/os/:id" exact component={OpenSpace} />
+    <Route path={['/login', '/register']} exact component={Login} />
+    <Route path="/" exact component={Home} />
+    {/* <Route component={Page404} /> */}
+  </Switch>
+);
 
 const App = () => (
   <Grommet full theme={grommet}>
-    <Router>
-      <AuthProvider>
-        <MainLayout header={<Route path="/" component={Header} />}>
-          <Switch>
-            <Route path="/os/:id/projector" exact component={OSProjector} />
-            <Route path="/os/:id/myTalks" exact component={MyTalks} />
-            <Route path={['/newTalk/:id', '/editTalk/:id']} exact component={EditTalk} />
-            <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
-            <Route path="/os/:id" exact component={OpenSpace} />
-            <Route path={['/login', '/register']} exact component={Login} />
-            <Route path="/" exact component={Home} />
-            {/* <Route component={Page404} /> */}
-          </Switch>
-        </MainLayout>
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <MainLayout header={<Route path="/" component={Header} />}>
+            <Routes />
+          </MainLayout>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   </Grommet>
 );
 

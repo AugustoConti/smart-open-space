@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const getSocket = (endpoint, id, onUpdate) => {
   // eslint-disable-next-line no-undef
@@ -8,7 +9,8 @@ const getSocket = (endpoint, id, onUpdate) => {
   return () => webSocket.close();
 };
 
-const useQueue = (id, onUpdate = () => {}) => {
+const useQueue = (onUpdate = () => {}) => {
+  const { id } = useParams();
   const [queue, setQueue] = useState();
   const onUpd = q => {
     onUpdate();
@@ -19,7 +21,8 @@ const useQueue = (id, onUpdate = () => {}) => {
   return queue;
 };
 
-const useSlots = id => {
+const useSlots = () => {
+  const { id } = useParams();
   const [slots, setSlots] = useState([]);
   useEffect(() => getSocket('scheduleSocket', id, setSlots), [id]);
   return slots;

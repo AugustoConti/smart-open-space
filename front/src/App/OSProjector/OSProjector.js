@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useHistory, useParams, Redirect } from 'react-router-dom';
 import { Box, Button, Text, Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
@@ -7,11 +6,13 @@ import ideasFlow from '#assets/ideas_flow.svg';
 import { nextTalk, useGetOS } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
+import ButtonLoading from '#shared/ButtonLoading';
 import EmptyData from '#shared/EmptyData';
 import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
 import { ClockIcon, NextIcon, TalkIcon, UserIcon } from '#shared/icons';
 import Spinner from '#shared/Spinner';
+import { RedirectToOS, RedirectToRoot, usePushToOS } from '#helpers/routes';
 
 const TIME_FOR_SPEAKER = 30;
 
@@ -21,10 +22,7 @@ const useInterval = (callback, delay) => {
     savedCallback.current = callback;
   });
   useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    const id = setInterval(tick, delay);
+    const id = setInterval(() => savedCallback.current(), delay);
     return () => clearInterval(id);
   }, [delay]);
 };
@@ -32,13 +30,15 @@ const useInterval = (callback, delay) => {
 const LabelTimeLeft = () => (
   <Row>
     <ClockIcon />
-    <Text>Tiempo restante</Text>
+    <Text>TIEMPO RESTANTE</Text>
   </Row>
 );
 
 const BoxTime = ({ background = 'status-critical', label }) => (
   <Box alignSelf="center" background={background} pad="medium" round>
-    <Text size="large">{label}</Text>
+    <Text size="large" weight="bold">
+      {label}
+    </Text>
   </Box>
 );
 BoxTime.propTypes = {
@@ -47,16 +47,16 @@ BoxTime.propTypes = {
 };
 
 const TimeLeft = ({ time }) => (
-  <Box alignSelf="start" margin={{ top: 'medium' }}>
+  <Box alignSelf="center" margin={{ top: 'medium' }}>
     {time === 0 ? (
       <BoxTime label="Se acabó tu tiempo!" />
     ) : time <= 5 ? (
-      <Box>
+      <Box gap="medium">
         <BoxTime label={time} />
         <LabelTimeLeft />
       </Box>
     ) : (
-      <Box>
+      <Box gap="medium">
         <BoxTime background="dark-1" label={time} />
         <LabelTimeLeft />
       </Box>
@@ -65,19 +65,21 @@ const TimeLeft = ({ time }) => (
 );
 TimeLeft.propTypes = { time: PropTypes.number.isRequired };
 
-const NextTalks = ({ restTalks }) =>
+const NextTalks = ({ restTalks, size }) =>
   restTalks.length < 1 ? (
     <Text>Último orador!</Text>
   ) : (
     <Box>
       <Text color="dark-3" textAlign="center">
         SIGUIENTES
-        {!!restTalks.length && ` (${restTalks.length})`}
+        {size > 0 && ` (${size})`}
       </Text>
       {restTalks.map(t => (
         <Row
+          background="light-1"
+          border={{ color: 'dark-3' }}
           direction="row-responsive"
-          border={{ color: 'dark-2' }}
+          elevation="small"
           key={t.id}
           margin={{ top: 'small' }}
           pad="small"
@@ -92,56 +94,45 @@ const NextTalks = ({ restTalks }) =>
       ))}
     </Box>
   );
-NextTalks.propTypes = { restTalks: PropTypes.arrayOf(PropTypes.object).isRequired };
+NextTalks.propTypes = {
+  restTalks: PropTypes.arrayOf(PropTypes.object).isRequired,
+  size: PropTypes.number.isRequired,
+};
 
 const StartButton = props => (
-  <Button
-    color="status-warning"
-    icon={<ClockIcon />}
-    label="Comenzar 30''"
-    primary
-    {...props}
-  />
+  <Button color="status-warning" icon={<ClockIcon />} label="30''" primary {...props} />
 );
 
 const NextButton = props => (
-  <Button gap="none" icon={<NextIcon />} label="Siguiente" primary reverse {...props} />
+  <ButtonLoading gap="none" icon={<NextIcon />} label="Siguiente" reverse {...props} />
 );
 
-const EmptyProjector = () => {
-  const { id } = useParams();
-  const history = useHistory();
-  return (
-    <Box margin={{ top: 'large' }}>
-      <EmptyData
-        buttonText="Ir al OpenSpace"
-        img={ideasFlow}
-        onClick={() => history.push(`/os/${id}`)}
-        text="No hay oradores para exponer"
-      />
-    </Box>
-  );
-};
+const EmptyProjector = () => (
+  <Box margin={{ top: 'large' }}>
+    <EmptyData
+      buttonText="Ir al OpenSpace"
+      img={ideasFlow}
+      onClick={usePushToOS()}
+      text="No hay oradores para exponer"
+    />
+  </Box>
+);
 
 const OSProjector = () => {
-  const { id } = useParams();
   const user = useUser();
   const [time, setTime] = useState();
-  // const [fast, setFast] = useState(true);
-  const { data: { organizer } = {}, isPending } = useGetOS(id);
-  const queue = useQueue(id);
+  const { data: { id, organizer } = {}, isPending, isRejected } = useGetOS();
+  const queue = useQueue();
 
-  useInterval(
-    () => {
-      if (!time || time === 0) return;
-      setTime(time - 1);
-    },
-    // fast ? 300 :
-    1000
-  );
+  useInterval(() => {
+    if (!time || time === 0) return;
+    setTime(time - 1);
+  }, 1000);
 
+  if (isRejected) return <RedirectToRoot />;
+  if (!user) return <RedirectToOS />;
   if (isPending) return <Spinner />;
-  if (organizer.id !== user.id) return <Redirect to={`/os/${id}`} />;
+  if (organizer.id !== user.id) return <RedirectToOS />;
   if (!queue) return <Spinner />;
   if (queue.length < 1) return <EmptyProjector />;
 
@@ -152,30 +143,34 @@ const OSProjector = () => {
     <>
       <RowBetween margin={{ vertical: 'medium' }}>
         <StartButton onClick={() => setTime(TIME_FOR_SPEAKER)} />
-        {/* <CheckBox
-          checked={fast}
-          label="Acelerar?"
-          onChange={event => setFast(event.target.checked)}
-        /> */}
         <NextButton
           onClick={() => {
-            nextTalk(id);
             setTime(undefined);
+            return nextTalk(id);
           }}
         />
       </RowBetween>
       <Box align="center">
-        <Heading margin="small">{currentTalk.name}</Heading>
-        <Text size="large">{currentTalk.description}</Text>
-        <Row margin={{ top: 'small' }}>
+        <Heading size="medium" margin="small">
+          {currentTalk.name}
+        </Heading>
+        <Row>
           <UserIcon />
-          <Text>{currentTalk.speaker.name}</Text>
+          <Text size="large">{currentTalk.speaker.name}</Text>
         </Row>
+        <Text textAlign="center" size="xlarge">
+          {currentTalk.description}
+        </Text>
       </Box>
-      <RowBetween justify="evenly" margin={{ top: 'large' }}>
+      <Row
+        direction="row-responsive"
+        gap="large"
+        justify="evenly"
+        margin={{ top: 'medium' }}
+      >
         {time !== undefined && <TimeLeft time={time} />}
-        <NextTalks restTalks={restTalks} />
-      </RowBetween>
+        <NextTalks restTalks={restTalks} size={queue.length - 1} />
+      </Row>
     </>
   );
 };

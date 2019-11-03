@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Box, Grid } from 'grommet';
 import PropTypes from 'prop-types';
 
@@ -57,8 +56,8 @@ TimeSpan.propTypes = {
 
 const getRangeHours = (start, end) => [...Array(end + 1).keys()].slice(start);
 
-const Schedule = ({ id, startTime, endTime }) => {
-  const slots = useSlots(id);
+const Schedule = ({ startTime, endTime }) => {
+  const slots = useSlots();
   return getRangeHours(startTime[0], endTime[0]).map(hour => {
     const slotsHour = slots.filter(s => s.hour === hour);
     const key = `${hour}-${slotsHour.map(s => s.id).join('-')}`;

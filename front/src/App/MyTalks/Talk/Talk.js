@@ -1,32 +1,27 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Text } from 'grommet';
+import { Box, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { enqueueTalk, scheduleTalk } from '#api/os-client';
+import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
 
-const Badge = ({ text, color }) => (
-  <Box
-    alignSelf="center"
-    // background={{ color, opacity: 'medium' }}
-    border={{ color, size: 'small' }}
-    pad={{ horizontal: 'small', vertical: 'xsmall' }}
-    round
-  >
+const Badge = ({ color, text }) => (
+  <Box alignSelf="center">
     <Text color={color} weight="bold">
       {text}
     </Text>
   </Box>
 );
-Badge.propTypes = { text: PropTypes.string, color: PropTypes.string };
+Badge.propTypes = { color: PropTypes.string, text: PropTypes.string };
 
 const ButtonAction = props => (
-  <Button alignSelf="center" margin={{ top: 'medium' }} primary {...props} />
+  <ButtonLoading alignSelf="center" margin={{ top: 'medium' }} {...props} />
 );
 
 const Talk = ({
@@ -47,13 +42,7 @@ const Talk = ({
   const onSubmit = ({ value: { time, room } }) => {
     scheduleTalk(id, room.id, time).then(onSchedule);
   };
-  const color = assigned
-    ? 'status-ok'
-    : toSchedule
-    ? 'accent-3'
-    : enqueued
-    ? 'accent-2'
-    : 'accent-4';
+  const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
   return (
     <Card borderColor={color}>
       <Box>

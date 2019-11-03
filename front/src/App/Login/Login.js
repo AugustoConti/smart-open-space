@@ -1,43 +1,46 @@
 import React from 'react';
-import { useHistory, useLocation, Redirect } from 'react-router-dom';
-
 import { Heading } from 'grommet';
 
 import useAuth, { useUser } from '#helpers/useAuth';
 import MyForm from '#shared/MyForm';
+import {
+  RedirectToRoot,
+  usePushToRoot,
+  usePushToRegister,
+  useInLogin,
+} from '#helpers/routes';
 
 const Login = () => {
-  const { pathname } = useLocation();
-  const history = useHistory();
+  const pushToRoot = usePushToRoot();
+  const pushToRegister = usePushToRegister();
   const { login, register } = useAuth();
-  const isRegister = pathname === '/register';
+  const isRegister = !useInLogin();
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',
     secondaryLabel: isRegister ? undefined : 'Registrarse',
-    onSecondary: isRegister ? undefined : () => history.push('/register'),
+    onSecondary: isRegister ? undefined : pushToRegister,
     primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
-  const onSubmit = ({ value: userData }) =>
-    data.action(userData).then(() => history.push('/'));
+  const onSubmit = ({ value: userData }) => {
+    data.action(userData).then(pushToRoot);
+  };
 
-  return useUser() ? (
-    <Redirect to="/" />
-  ) : (
-    <>
+  if (useUser()) return <RedirectToRoot />;
+
+  return (
+    <MyForm
+      onSecondary={data.onSecondary}
+      primaryLabel={data.primaryLabel}
+      secondaryLabel={data.secondaryLabel}
+      onSubmit={onSubmit}
+      value={{ name: '', email: '', password: '' }}
+    >
       <Heading>{data.title}</Heading>
-      <MyForm
-        onSecondary={data.onSecondary}
-        primaryLabel={data.primaryLabel}
-        secondaryLabel={data.secondaryLabel}
-        onSubmit={onSubmit}
-        value={{ name: '', email: '', password: '' }}
-      >
-        {isRegister && <MyForm.Text />}
-        <MyForm.Email />
-        <MyForm.Password />
-      </MyForm>
-    </>
+      {isRegister && <MyForm.Text />}
+      <MyForm.Email />
+      <MyForm.Password />
+    </MyForm>
   );
 };
 

@@ -1,15 +1,17 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { Box, Button, Menu, Text, Image } from 'grommet';
 import PropTypes from 'prop-types';
 
 import logo from '#assets/logo.svg';
 import useAuth, { useUser } from '#helpers/useAuth';
+import useLoading from '#helpers/useLoading';
 import useSize from '#helpers/useSize';
 import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
+import { useInLogin, usePushToLogin, usePushToRoot } from '#helpers/routes';
+import { TinySpinner } from '#shared/Spinner';
 
 const SmallMenu = ({ color }) => (
   <Box pad="medium">
@@ -31,38 +33,36 @@ LargeMenu.propTypes = {
 };
 
 const LogoSmall = () => (
-  <Box height="xxsmall" width="xxsmall" round="large" pad="xxsmall" background="accent-1">
+  <Box background="accent-1" height="xxsmall" pad="xxsmall" round="large" width="xxsmall">
     <Image fit="contain" src={logo} />
   </Box>
 );
 
-const HomeButton = ({ onClick }) => {
-  const isSmall = useSize() === 'small';
-  return (
-    <Button fill="vertical" hoverIndicator onClick={onClick} plain>
-      <RowBetween pad="xxsmall" fill="vertical">
-        <LogoSmall />
-        {!isSmall && (
-          <Text color="light-1" size="xlarge" margin={{ left: 'xsmall' }}>
-            Smart-OS
-          </Text>
-        )}
-      </RowBetween>
-    </Button>
-  );
-};
+const HomeButton = ({ onClick }) => (
+  <Button
+    hoverIndicator
+    icon={<LogoSmall />}
+    label={
+      <Text color="light-1" size="xlarge">
+        {useSize() === 'small' ? 'SOS' : 'Smart-OS'}
+      </Text>
+    }
+    onClick={onClick}
+    plain
+  />
+);
 HomeButton.propTypes = { onClick: PropTypes.func.isRequired };
 
 const MyMenu = ({ user }) => {
-  const history = useHistory();
+  const [loading, withLoading] = useLoading();
+  const pushToLogin = usePushToLogin();
   const isSmall = useSize() === 'small';
   const { logout } = useAuth();
+  if (loading) return <TinySpinner color="light-1" size="large" />;
   const menuItems = [
     // {
     //   label: 'Help',
-    //   onClick: () => {
-    //     history.push('/');
-    //   },
+    //   onClick: () => {},
     // },
     {
       label: (
@@ -71,7 +71,7 @@ const MyMenu = ({ user }) => {
           Salir
         </Row>
       ),
-      onClick: () => logout().then(() => history.push('/login')),
+      onClick: withLoading(() => logout().then(pushToLogin)),
     },
   ];
   return (
@@ -93,18 +93,17 @@ MyMenu.propTypes = {
 };
 
 const Header = () => {
-  const { pathname } = useLocation();
-  const history = useHistory();
+  const pushToRoot = usePushToRoot();
+  const pushToLogin = usePushToLogin();
   const user = useUser();
-  const isLogged = !!user;
-  const inLogin = pathname === '/login';
+  const inLogin = useInLogin();
   return (
     <RowBetween as="header" fill>
-      <HomeButton onClick={() => history.push('/')} />
-      {isLogged ? (
+      <HomeButton onClick={pushToRoot} />
+      {user ? (
         <MyMenu user={user} />
       ) : (
-        !inLogin && <Button label="Ingresar" onClick={() => history.push('/login')} />
+        !inLogin && <Button label="Ingresar" onClick={pushToLogin} />
       )}
     </RowBetween>
   );
