@@ -20,6 +20,14 @@ class UserData(
   val password: String
 )
 
+data class Data(val data: User?)
+
+data class DataEmail(
+  @field:NotEmpty(message = "Ingrese un email")
+  @field:Email
+  val email: String
+)
+
 @RestController
 @RequestMapping("user")
 class UserServiceREST(private val userService: UserService) {
@@ -28,4 +36,7 @@ class UserServiceREST(private val userService: UserService) {
 
   @PostMapping("/auth")
   fun auth(@Valid @RequestBody user: UserData) = userService.auth(user.email, user.password)
+
+  @PostMapping("/identify")
+  fun identify(@Valid @RequestBody data: DataEmail) = Data(userService.identify(data.email))
 }

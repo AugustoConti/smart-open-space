@@ -33,7 +33,7 @@ const EditOpenSpace = () => {
       rooms,
       time: [start, end],
     },
-  }) => {
+  }) =>
     createOS({
       date: new Date(date),
       endTime: `${pad(end)}:00`,
@@ -41,7 +41,6 @@ const EditOpenSpace = () => {
       rooms: rooms.map(r => ({ name: r })),
       startTime: `${pad(start)}:00`,
     }).then(pushToRoot);
-  };
 
   return (
     <>

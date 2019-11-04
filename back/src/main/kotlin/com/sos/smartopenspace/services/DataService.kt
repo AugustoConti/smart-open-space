@@ -103,23 +103,23 @@ class DataService(private val userRepository: UserRepository) {
     userRepository.saveAll(
       setOf(
         User(
-          "augusto@sos.sos", "augusto", "Augusto",
+          "augusto@sos.sos", "Augusto", "Augusto",
           mutableSetOf(practicas), mutableSetOf(master, winter, agileMeetings, contrato)
         ),
         User(
-          "fede@sos.sos", "fede", "Fede",
+          "fede@sos.sos", "Fede", "Fede",
           mutableSetOf(cpi), mutableSetOf(dessAgil, front, proy, appLenta)
         ),
         User(
-          "juan@sos.sos", "juan", "Juan",
+          "juan@sos.sos", "Juan", "Juan",
           mutableSetOf(os1), mutableSetOf(testear, desSinJefe, charla1)
         ),
         User(
-          "maria@sos.sos", "maria", "Maria",
+          "maria@sos.sos", "Maria", "Maria",
           mutableSetOf(), mutableSetOf(judo, cuis, api, flutter)
         ),
         User(
-          "andrea@sos.sos", "andrea", "Andrea",
+          "andrea@sos.sos", "Andrea", "Andrea",
           mutableSetOf(), mutableSetOf(dessDeberia, js, troika)
         )
       )

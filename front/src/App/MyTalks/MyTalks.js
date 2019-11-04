@@ -47,7 +47,7 @@ EnqueuedTalkCard.propTypes = {
   children: MyProps.children.isRequired,
 };
 
-const PlaceBox = place => (
+const PlaceBox = ({ place }) => (
   <>
     <Box
       border={{
@@ -69,6 +69,7 @@ const PlaceBox = place => (
     )}
   </>
 );
+PlaceBox.propTypes = { place: PropTypes.number.isRequired };
 
 const EnqueuedTalkCurrent = ({ description, onFinish, title }) => (
   <EnqueuedTalkCard bgColor="accent-1">

@@ -22,4 +22,7 @@ class UserService(private val userRepository: UserRepository) {
 
   @Transactional(readOnly = true)
   fun findById(id: Long) = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
+
+  @Transactional(readOnly = true)
+  fun identify(email: String) = userRepository.findByEmail(email)
 }

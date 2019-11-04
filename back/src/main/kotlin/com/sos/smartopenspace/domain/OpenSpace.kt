@@ -36,7 +36,7 @@ class OpenSpace(
   val startTime: LocalTime,
   val endTime: LocalTime,
 
-  @JsonIgnore
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
   @OneToMany(cascade = [CascadeType.ALL])

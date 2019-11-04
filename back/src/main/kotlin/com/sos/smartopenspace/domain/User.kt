@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -19,14 +20,14 @@ class User(
   @Column(unique = true)
   val email: String,
 
-  @field:NotEmpty(message = "Ingrese una contraseña")
-  @field:NotBlank(message = "Contraseña no puede ser vacía")
-  @JsonIgnore
-  val password: String,
-
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
+
+  // @field:NotEmpty(message = "Ingrese una contraseña")
+  // @field:NotBlank(message = "Contraseña no puede ser vacía")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  val password: String = "",
 
   @field:Valid
   @JsonIgnore

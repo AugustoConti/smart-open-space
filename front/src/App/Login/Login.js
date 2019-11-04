@@ -22,9 +22,7 @@ const Login = () => {
     primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
-  const onSubmit = ({ value: userData }) => {
-    data.action(userData).then(pushToRoot);
-  };
+  const onSubmit = ({ value: userData }) => data.action(userData).then(pushToRoot);
 
   if (useUser()) return <RedirectToRoot />;
 
