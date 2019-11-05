@@ -60,7 +60,7 @@
     "serve": "^11.2.0",
     "slick-carousel": "^1.8.1",
     "sockjs-client": "^1.4.0",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.4.1"
   },
   "alias": {
     "#assets": "./src/assets",
