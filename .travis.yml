@@ -2,7 +2,8 @@ sudo: false
 
 jobs:
   include:
-    - stage: TestBack
+    - stage: test
+      name: back
       language: java
       services:
         - postgresql
@@ -20,14 +21,17 @@ jobs:
       after_success:
         - bash <(curl -s https://codecov.io/bash)
 
-    - stage: TestFront
+    - stage: test
+      name: front
       language: node_js
       node_js: node
       cache: yarn
       before_install: cd front
       install: yarn
 
-    - stage: DeployBack
+    - stage: deploy
+      name: back
+      if: branch = master
       language: java
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -47,7 +51,9 @@ jobs:
         on:
           repo: AugustoConti/smart-open-space
 
-    - stage: DeployFront
+    - stage: deploy
+      name: front
+      if: branch = master
       language: node_js
       node_js: node
       cache: yarn
