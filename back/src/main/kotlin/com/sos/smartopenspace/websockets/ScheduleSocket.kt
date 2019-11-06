@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.websocket
+package com.sos.smartopenspace.websockets
 
 import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Slot

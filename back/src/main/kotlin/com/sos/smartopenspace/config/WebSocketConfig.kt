@@ -1,7 +1,7 @@
 package com.sos.smartopenspace.config
 
-import com.sos.smartopenspace.websocket.QueueSocket
-import com.sos.smartopenspace.websocket.ScheduleSocket
+import com.sos.smartopenspace.websockets.QueueSocket
+import com.sos.smartopenspace.websockets.ScheduleSocket
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer

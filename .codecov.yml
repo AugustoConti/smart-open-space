@@ -1,5 +1,7 @@
 ignore:
   - "back/src/main/kotlin/com/sos/smartopenspace/SmartOpenSpaceApplication.kt"
+  - "back/src/main/kotlin/com/sos/smartopenspace/config"
+  - "back/src/main/kotlin/com/sos/smartopenspace/controllers"
   - "back/src/main/kotlin/com/sos/smartopenspace/persistence"
   - "back/src/main/kotlin/com/sos/smartopenspace/service"
-  - "back/src/main/kotlin/com/sos/smartopenspace/webservice"
+  - "back/src/main/kotlin/com/sos/smartopenspace/websockets"

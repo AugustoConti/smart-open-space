@@ -4,7 +4,7 @@ import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.websocket.QueueSocket
+import com.sos.smartopenspace.websockets.QueueSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

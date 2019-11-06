@@ -1,4 +1,4 @@
-package com.sos.smartopenspace.websocket
+package com.sos.smartopenspace.websockets
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
