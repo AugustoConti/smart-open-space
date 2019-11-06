@@ -12,9 +12,10 @@
 
 [![Heroku][heroku-badge]][heroku]
 [![Build Status][build-badge]][build]
-[![Issues][issues-badge]][issues]
+[![Dependabot Status][dependabot-badge]][dependabot]
 [![Backlog][backlog-badge]][backlog]
 [![License: GPLv3][license-badge]][license]
+[![Issues][issues-badge]][issues]
 
 ## 📖 Índice
 - [👎 Problema](#-problema)
@@ -90,6 +91,8 @@ cd front && yarn && yarn watch
 [backlog-badge]: https://img.shields.io/badge/trello-backlog-blue?style=flat-square&logo=trello
 [build]: https://travis-ci.org/AugustoConti/smart-open-space
 [build-badge]: https://img.shields.io/travis/AugustoConti/smart-open-space?logo=travis&style=flat-square
+[dependabot]: https://dependabot.com
+[dependabot-badge]: https://api.dependabot.com/badges/status?host=github&repo=AugustoConti/smart-open-space
 [git]: https://help.github.com/set-up-git-redirect
 [heroku]: https://smartopenspace.herokuapp.com
 [heroku-badge]: https://img.shields.io/badge/heroku-deploy-ff69b4?style=flat-square&logo=heroku
