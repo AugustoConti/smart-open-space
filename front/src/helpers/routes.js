@@ -31,4 +31,4 @@ export const usePushToOS = id => pushTo(useHistory(), useToOS(id));
 export const usePushToNewTalk = id => pushTo(useHistory(), useToNewTalk(id));
 export const usePushToProjector = id => pushTo(useHistory(), useToProjector(id));
 
-export const useInLogin = () => useLocation().pathname === toLogin;
+export const useInRegister = () => useLocation().pathname === toRegister;

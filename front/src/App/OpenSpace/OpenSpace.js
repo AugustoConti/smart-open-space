@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Box, Layer } from 'grommet';
 
 import { activateQueue, useGetOS } from '#api/os-client';
+import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
 import { RedirectToRoot, usePushToProjector, usePushToMyTalks } from '#helpers/routes';
-import { ScheduleIcon, TalkIcon, VideoIcon } from '#shared/icons';
+import { ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
@@ -13,6 +14,23 @@ import Title from '#shared/Title';
 
 import Schedule from './Schedule';
 import TalksGrid from './TalksGrid';
+
+const IdentifyForm = ({ children, onSecondary, onSubmit, title }) => (
+  <>
+    <Box margin={{ vertical: 'medium' }}>
+      <Title level="2" label={title} />
+    </Box>
+    <MyForm onSecondary={onSecondary} onSubmit={onSubmit}>
+      {children}
+    </MyForm>
+  </>
+);
+IdentifyForm.propTypes = {
+  children: MyProps.children.isRequired,
+  onSecondary: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+};
 
 const Identify = ({ onExit }) => {
   const [email, setEmail] = useState();
@@ -33,17 +51,14 @@ const Identify = ({ onExit }) => {
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
-        <Box margin={{ vertical: 'medium' }}>
-          <Title level="2">{email ? '¿Tu nombre?' : '¿Quien sos?'}</Title>
-        </Box>
         {email ? (
-          <MyForm onSecondary={onExit} onSubmit={onRegister}>
-            <MyForm.Text label="Para mostrar en tus charlas" />
-          </MyForm>
+          <IdentifyForm onSecondary={onExit} onSubmit={onRegister} title="¿Tu nombre?">
+            <MyForm.Text label="Para mostrarlo en tus charlas" />
+          </IdentifyForm>
         ) : (
-          <MyForm onSecondary={onExit} onSubmit={onIdentify}>
+          <IdentifyForm onSecondary={onExit} onSubmit={onIdentify} title="¿Quien sos?">
             <MyForm.Email />
-          </MyForm>
+          </IdentifyForm>
         )}
       </Box>
     </Layer>
@@ -77,12 +92,21 @@ const OpenSpace = () => {
         ) : (
           <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
         )}
-        <MainHeader.Button
-          color="accent-1"
-          icon={<TalkIcon />}
-          label="Mis charlas"
-          onClick={user ? pushToMyTalks : () => setShowIndentify(true)}
-        />
+        {user ? (
+          <MainHeader.Button
+            color="accent-1"
+            icon={<TalkIcon />}
+            label="Mis charlas"
+            onClick={pushToMyTalks}
+          />
+        ) : (
+          <MainHeader.Button
+            color="accent-3"
+            icon={<UserAddIcon />}
+            label="Ingresar"
+            onClick={() => setShowIndentify(true)}
+          />
+        )}
         {amTheOrganizer &&
           (activeQueue ? (
             <MainHeader.Button

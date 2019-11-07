@@ -2,10 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { createOS } from '#api/os-client';
+import { useUser } from '#helpers/useAuth';
 import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
-import { usePushToRoot } from '#helpers/routes';
+import { RedirectToRoot, usePushToRoot } from '#helpers/routes';
 
 import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
@@ -24,7 +25,10 @@ const initialValues = {
 
 const EditOpenSpace = () => {
   const history = useHistory();
+  const user = useUser();
   const pushToRoot = usePushToRoot();
+
+  if (!user) return <RedirectToRoot />;
 
   const onSubmit = ({
     value: {

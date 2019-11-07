@@ -3,5 +3,5 @@ ignore:
   - "back/src/main/kotlin/com/sos/smartopenspace/config"
   - "back/src/main/kotlin/com/sos/smartopenspace/controllers"
   - "back/src/main/kotlin/com/sos/smartopenspace/persistence"
-  - "back/src/main/kotlin/com/sos/smartopenspace/service"
+  - "back/src/main/kotlin/com/sos/smartopenspace/services"
   - "back/src/main/kotlin/com/sos/smartopenspace/websockets"

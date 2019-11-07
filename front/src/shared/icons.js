@@ -16,6 +16,7 @@ import {
   Run,
   Schedules,
   User,
+  UserAdd,
   Video,
   Workshop,
 } from 'grommet-icons';
@@ -39,5 +40,6 @@ export {
   DocumentText as TextAreaIcon,
   FormTrash as TrashIcon,
   User as UserIcon,
+  UserAdd as UserAddIcon,
   Video as VideoIcon,
 };

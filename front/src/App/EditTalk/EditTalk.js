@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useGetOS, createTalk } from '#api/os-client';
+import { useUser } from '#helpers/useAuth';
 import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
@@ -10,10 +11,11 @@ import { RedirectToRoot, usePushToMyTalks } from '#helpers/routes';
 
 const EditTalk = () => {
   const history = useHistory();
+  const user = useUser();
   const pushToMyTalks = usePushToMyTalks();
   const { data: os, isPending, isRejected } = useGetOS();
 
-  if (isRejected) return <RedirectToRoot />;
+  if (!user || isRejected) return <RedirectToRoot />;
 
   const onSubmit = ({ value: { name, description } }) =>
     createTalk(os.id, { name, description }).then(pushToMyTalks);

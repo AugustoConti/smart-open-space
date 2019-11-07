@@ -7,14 +7,14 @@ import {
   RedirectToRoot,
   usePushToRoot,
   usePushToRegister,
-  useInLogin,
+  useInRegister,
 } from '#helpers/routes';
 
 const Login = () => {
   const pushToRoot = usePushToRoot();
   const pushToRegister = usePushToRegister();
   const { login, register } = useAuth();
-  const isRegister = !useInLogin();
+  const isRegister = useInRegister();
   const data = {
     title: isRegister ? 'Registrarse' : 'Iniciar sesión',
     secondaryLabel: isRegister ? undefined : 'Registrarse',

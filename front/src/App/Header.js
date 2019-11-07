@@ -10,7 +10,7 @@ import useSize from '#helpers/useSize';
 import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
-import { useInLogin, usePushToLogin, usePushToRoot } from '#helpers/routes';
+import { useInRegister, usePushToLogin, usePushToRoot } from '#helpers/routes';
 import { TinySpinner } from '#shared/Spinner';
 
 const SmallMenu = ({ color }) => (
@@ -96,14 +96,14 @@ const Header = () => {
   const pushToRoot = usePushToRoot();
   const pushToLogin = usePushToLogin();
   const user = useUser();
-  const inLogin = useInLogin();
+  const inRegister = useInRegister();
   return (
     <RowBetween as="header" fill>
       <HomeButton onClick={pushToRoot} />
       {user ? (
         <MyMenu user={user} />
       ) : (
-        !inLogin && <Button label="Ingresar" onClick={pushToLogin} />
+        inRegister && <Button label="Ingresar" onClick={pushToLogin} />
       )}
     </RowBetween>
   );

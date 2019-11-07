@@ -5,16 +5,16 @@ import PropTypes from 'prop-types';
 
 import { nextTalk, useGetMyTalks } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
+import MyProps from '#helpers/MyProps';
+import { RedirectToRoot, usePushToOS, usePushToNewTalk } from '#helpers/routes';
 import { TalkIcon } from '#shared/icons';
 import Detail from '#shared/Detail';
 import MainHeader from '#shared/MainHeader';
 import MyGrid from '#shared/MyGrid';
-import MyProps from '#helpers/MyProps';
 import ButtonLoading from '#shared/ButtonLoading';
 import Row from '#shared/Row';
 import Spinner, { TinySpinner } from '#shared/Spinner';
 import Title from '#shared/Title';
-import { RedirectToRoot, usePushToOS, usePushToNewTalk } from '#helpers/routes';
 
 import EmptyTalk from './EmptyTalk';
 import Talk from './Talk';
