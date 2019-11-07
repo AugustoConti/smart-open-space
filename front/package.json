@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "grommet": "^2.7.11",
-    "grommet-icons": "^4.3.0",
+    "grommet-icons": "^4.4.0",
     "parcel-bundler": "^1.12.4",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
