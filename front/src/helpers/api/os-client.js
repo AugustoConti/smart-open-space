@@ -26,6 +26,9 @@ const scheduleTalk = (talkID, roomID, hour) =>
 const activateQueue = osId =>
   withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
 
+const finishQueue = osId =>
+  withUser(({ id }) => put(`openSpace/finishQueue/${id}/${osId}`));
+
 const enqueueTalk = talkId =>
   withUser(({ id }) => put(`openSpace/enqueueTalk/${id}/${talkId}`));
 
@@ -45,6 +48,7 @@ export {
   createOS,
   createTalk,
   enqueueTalk,
+  finishQueue,
   nextTalk,
   useGetAllOS,
   useGetOS,

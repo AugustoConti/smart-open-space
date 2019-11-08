@@ -29,7 +29,7 @@ MyTitle.propTypes = {
 };
 
 const MyTitleLink = props => (
-  <MyTitle>
+  <MyTitle style={{ textDecoration: 'underline' }}>
     <Button hoverIndicator plain {...props} />
   </MyTitle>
 );
@@ -59,7 +59,7 @@ const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const childs = React.Children.toArray(children);
   const title = getByType(childs, MyTitle) || getByType(childs, MyTitleLink);
-  const subtitle = getByType(childs, MySubTitle);
+  const subtitle = getAllByTypes(childs, MySubTitle);
   const buttons = getAllByTypes(childs, MyButton, ButtonNew, ButtonLoading);
   return (
     <RowBetween

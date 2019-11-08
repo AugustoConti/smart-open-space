@@ -41,6 +41,10 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   fun activateQueue(@PathVariable userID: Long, @PathVariable osID: Long) =
     openSpaceService.activateQueue(userID, osID)
 
+  @PutMapping("/finishQueue/{userID}/{osID}")
+  fun finishQueue(@PathVariable userID: Long, @PathVariable osID: Long) =
+    openSpaceService.finishQueue(userID, osID)
+
   @PutMapping("/enqueueTalk/{userID}/{talkID}")
   fun enqueueTalk(@PathVariable userID: Long, @PathVariable talkID: Long) =
     openSpaceService.enqueueTalk(userID, talkID)

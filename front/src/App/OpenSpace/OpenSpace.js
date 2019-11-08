@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Layer } from 'grommet';
 
-import { activateQueue, useGetOS } from '#api/os-client';
+import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
+import { useQueue } from '#api/sockets-client';
 import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
 import { RedirectToRoot, usePushToProjector, usePushToMyTalks } from '#helpers/routes';
-import { ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
+import Detail from '#shared/Detail';
+import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
@@ -66,32 +68,69 @@ const Identify = ({ onExit }) => {
 };
 Identify.propTypes = { onExit: PropTypes.func.isRequired };
 
+const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
+  <Layer onEsc={onExit} onClickOutside={onExit}>
+    <Box pad="medium">
+      <Box margin={{ vertical: 'medium' }}>
+        <Title level="2" label={title} />
+        <Detail size="large" text={subTitle} textAlign="center" />
+      </Box>
+      <MyForm
+        onSecondary={onExit}
+        onSubmit={data => {
+          onExit();
+          return onSubmit(data);
+        }}
+      />
+    </Box>
+  </Layer>
+);
+QueryForm.propTypes = {
+  title: PropTypes.string.isRequired,
+  subTitle: PropTypes.string.isRequired,
+  onExit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+};
+
 const OpenSpace = () => {
   const pushToProjector = usePushToProjector();
   const pushToMyTalks = usePushToMyTalks();
   const user = useUser();
+  const [showQuery, setShowQuery] = useState(false);
   const [showIndentify, setShowIndentify] = useState(false);
   const {
-    data: { id, activeQueue, name, startTime, endTime, organizer } = {},
+    data: {
+      id,
+      activeQueue,
+      endTime,
+      finishedQueue,
+      name,
+      organizer,
+      pendingQueue,
+      startTime,
+    } = {},
     isPending,
     isRejected,
     setData,
   } = useGetOS();
+  const queue = useQueue();
 
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
   const amTheOrganizer = user && organizer.id === user.id;
+  const doFinishQueue = () => finishQueue(id).then(setData);
 
   return (
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        {activeQueue ? (
-          <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
-        ) : (
+        {pendingQueue ? (
           <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
+        ) : (
+          <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         )}
+        {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         {user ? (
           <MainHeader.Button
             color="accent-1"
@@ -107,30 +146,53 @@ const OpenSpace = () => {
             onClick={() => setShowIndentify(true)}
           />
         )}
+        {amTheOrganizer && pendingQueue && (
+          <MainHeader.ButtonLoading
+            color="accent-4"
+            icon={<CartIcon />}
+            label="Iniciar Marketplace"
+            onClick={() => activateQueue(id).then(setData)}
+          />
+        )}
         {amTheOrganizer &&
-          (activeQueue ? (
+          activeQueue && (
             <MainHeader.Button
               color="accent-2"
               icon={<VideoIcon />}
               label="Proyector"
               onClick={pushToProjector}
             />
-          ) : (
+          ) && (
             <MainHeader.ButtonLoading
-              color="accent-4"
-              label="Activar Encolamiento"
-              onClick={() => activateQueue(id).then(setData)}
+              color="neutral-4"
+              icon={<CartIcon />}
+              label="Finalizar Marketplace"
+              onClick={() => {
+                if (queue && queue.length > 0) {
+                  setShowQuery(true);
+                  return Promise.resolve();
+                }
+                return doFinishQueue();
+              }}
             />
-          ))}
+          )}
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        {activeQueue ? (
-          <Schedule startTime={startTime} endTime={endTime} />
-        ) : (
+        {pendingQueue ? (
           <TalksGrid />
+        ) : (
+          <Schedule startTime={startTime} endTime={endTime} />
         )}
       </Box>
       {showIndentify && <Identify onExit={() => setShowIndentify(false)} />}
+      {showQuery && (
+        <QueryForm
+          title="¿Seguro?"
+          subTitle={`Queda${queue.length > 1 ? 'n' : ''} ${queue.length} en la cola`}
+          onExit={() => setShowQuery(false)}
+          onSubmit={doFinishQueue}
+        />
+      )}
     </>
   );
 };

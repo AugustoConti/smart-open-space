@@ -150,7 +150,7 @@ const MyTalks = () => {
           {!os ? <TinySpinner /> : os.name}
         </MainHeader.TitleLink>
         <MainHeader.SubTitle icon={TalkIcon} label="MIS CHARLAS" />
-        {talks.length > 0 && (
+        {talks.length > 0 && !os.finishedQueue && (
           <MainHeader.ButtonNew label="Charla" onClick={pushToNewTalk} />
         )}
       </MainHeader>

@@ -13,7 +13,7 @@ class SlotTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) = OpenSpace(
     "os", LocalDate.now(), LocalTime.of(9, 0),
-    LocalTime.of(11, 0), setOf(room1), talks, true
+    LocalTime.of(11, 0), setOf(room1), talks
   )
 
   private fun anyUser(talk: Talk) = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
@@ -21,6 +21,7 @@ class SlotTest {
   private fun anyOsWithQueued(talks: Set<Talk>): OpenSpace {
     val os = anyOS(talks.toMutableSet())
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(os))
+    os.activeQueue(organizer)
     talks.forEach {
       anyUser(it)
       it.enqueue()

@@ -1,15 +1,21 @@
 import React from 'react';
 
 import { useGetTalks } from '#api/os-client';
+import onlineOrganizerImg from '#assets/online_organizer.svg';
+import { usePushToNewTalk } from '#helpers/routes';
 import MyGrid from '#shared/MyGrid';
 import Spinner from '#shared/Spinner';
-import onlineOrganizerImg from '#assets/online_organizer.svg';
 import EmptyData from '#shared/EmptyData';
 
 import Talk from './Talk';
 
 const EmptyOpenSpace = () => (
-  <EmptyData img={onlineOrganizerImg} text="Cargá la primer charla de este Open Space!" />
+  <EmptyData
+    buttonText="Cargar charla"
+    img={onlineOrganizerImg}
+    onClick={usePushToNewTalk()}
+    text="Cargá la primer charla de este Open Space!"
+  />
 );
 
 const TalksGrid = () => {

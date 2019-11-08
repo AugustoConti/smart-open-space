@@ -96,7 +96,7 @@ const MyForm = ({
   );
 };
 MyForm.propTypes = {
-  children: MyProps.children.isRequired,
+  children: MyProps.children,
   onSecondary: PropTypes.func,
   onSubmit: PropTypes.func.isRequired,
   primaryLabel: PropTypes.string,
