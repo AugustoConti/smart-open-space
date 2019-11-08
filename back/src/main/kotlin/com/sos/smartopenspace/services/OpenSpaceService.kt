@@ -52,6 +52,9 @@ class OpenSpaceService(
   fun activateQueue(userID: Long, osID: Long) =
     findById(osID).activeQueue(findUser(userID))
 
+  fun finishQueue(userID: Long, osID: Long) =
+    findById(osID).finishQueuing(findUser(userID))
+
   private fun findTalk(id: Long) = talkRepository.findByIdOrNull(id) ?: throw TalkNotFoundException()
 
   fun enqueueTalk(userID: Long, talkID: Long): OpenSpace {

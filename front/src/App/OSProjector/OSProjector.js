@@ -123,6 +123,7 @@ const OSProjector = () => {
   const [time, setTime] = useState();
   const { data: { id, organizer } = {}, isPending, isRejected } = useGetOS();
   const queue = useQueue();
+  // const pushToOS = usePushToOS();
 
   useInterval(() => {
     if (!time || time === 0) return;
@@ -142,6 +143,7 @@ const OSProjector = () => {
   return (
     <>
       <RowBetween margin={{ vertical: 'medium' }}>
+        {/* <Button icon={<PreviousIcon />} onClick={pushToOS} primary /> */}
         <StartButton onClick={() => setTime(TIME_FOR_SPEAKER)} />
         <NextButton
           onClick={() => {

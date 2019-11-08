@@ -16,6 +16,7 @@ const EditTalk = () => {
   const { data: os, isPending, isRejected } = useGetOS();
 
   if (!user || isRejected) return <RedirectToRoot />;
+  if (os && os.finishedQueue) return <RedirectToRoot />;
 
   const onSubmit = ({ value: { name, description } }) =>
     createTalk(os.id, { name, description }).then(pushToMyTalks);
