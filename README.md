@@ -72,7 +72,7 @@ cd front && yarn && yarn watch
   - **OpenSpace.js**: Renderiza la pantalla con los datos del Open Space.
   - **os-client.js**: Conseguir los datos del Open Space, conectandose con el backend.
 - Backend:
-  - **OpenSpaceServiceREST**: Exponer los endpoints del OpenSpaceService, como REST-Json.
+  - **OpenSpaceController**: Exponer los endpoints del OpenSpaceService, como REST-Json.
   - **OpenSpaceService**: Exponer un servicio para manipular un Open Space.
   - **OpenSpaceRepository**: Persistir y recuperar objetos OpenSpace de la base de datos.
   - **OpenSpace**: Objeto que representa un Open Space.
@@ -83,6 +83,9 @@ cd front && yarn && yarn watch
 
 #### Entrega 2
 ![Caso de uso entrega 2](/other/CasoDeUso2.png)
+
+#### Entrega 3
+![Caso de uso entrega 3](/other/CasoDeUso3.png)
 
 ## 👮 LICENCIA
 - [GPLv3](LICENSE)
