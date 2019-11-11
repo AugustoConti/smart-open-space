@@ -57,7 +57,7 @@
     "react-https-redirect": "^1.1.0",
     "react-router-dom": "^5.1.2",
     "react-slick": "^0.25.2",
-    "react-toastify": "^5.3.2",
+    "react-toastify": "^5.4.1",
     "serve": "^11.2.0",
     "slick-carousel": "^1.8.1",
     "sockjs-client": "^1.4.0",
