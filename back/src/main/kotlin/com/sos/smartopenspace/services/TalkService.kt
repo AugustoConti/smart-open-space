@@ -9,6 +9,7 @@ import com.sos.smartopenspace.websockets.ScheduleSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalTime
 
 @Service
 @Transactional
@@ -25,8 +26,8 @@ class TalkService(
   private fun findTalk(id: Long) = talkRepository.findByIdOrNull(id) ?: throw TalkNotFoundException()
   private fun findRoom(id: Long) = roomRepository.findByIdOrNull(id) ?: throw RoomNotFoundException()
 
-  fun scheduleTalk(talkID: Long, roomID: Long, hour: Int): OpenSpace {
-    val os = findTalk(talkID).schedule(hour, findRoom(roomID))
+  fun scheduleTalk(talkID: Long, roomID: Long, time: LocalTime): OpenSpace {
+    val os = findTalk(talkID).schedule(time, findRoom(roomID))
     scheduleSocket.sendFor(os)
     return os
   }

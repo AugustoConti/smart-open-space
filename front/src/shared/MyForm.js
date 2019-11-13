@@ -22,7 +22,7 @@ const MyField = ({ icon, label, ...props }) => (
     {...props}
   />
 );
-MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string.isRequired };
+MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string };
 
 const MyFieldText = props => (
   <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />

@@ -126,7 +126,7 @@ const MyTalks = () => {
   const pushToOS = usePushToOS();
   const pushToNewTalk = usePushToNewTalk();
   const {
-    data: [os, slots, talks = []] = [],
+    data: [os, assignedSlots, talks = []] = [],
     isPending,
     isRejected,
     reload,
@@ -135,7 +135,7 @@ const MyTalks = () => {
 
   if (isRejected) return <RedirectToRoot />;
 
-  const isAssigned = idTalk => slots.some(s => s.talk.id === idTalk);
+  const isAssigned = idTalk => assignedSlots.some(s => s.talk.id === idTalk);
   const isEnqueue = idTalk => queue.some(t => t.id === idTalk);
   const isMyTalk = talk => talks.some(t => t.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);

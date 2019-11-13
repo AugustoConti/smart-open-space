@@ -34,8 +34,8 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   @GetMapping("/talks/{id}")
   fun findTalks(@PathVariable id: Long) = openSpaceService.findTalks(id)
 
-  @GetMapping("/slots/{id}")
-  fun findSlotsById(@PathVariable id: Long) = openSpaceService.findSlotsById(id)
+  @GetMapping("/assignedSlots/{id}")
+  fun findAssignedSlotsById(@PathVariable id: Long) = openSpaceService.findAssignedSlotsById(id)
 
   @PutMapping("/activateQueue/{userID}/{osID}")
   fun activateQueue(@PathVariable userID: Long, @PathVariable osID: Long) =

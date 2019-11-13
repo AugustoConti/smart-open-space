@@ -37,9 +37,9 @@ const nextTalk = osId => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`)
 const getMyTalks = ({ osId }) =>
   withUser(({ id }) => {
     const os = getOS({ osId });
-    const slots = get(`openSpace/slots/${osId}`);
+    const assignedSlots = get(`openSpace/assignedSlots/${osId}`);
     const talks = get(`openSpace/talks/${id}/${osId}`);
-    return Promise.all([os, slots, talks]);
+    return Promise.all([os, assignedSlots, talks]);
   });
 const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });
 

@@ -8,7 +8,8 @@ import { CalendarIcon, ClockIcon } from '#shared/icons';
 import Title from '#shared/Title';
 import { usePushToOS } from '#helpers/routes';
 
-const getTime = (start, end) => `${start[0]} a ${end[0] + 1} hs`;
+const pad = n => (n < 10 ? '0' : '') + n;
+const toTime = time => time.map(pad).join(':');
 
 const OpenSpace = ({ date, endTime, id, name, startTime }) => (
   <Button fill onClick={usePushToOS(id)} plain>
@@ -21,8 +22,8 @@ const OpenSpace = ({ date, endTime, id, name, startTime }) => (
         justify="start"
       >
         <Title level="3">{name}</Title>
-        <Detail icon={CalendarIcon} text={new Date(date).toLocaleDateString()} />
-        <Detail icon={ClockIcon} text={getTime(startTime, endTime)} />
+        <Detail icon={CalendarIcon} text={new Date(date).toLocaleDateString('es')} />
+        <Detail icon={ClockIcon} text={`${toTime(startTime)} a ${toTime(endTime)} hs`} />
       </Card>
     )}
   </Button>

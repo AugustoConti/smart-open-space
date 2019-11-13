@@ -15,7 +15,7 @@ const ListItem = props => <RowBetween as="li" border="top" pad="xxsmall" {...pro
 const RoomItem = ({ room, onRemove }) => (
   <ListItem>
     {room}
-    <Button icon={<TrashIcon />} onClick={onRemove} />
+    <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />
   </ListItem>
 );
 RoomItem.propTypes = {
@@ -35,10 +35,11 @@ const Rooms = ({ value, onChange }) => {
           value={textValue}
         />
         <Button
+          disabled={textValue.trim().length < 1}
           icon={<AddIcon />}
           onClick={() => {
-            if (!textValue) return;
-            onChange({ value: [...value, textValue] });
+            if (textValue.trim().length < 1) return;
+            onChange({ value: [...value, textValue.trim()] });
             setTextValue('');
           }}
         />
