@@ -24,7 +24,7 @@ class OpenSpaceService(
   private fun findUser(userID: Long) = userService.findById(userID)
 
   fun create(userID: Long, openSpace: OpenSpace): OpenSpace {
-    openSpace.organizer = findUser(userID)
+    findUser(userID).addOpenSpace(openSpace)
     return openSpaceRepository.save(openSpace)
   }
 
@@ -44,7 +44,7 @@ class OpenSpaceService(
   fun findTalksByUser(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
 
   @Transactional(readOnly = true)
-  fun findSlotsById(id: Long) = findById(id).slots.toList()
+  fun findAssignedSlotsById(id: Long) = findById(id).assignedSlots.toList()
 
   @Transactional(readOnly = true)
   fun findTalks(id: Long) = findById(id).talks.toList()

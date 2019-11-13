@@ -8,8 +8,14 @@ import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 
+const pad = n => (n < 10 ? '0' : '') + n;
+const toTime = time => time.map(pad).join(':');
+const sortTimes = times =>
+  times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
+
 const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
   const [freeHours, setFreeHours] = useState([]);
+
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
@@ -25,7 +31,7 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
             options={freeSlots.map(p => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
-              setFreeHours(freeSlots[selected].second.map(String));
+              setFreeHours(sortTimes(freeSlots[selected].second).map(toTime));
             }}
           />
           <MyForm.Select
@@ -45,7 +51,7 @@ SelectSlot.propTypes = {
   onExit: PropTypes.func.isRequired,
   freeSlots: PropTypes.arrayOf(
     PropTypes.shape({
-      second: PropTypes.arrayOf(PropTypes.number),
+      second: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
     }).isRequired
   ).isRequired,
   onSubmit: PropTypes.func.isRequired,

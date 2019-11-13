@@ -30,6 +30,7 @@ class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada"
 class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
 class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
+class SlotNotFound : RuntimeException("No existe un slot en ese horario")
 
 @Entity
 class OpenSpace(
@@ -37,14 +38,15 @@ class OpenSpace(
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
   val date: LocalDate,
-  val startTime: LocalTime,
-  val endTime: LocalTime,
 
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(cascade = [CascadeType.ALL])
   val rooms: Set<Room>,
+
+  @OneToMany(cascade = [CascadeType.ALL])
+  val slots: Set<Slot>,
 
   @JsonIgnore
   @field:Valid
@@ -64,7 +66,7 @@ class OpenSpace(
 
   @JsonIgnore
   @OneToMany(cascade = [CascadeType.ALL])
-  val slots: MutableSet<Slot> = mutableSetOf()
+  val assignedSlots: MutableSet<AssignedSlot> = mutableSetOf()
 
   @OrderColumn
   @JsonIgnore
@@ -81,6 +83,12 @@ class OpenSpace(
   fun isActiveQueue() = queueState == QueueState.ACTIVE
   fun isFinishedQueue() = queueState == QueueState.FINISHED
 
+  @JsonProperty
+  fun startTime() = slots.map { it.startTime }.min()
+
+  @JsonProperty
+  fun endTime() = slots.map { it.endTime }.max()
+
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
     talk.openSpace = this
@@ -88,28 +96,31 @@ class OpenSpace(
     return this
   }
 
-  private fun isBusySlot(room: Room, hour: Int) = slots.any { it.hour == hour && it.room == room }
+  private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
 
   private fun checkTalkBelongs(talk: Talk) = !talks.contains(talk) && throw TalkDoesntBelongException()
 
-  private fun checkScheduleTalk(talk: Talk, hour: Int, room: Room) {
+  private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room) {
     checkTalkBelongs(talk)
-    slots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
+    assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
     !toSchedule.contains(talk) && throw TalkIsNotForScheduledException()
-    isBusySlot(room, hour) && throw BusySlotException()
+    isBusySlot(room, time) && throw BusySlotException()
   }
 
-  fun scheduleTalk(talk: Talk, hour: Int, room: Room): Slot {
-    checkScheduleTalk(talk, hour, room)
-    val slot = Slot(talk, hour, room)
-    slots.add(slot)
-    return slot
+  fun scheduleTalk(talk: Talk, time: LocalTime, room: Room): AssignedSlot {
+    val slot = slots.find { it.startTime == time && it.isAssignable() } ?: throw SlotNotFound()
+    checkScheduleTalk(talk, time, room)
+    val assignedSlot = AssignedSlot(slot as TalkSlot, room, talk)
+    assignedSlots.add(assignedSlot)
+    return assignedSlot
   }
-
-  private fun slotsHours() = startTime.hour until endTime.hour + 1
 
   @JsonProperty
-  fun freeSlots() = rooms.map { room -> room to slotsHours().filter { !isBusySlot(room, it) } }
+  fun freeSlots() = rooms.map { room ->
+    room to slots.filter {
+      it.isAssignable() && !isBusySlot(room, it.startTime)
+    }.map { it.startTime }
+  }
 
   private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotOrganizerException()
 

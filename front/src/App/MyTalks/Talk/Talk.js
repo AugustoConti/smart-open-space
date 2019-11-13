@@ -38,10 +38,14 @@ const Talk = ({
   toSchedule,
 }) => {
   const [open, setOpen] = useState(false);
+
   if (enqueued) return null;
+
   const onSubmit = ({ value: { time, room } }) =>
     scheduleTalk(id, room.id, time).then(onSchedule);
+
   const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
+
   return (
     <Card borderColor={color}>
       <Box>

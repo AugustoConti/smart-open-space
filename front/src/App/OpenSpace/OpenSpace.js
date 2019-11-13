@@ -99,16 +99,7 @@ const OpenSpace = () => {
   const [showQuery, setShowQuery] = useState(false);
   const [showIndentify, setShowIndentify] = useState(false);
   const {
-    data: {
-      id,
-      activeQueue,
-      endTime,
-      finishedQueue,
-      name,
-      organizer,
-      pendingQueue,
-      startTime,
-    } = {},
+    data: { id, activeQueue, finishedQueue, name, organizer, pendingQueue, slots } = {},
     isPending,
     isRejected,
     setData,
@@ -178,11 +169,7 @@ const OpenSpace = () => {
           )}
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        {pendingQueue ? (
-          <TalksGrid />
-        ) : (
-          <Schedule startTime={startTime} endTime={endTime} />
-        )}
+        {pendingQueue ? <TalksGrid /> : <Schedule slots={slots} />}
       </Box>
       {showIndentify && <Identify onExit={() => setShowIndentify(false)} />}
       {showQuery && (

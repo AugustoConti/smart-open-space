@@ -52,4 +52,10 @@ class User(
     talks.add(talk)
     return this
   }
+
+  fun addOpenSpace(openSpace: OpenSpace): User {
+    openSpace.organizer = this
+    openSpaces.add(openSpace)
+    return this
+  }
 }

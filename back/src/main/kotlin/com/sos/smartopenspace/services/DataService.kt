@@ -3,6 +3,7 @@ package com.sos.smartopenspace.services
 import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Room
 import com.sos.smartopenspace.domain.Talk
+import com.sos.smartopenspace.domain.TalkSlot
 import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.UserRepository
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -53,9 +54,10 @@ class DataService(private val userRepository: UserRepository) {
     val cpi = OpenSpace(
       "CPI-Conf",
       LocalDate.now().plusDays(2),
-      LocalTime.of(14, 0),
-      LocalTime.of(23, 0),
       setOf(room213),
+      (14..23).map {
+        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it, 59))
+      }.toSet(),
       mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js)
     )
 
@@ -82,20 +84,21 @@ class DataService(private val userRepository: UserRepository) {
     val practicas = OpenSpace(
       "Prácticas Técnicas - 4° edición",
       LocalDate.now().plusDays(5),
-      LocalTime.of(19, 0),
-      LocalTime.of(21, 0),
       setOf(roja, amarilla, verde, naranja),
+      (19..21).map {
+        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
+      }.toSet(),
       mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter)
-
     )
 
     val charla1 = Talk("Charla 1")
     val os1 = OpenSpace(
       "OS 1",
       LocalDate.now().plusDays(5),
-      LocalTime.of(19, 0),
-      LocalTime.of(21, 0),
       setOf(Room("Sala 1")),
+      (19..21).map {
+        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
+      }.toSet(),
       mutableSetOf(charla1)
     )
 
@@ -134,16 +137,16 @@ class DataService(private val userRepository: UserRepository) {
     front.enqueue()
     master.enqueue()
 
-    schedule(cpi, dessAgil, 14, room213)
-    schedule(cpi, proy, 16, room213)
-    schedule(cpi, desSinJefe, 18, room213)
-    schedule(cpi, cuis, 20, room213)
-    schedule(cpi, api, 22, room213)
+    schedule(cpi, dessAgil, LocalTime.parse("14:00"), room213)
+    schedule(cpi, proy, LocalTime.parse("16:00"), room213)
+    schedule(cpi, desSinJefe, LocalTime.parse("18:00"), room213)
+    schedule(cpi, cuis, LocalTime.parse("20:00"), room213)
+    schedule(cpi, api, LocalTime.parse("22:00"), room213)
   }
 
-  private fun schedule(os: OpenSpace, talk: Talk, hour: Int, room: Room) {
+  private fun schedule(os: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
     talk.enqueue()
     os.nextTalk(os.organizer)
-    talk.schedule(hour, room)
+    talk.schedule(time, room)
   }
 }

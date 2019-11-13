@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.time.LocalTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -29,8 +30,8 @@ class Talk(
   @JsonIgnore
   lateinit var openSpace: OpenSpace
 
-  fun schedule(hour: Int, room: Room): OpenSpace {
-    openSpace.scheduleTalk(this, hour, room)
+  fun schedule(time: LocalTime, room: Room): OpenSpace {
+    openSpace.scheduleTalk(this, time, room)
     return openSpace
   }
 

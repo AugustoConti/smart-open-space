@@ -9,8 +9,12 @@ class QueueTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf()) =
     OpenSpace(
-      "os", LocalDate.now(), LocalTime.of(9, 0),
-      LocalTime.of(11, 0), setOf(), talks
+      "os", LocalDate.now(), setOf(),
+      setOf(
+        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
+        TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
+        TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
+      ), talks
     )
 
   private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
