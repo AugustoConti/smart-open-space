@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import HttpsRedirect from 'react-https-redirect';
 
 import 'react-toastify/dist/ReactToastify.css';
 import 'slick-carousel/slick/slick.css';
@@ -10,4 +11,9 @@ import App from './App';
 
 toast.configure();
 
-render(<App />, document.getElementById('root'));
+render(
+  <HttpsRedirect>
+    <App />
+  </HttpsRedirect>,
+  document.getElementById('root')
+);

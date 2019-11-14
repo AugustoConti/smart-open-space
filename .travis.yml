@@ -29,8 +29,7 @@ jobs:
       before_install: cd front
       install: yarn
 
-    - stage: deploy
-      name: back
+    - stage: deploy-back
       if: branch = master
       language: java
       before_cache:
@@ -51,8 +50,7 @@ jobs:
         on:
           repo: AugustoConti/smart-open-space
 
-    - stage: deploy
-      name: front
+    - stage: deploy-front
       if: branch = master
       language: node_js
       node_js: node
