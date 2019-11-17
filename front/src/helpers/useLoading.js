@@ -12,7 +12,7 @@ const useLoading = () => {
       if (isMounted.current) setLoading(false);
       return res;
     } catch (e) {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
       throw e;
     }
   };
