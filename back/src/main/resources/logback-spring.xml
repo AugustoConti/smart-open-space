@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty name="db_driver" source="spring.datasource.driverClassName"/>
+    <springProperty name="db_url" source="spring.datasource.url"/>
+    <springProperty name="db_username" source="spring.datasource.username"/>
+    <springProperty name="db_password" source="spring.datasource.password"/>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>${db_driver}</driverClass>
+            <url>${db_url}</url>
+            <user>${db_username}</user>
+            <password>${db_password}</password>
+        </connectionSource>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="DB"/>
+    </root>
+
+</configuration>
