@@ -44,7 +44,7 @@ class OpenSpace(
 
   @JsonIgnore
   @field:Valid
-  @OneToMany(cascade = [CascadeType.ALL])
+  @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
   var isActiveQueue: Boolean = false,

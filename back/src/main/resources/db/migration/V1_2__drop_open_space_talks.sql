@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS open_space_talks;
