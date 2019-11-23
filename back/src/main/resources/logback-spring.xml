@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <springProperty name="db_driver" source="spring.datasource.driverClassName"/>
-    <springProperty name="db_url" source="spring.datasource.url"/>
-    <springProperty name="db_username" source="spring.datasource.username"/>
-    <springProperty name="db_password" source="spring.datasource.password"/>
+    <springProperty name="email_username" source="logging.appender.email.username"/>
+    <springProperty name="email_password" source="logging.appender.email.password"/>
+    <springProperty name="email_to" source="logging.appender.email.to"/>
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
@@ -14,18 +13,24 @@
         </layout>
     </appender>
 
-    <appender name="DB" class="ch.qos.logback.classic.db.DBAppender">
-        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>${db_driver}</driverClass>
-            <url>${db_url}</url>
-            <user>${db_username}</user>
-            <password>${db_password}</password>
-        </connectionSource>
+    <appender name="Email" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>smtp.gmail.com</smtpHost>
+        <smtpPort>587</smtpPort>
+        <STARTTLS>true</STARTTLS>
+        <asynchronousSending>false</asynchronousSending>
+        <username>${email_username}</username>
+        <password>${email_password}</password>
+        <to>${email_to}</to>
+        <from>${email_username}</from>
+        <subject>SOS: %logger{20} - %m</subject>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date %-5level %logger{35} - %message%n</pattern>
+        </layout>
     </appender>
 
     <root level="info">
         <appender-ref ref="Console"/>
-        <appender-ref ref="DB"/>
+        <appender-ref ref="Email" />
     </root>
 
 </configuration>
