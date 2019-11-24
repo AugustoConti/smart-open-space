@@ -11,6 +11,7 @@ import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.OrderColumn
@@ -43,9 +44,13 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese al menos una sala")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val rooms: Set<Room>,
 
+  @field:Valid
+  @field:NotEmpty(message = "Ingrese al menos un slot")
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val slots: Set<Slot>,
 
   @JsonIgnore
@@ -66,6 +71,7 @@ class OpenSpace(
 
   @JsonIgnore
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val assignedSlots: MutableSet<AssignedSlot> = mutableSetOf()
 
   @OrderColumn
@@ -112,6 +118,7 @@ class OpenSpace(
     checkScheduleTalk(talk, time, room)
     val assignedSlot = AssignedSlot(slot as TalkSlot, room, talk)
     assignedSlots.add(assignedSlot)
+    toSchedule.remove(talk)
     return assignedSlot
   }
 
