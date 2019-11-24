@@ -95,3 +95,10 @@ typings/
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
