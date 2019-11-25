@@ -8,8 +8,11 @@ const withUser = fn => fn(getUser());
 
 const createOS = osData => withUser(({ id }) => post(`openSpace/${id}`, osData));
 
+const createTalkFor = (userId, osId, talkData) =>
+  post(`openSpace/talk/${userId}/${osId}`, talkData);
+
 const createTalk = (osId, talkData) =>
-  withUser(({ id }) => post(`openSpace/talk/${id}/${osId}`, talkData));
+  withUser(({ id }) => createTalkFor(id, osId, talkData));
 
 const getAllOS = () => withUser(({ id }) => get(`openSpace/user/${id}`));
 const useGetAllOS = () => useAsync({ promiseFn: getAllOS });
@@ -38,8 +41,8 @@ const getMyTalks = ({ osId }) =>
   withUser(({ id }) => {
     const os = getOS({ osId });
     const assignedSlots = get(`openSpace/assignedSlots/${osId}`);
-    const talks = get(`openSpace/talks/${id}/${osId}`);
-    return Promise.all([os, assignedSlots, talks]);
+    const myTalks = get(`openSpace/talks/${id}/${osId}`);
+    return Promise.all([os, assignedSlots, myTalks]);
   });
 const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });
 
@@ -47,6 +50,7 @@ export {
   activateQueue,
   createOS,
   createTalk,
+  createTalkFor,
   enqueueTalk,
   finishQueue,
   nextTalk,

@@ -4,7 +4,10 @@ import { Box, Grid } from 'grommet';
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
 
-const areasThree = [['headerL', 'header', 'headerR'], ['l', 'main', 'r']];
+const areasThree = [
+  ['headerL', 'header', 'headerR'],
+  ['l', 'main', 'r'],
+];
 
 const layouts = {
   small: {

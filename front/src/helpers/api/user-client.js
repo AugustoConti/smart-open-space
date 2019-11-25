@@ -1,6 +1,6 @@
-import { post } from './api-client';
+import { get, post } from './api-client';
 
-const identify = email => post('user/identify', { email }).then(r => r.data);
+const identify = email => get(`user/identify/${email}/`).then(r => r.data);
 
 const login = userData => post('user/auth', userData);
 

@@ -59,7 +59,7 @@ class OpenSpaceService(
 
   fun enqueueTalk(userID: Long, talkID: Long): OpenSpace {
     val talk = findTalk(talkID)
-    talk.speaker.id != userID && throw TalkNotFoundException()
+    (talk.speaker.id != userID && talk.openSpace.organizer.id != userID) && throw TalkNotFoundException()
     val os = talk.enqueue()
     queueSocket.sendFor(os)
     return os

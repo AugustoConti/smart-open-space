@@ -19,9 +19,11 @@ const Home = () => {
     <>
       <MainHeader>
         <MainHeader.Title icon={OpenSpaceIcon} label="Mis Open Spaces" />
-        {openSpaces && openSpaces.length > 0 && (
-          <MainHeader.ButtonNew onClick={pushToNewOS} />
-        )}
+        <MainHeader.Buttons>
+          {openSpaces && openSpaces.length > 0 && (
+            <MainHeader.ButtonNew onClick={pushToNewOS} />
+          )}
+        </MainHeader.Buttons>
       </MainHeader>
       {isPending || !openSpaces ? (
         <Spinner />

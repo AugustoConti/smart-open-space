@@ -2,6 +2,8 @@ package com.sos.smartopenspace.controllers
 
 import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.services.UserService
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,12 +24,6 @@ class UserData(
 
 data class Data(val data: User?)
 
-data class DataEmail(
-  @field:NotEmpty(message = "Ingrese un email")
-  @field:Email
-  val email: String
-)
-
 @RestController
 @RequestMapping("user")
 class UserServiceREST(private val userService: UserService) {
@@ -37,6 +33,6 @@ class UserServiceREST(private val userService: UserService) {
   @PostMapping("/auth")
   fun auth(@Valid @RequestBody user: UserData) = userService.auth(user.email, user.password)
 
-  @PostMapping("/identify")
-  fun identify(@Valid @RequestBody data: DataEmail) = Data(userService.identify(data.email))
+  @GetMapping("/identify/{email}/")
+  fun identify(@Email @PathVariable email: String) = Data(userService.identify(email))
 }

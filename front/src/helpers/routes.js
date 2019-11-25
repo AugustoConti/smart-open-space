@@ -2,10 +2,7 @@ import React from 'react';
 import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const useID = id => {
-  const def = useParams().id;
-  return id || def;
-};
+const useID = id => (idParam => id || idParam)(useParams().id);
 
 const toRoot = '/';
 const toLogin = '/login';

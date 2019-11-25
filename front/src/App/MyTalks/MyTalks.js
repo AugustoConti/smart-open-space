@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { Box, Heading, Text } from 'grommet';
+import { Box, Heading, Layer, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { nextTalk, useGetMyTalks } from '#api/os-client';
+import { createTalkFor, nextTalk, useGetTalks, useGetMyTalks } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
+import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
+import { useUser } from '#helpers/useAuth';
 import { RedirectToRoot, usePushToOS, usePushToNewTalk } from '#helpers/routes';
-import { TalkIcon } from '#shared/icons';
-import Detail from '#shared/Detail';
-import MainHeader from '#shared/MainHeader';
-import MyGrid from '#shared/MyGrid';
 import ButtonLoading from '#shared/ButtonLoading';
+import Detail from '#shared/Detail';
+import { TalkIcon, UserIcon } from '#shared/icons';
+import MainHeader from '#shared/MainHeader';
+import MyForm from '#shared/MyForm';
+import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
 import Spinner, { TinySpinner } from '#shared/Spinner';
 import Title from '#shared/Title';
@@ -125,23 +128,39 @@ MyEnqueuedTalk.propTypes = {
 const MyTalks = () => {
   const pushToOS = usePushToOS();
   const pushToNewTalk = usePushToNewTalk();
+  const user = useUser();
+  const [showQuerySpeaker, setShowQuerySpeaker] = useState(false);
+  const [speaker, setSpeaker] = useState();
   const {
-    data: [os, assignedSlots, talks = []] = [],
+    data: [os, assignedSlots, myTalks = []] = [],
     isPending,
     isRejected,
-    reload,
+    reload: reloadMyTalks,
   } = useGetMyTalks();
+  const { data: talks, reload: reloadTalks } = useGetTalks();
+
+  const reload = useCallback(() => {
+    reloadMyTalks();
+    reloadTalks();
+  }, [reloadMyTalks, reloadTalks]);
+
   const queue = useQueue(reload);
 
   if (isRejected) return <RedirectToRoot />;
 
+  const amTheOrganizer = os && user && os.organizer.id === user.id;
   const isAssigned = idTalk => assignedSlots.some(s => s.talk.id === idTalk);
   const isEnqueue = idTalk => queue.some(t => t.id === idTalk);
-  const isMyTalk = talk => talks.some(t => t.id === talk.id);
+  const isMyTalk = talk => myTalks.some(t => t.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = idTalk => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
   const isToSchedule = idTalk => os.toSchedule.some(t => t.id === idTalk);
+
+  const onCloseQuerySpeaker = () => {
+    setShowQuerySpeaker(false);
+    setSpeaker(null);
+  };
 
   return (
     <>
@@ -149,15 +168,28 @@ const MyTalks = () => {
         <MainHeader.TitleLink onClick={pushToOS}>
           {!os ? <TinySpinner /> : os.name}
         </MainHeader.TitleLink>
-        <MainHeader.SubTitle icon={TalkIcon} label="MIS CHARLAS" />
-        {talks.length > 0 && !os.finishedQueue && (
-          <MainHeader.ButtonNew label="Charla" onClick={pushToNewTalk} />
-        )}
+        <MainHeader.SubTitle
+          icon={TalkIcon}
+          label={amTheOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
+        />
+        <MainHeader.Buttons>
+          {myTalks.length > 0 && os && !os.finishedQueue && (
+            <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
+          )}
+          {os && !os.finishedQueue && amTheOrganizer && (
+            <MainHeader.ButtonNew
+              color="accent-1"
+              label="Charla para Orador"
+              key="newTalkSpeaker"
+              onClick={() => setShowQuerySpeaker(true)}
+            />
+          )}
+        </MainHeader.Buttons>
       </MainHeader>
-      {!queue || (talks.length === 0 && isPending) ? (
+      {!queue || (myTalks.length === 0 && isPending) ? (
         <Spinner />
-      ) : talks.length === 0 ? (
-        <EmptyTalk onClick={pushToNewTalk} />
+      ) : myTalks.length === 0 ? (
+        os && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
@@ -169,7 +201,7 @@ const MyTalks = () => {
             />
           )}
           <MyGrid>
-            {talks.map(talk => (
+            {(amTheOrganizer ? talks : myTalks).map(talk => (
               <Talk
                 activeQueue={os.activeQueue}
                 assigned={isAssigned(talk.id)}
@@ -185,6 +217,64 @@ const MyTalks = () => {
             ))}
           </MyGrid>
         </>
+      )}
+      {showQuerySpeaker && (
+        <Layer onEsc={onCloseQuerySpeaker} onClickOutside={onCloseQuerySpeaker}>
+          <Box pad="medium">
+            <Box margin={{ vertical: 'medium' }}>
+              {speaker ? (
+                <>
+                  <Title level="2" label="Nueva charla" />
+                  <Detail text={!speaker.id ? 'Orador no registrado' : speaker.name} />
+                </>
+              ) : (
+                <Title level="2" label="¿Para cual orador?" />
+              )}
+            </Box>
+            {speaker ? (
+              <MyForm
+                onSecondary={onCloseQuerySpeaker}
+                onSubmit={({ value: { description, name, title } }) =>
+                  (speaker.id
+                    ? Promise.resolve(speaker.id)
+                    : register({ email: speaker, name }).then(({ id: speakerId }) =>
+                        Promise.resolve(speakerId)
+                      )
+                  )
+                    .then(speakerId =>
+                      createTalkFor(speakerId, os.id, {
+                        name: title,
+                        description,
+                      })
+                    )
+                    .then(() => reload())
+                    .then(() => {
+                      onCloseQuerySpeaker();
+                      return Promise.resolve();
+                    })
+                }
+              >
+                {!speaker.id && (
+                  <MyForm.Text icon={<UserIcon />} label="Nombre del orador" />
+                )}
+                <MyForm.Text label="Título" name="title" />
+                <MyForm.TextArea />
+              </MyForm>
+            ) : (
+              <MyForm
+                onSecondary={onCloseQuerySpeaker}
+                onSubmit={({ value: { email } }) =>
+                  identify(email).then(data => {
+                    setSpeaker(data || email);
+                    return data;
+                  })
+                }
+              >
+                <MyForm.Email />
+              </MyForm>
+            )}
+          </Box>
+        </Layer>
       )}
     </>
   );

@@ -55,12 +55,14 @@ const getByType = (childs, type) => childs.find(c => c.type === type);
 const getAllByTypes = (childs, ...types) =>
   childs.filter(c => types.find(t => t === c.type));
 
+const Buttons = ({ children }) => <Box gap="medium">{children}</Box>;
+Buttons.propTypes = { children: MyProps.children };
+
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const childs = React.Children.toArray(children);
-  const title = getByType(childs, MyTitle) || getByType(childs, MyTitleLink);
-  const subtitle = getAllByTypes(childs, MySubTitle);
-  const buttons = getAllByTypes(childs, MyButton, ButtonNew, ButtonLoading);
+  const titles = getAllByTypes(childs, MyTitle, MyTitleLink, MySubTitle);
+  const buttons = getByType(childs, Buttons);
   return (
     <RowBetween
       direction={isSmall ? 'column' : 'row'}
@@ -68,13 +70,12 @@ const MainHeader = ({ children, ...props }) => {
     >
       <Box
         align={isSmall ? 'center' : undefined}
-        margin={{ bottom: isSmall && buttons.length > 0 ? 'large' : undefined }}
+        margin={{ bottom: isSmall ? 'large' : undefined }}
         {...props}
       >
-        {title}
-        {subtitle}
+        {titles}
       </Box>
-      <Box gap="medium">{buttons}</Box>
+      {buttons}
     </RowBetween>
   );
 };
@@ -86,5 +87,6 @@ MainHeader.SubTitle = MySubTitle;
 MainHeader.Button = MyButton;
 MainHeader.ButtonNew = ButtonNew;
 MainHeader.ButtonLoading = ButtonLoading;
+MainHeader.Buttons = Buttons;
 
 export default MainHeader;

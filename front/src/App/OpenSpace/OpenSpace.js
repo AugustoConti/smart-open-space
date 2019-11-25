@@ -92,12 +92,56 @@ QueryForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
+const ButtonMyTalks = ({ amTheOrganizer }) => (
+  <MainHeader.Button
+    color="accent-1"
+    icon={<TalkIcon />}
+    label={amTheOrganizer ? 'Charlas' : 'Mis charlas'}
+    onClick={usePushToMyTalks()}
+  />
+);
+ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
+
+const ButtonSingIn = props => (
+  <MainHeader.Button
+    color="accent-3"
+    icon={<UserAddIcon />}
+    label="Ingresar"
+    {...props}
+  />
+);
+
+const ButtonStartMarketplace = props => (
+  <MainHeader.ButtonLoading
+    color="accent-4"
+    icon={<CartIcon />}
+    label="Iniciar Marketplace"
+    {...props}
+  />
+);
+
+const ButtonProjector = () => (
+  <MainHeader.Button
+    color="accent-2"
+    icon={<VideoIcon />}
+    label="Proyector"
+    onClick={usePushToProjector()}
+  />
+);
+
+const ButtonFinishMarketplace = props => (
+  <MainHeader.ButtonLoading
+    color="neutral-4"
+    icon={<CartIcon />}
+    label="Finalizar Marketplace"
+    {...props}
+  />
+);
+
 const OpenSpace = () => {
-  const pushToProjector = usePushToProjector();
-  const pushToMyTalks = usePushToMyTalks();
   const user = useUser();
   const [showQuery, setShowQuery] = useState(false);
-  const [showIndentify, setShowIndentify] = useState(false);
+  const [showIdentify, setShowIdentify] = useState(false);
   const {
     data: { id, activeQueue, finishedQueue, name, organizer, pendingQueue, slots } = {},
     isPending,
@@ -112,6 +156,24 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
+  const organizerButtons = () =>
+    (pendingQueue && (
+      <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
+    )) ||
+    (activeQueue && [
+      <ButtonProjector key="projector" />,
+      <ButtonFinishMarketplace
+        key="finishMarketplace"
+        onClick={() => {
+          if (queue && queue.length > 0) {
+            setShowQuery(true);
+            return Promise.resolve();
+          }
+          return doFinishQueue();
+        }}
+      />,
+    ]);
+
   return (
     <>
       <MainHeader>
@@ -122,56 +184,19 @@ const OpenSpace = () => {
           <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         )}
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
-        {user ? (
-          <MainHeader.Button
-            color="accent-1"
-            icon={<TalkIcon />}
-            label="Mis charlas"
-            onClick={pushToMyTalks}
-          />
-        ) : (
-          <MainHeader.Button
-            color="accent-3"
-            icon={<UserAddIcon />}
-            label="Ingresar"
-            onClick={() => setShowIndentify(true)}
-          />
-        )}
-        {amTheOrganizer && pendingQueue && (
-          <MainHeader.ButtonLoading
-            color="accent-4"
-            icon={<CartIcon />}
-            label="Iniciar Marketplace"
-            onClick={() => activateQueue(id).then(setData)}
-          />
-        )}
-        {amTheOrganizer &&
-          activeQueue && (
-            <MainHeader.Button
-              color="accent-2"
-              icon={<VideoIcon />}
-              label="Proyector"
-              onClick={pushToProjector}
-            />
-          ) && (
-            <MainHeader.ButtonLoading
-              color="neutral-4"
-              icon={<CartIcon />}
-              label="Finalizar Marketplace"
-              onClick={() => {
-                if (queue && queue.length > 0) {
-                  setShowQuery(true);
-                  return Promise.resolve();
-                }
-                return doFinishQueue();
-              }}
-            />
+        <MainHeader.Buttons>
+          {user ? (
+            <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
+          ) : (
+            <ButtonSingIn onClick={() => setShowIdentify(true)} />
           )}
+          {amTheOrganizer && organizerButtons()}
+        </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
         {pendingQueue ? <TalksGrid /> : <Schedule slots={slots} />}
       </Box>
-      {showIndentify && <Identify onExit={() => setShowIndentify(false)} />}
+      {showIdentify && <Identify onExit={() => setShowIdentify(false)} />}
       {showQuery && (
         <QueryForm
           title="¿Seguro?"
