@@ -80,15 +80,36 @@ cd front && yarn && yarn watch
 ### Casos de uso
 #### Entrega 1
 ![Caso de uso entrega 1](/other/CasoDeUso.png)
+- Organizador:
+  - **Crear Open Space**: Nombre, fecha, horarios y salas.
+- Orador:
+  - **Registro / Login**: Registrarse con nombre, email y contraseña. Loguearse con email y contraseña
+  - **Cargar charla**: con título y descripción en un Open Space.
+  - **Agendar charla**: en una sala y un horario disponible en el Open Space.
+- Asistente:
+  - **Ver agenda**: con todas las charlas en su horario y sala de un Open Space.
+  - **Ver detalle de charla**: Título, descripción, orador, sala y horario.
 
 #### Entrega 2
 ![Caso de uso entrega 2](/other/CasoDeUso2.png)
+- Organizador:
+  - **Iniciar Marketplace**: Habilitar encolamiento de los oradores para poder exponer su charla.
+  - **Mostrar modo proyección**: Mientras orador expone, mostrar datos de su charla.
+- Orador:
+  - **Encolarse para exponer**: Ponerse en la fila, para exponer su charla.
 
 #### Entrega 3
 ![Caso de uso entrega 3](/other/CasoDeUso3.png)
+- Organizador:
+  - **Finalizar Marketplace**: Deshabilitar encolamiento para que no se puedan agendar mas charlas.
+- Orador:
+  - **Ingresar con mail**: Ingresar a la app solo con email y nombre.
 
 #### Entrega 4
 ![Caso de uso entrega 4](/other/CasoDeUso4.png)
+- Organizador:
+  - **Crear Open Space** (modificado): Cargar estructura de slots (charla - otro)
+  - **Gestionar charlas**: Cargar, encolar y agendar charlas de cualquier orador.
 
 ## 👮 LICENCIA
 - [GPLv3](LICENSE)
