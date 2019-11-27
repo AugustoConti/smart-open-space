@@ -43,18 +43,18 @@ exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupa
   - [Yarn][yarn]
 
 ### Clonar el repo
-```bash
+```sh
 git clone git@github.com:AugustoConti/smart-open-space.git
 cd smart-open-space
 ```
 
 ### Levantar backend
-```bash
+```sh
 cd back && ./gradlew bootRun
 ```
 
 ### Levantar frontend
-```bash
+```sh
 cd front && yarn && yarn watch
 ```
 
@@ -86,6 +86,9 @@ cd front && yarn && yarn watch
 
 #### Entrega 3
 ![Caso de uso entrega 3](/other/CasoDeUso3.png)
+
+#### Entrega 4
+![Caso de uso entrega 4](/other/CasoDeUso4.png)
 
 ## 👮 LICENCIA
 - [GPLv3](LICENSE)
