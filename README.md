@@ -38,17 +38,34 @@ exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupa
 ## 🔧 Instalación
 ### Antes de empezar, vas a necesitar:
   - [Git][git]
+  - [PostgreSQL][postgresql]
   - [JDK 8 update 60 o superior][java8] (Asegurate que la variable de entorno `JAVA_HOME` apunte a la carpeta `jdk1.8.0` que sacaste de la descarga del JDK).
   - [NodeJS][node]
   - [Yarn][yarn]
 
-### Clonar el repo
+### Descargar el código fuente
 ```sh
 git clone git@github.com:AugustoConti/smart-open-space.git
 cd smart-open-space
 ```
 
 ### Levantar backend
+- Crear base de datos, ejemplo:
+```sh
+psql -c 'create database SOS;' -U postgres
+```
+- Crear el archivo `application-default.properties` en la ruta `/back/src/main/resources/`. Configurando url, usuario y contraseña:
+```groovy
+spring.datasource.url=jdbc:postgresql://localhost:5432/sos
+spring.datasource.username=postgres
+spring.datasource.password=root
+
+logging.appender.email.username=""
+logging.appender.email.password=""
+logging.appender.email.to=""
+```
+
+- Ejecutar back
 ```sh
 cd back && ./gradlew bootRun
 ```
@@ -129,4 +146,5 @@ cd front && yarn && yarn watch
 [license]: LICENCIA
 [license-badge]: https://img.shields.io/github/license/AugustoConti/smart-open-space?style=flat-square
 [node]: https://nodejs.org
+[postgresql]: https://www.postgresql.org/download/
 [yarn]: https://yarnpkg.com/en/docs/install
