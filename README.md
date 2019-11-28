@@ -17,25 +17,26 @@
 [![License: GPLv3][license-badge]][license]
 [![Issues][issues-badge]][issues]
 
-## 📖 Índice
-- [👎 Problema](#-problema)
-- [🏆 Solución](#-solución)
-- [🎉 Diferencial](#-diferencial)
-- [🔧 Instalación](#-instalación)
-- [📜 Documentación](#-documentación)
-- [👮 Licencia](#-licencia)
+## :book: Índice
+- [:-1: Problema](#-1-problema)
+- [:trophy: Solución](#trophy-solución)
+- [:tada: Diferencial](#tada-diferencial)
+- [:wrench: Instalación](#wrench-instalación)
+- [:scroll: Documentación](#scroll-documentación)
+- [:computer: Demo](#computer-demo)
+- [:cop: Licencia](#cop-licencia)
 
-## 👎 Problema
+## :-1: Problema
 - Los asistentes de un Open Space no logran captar los datos de una charla, en la agenda se cambian de sala u horario, se superponen charlas del mismo tópico, y algunas salas suelen llenarse muy rápido.
 
-## 🏆 Solución
+## :trophy: Solución
 - **Smart Open Space** es una web app que permite ver los datos de una charla por un proyector mientras su orador está
 exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupando las charlas muy requeridas en espacios más grandes.
 
-## 🎉 Diferencial
+## :tada: Diferencial
 - A diferencia del método actual, Pizarrón + Google SpreedSheet, el nuestro no requiere carga manual, se encuentra siempre actualizado, y sugiere optimizaciones inteligentes.
 
-## 🔧 Instalación
+## :wrench: Instalación
 ### Antes de empezar, vas a necesitar:
   - [Git][git]
   - [PostgreSQL][postgresql]
@@ -75,7 +76,7 @@ cd back && ./gradlew bootRun
 cd front && yarn && yarn watch
 ```
 
-## 📜 Documentación
+## :scroll: Documentación
 
 ### Diagrama de Arquitectura
 
@@ -128,13 +129,18 @@ cd front && yarn && yarn watch
   - **Crear Open Space** (modificado): Cargar estructura de slots (charla - otro)
   - **Gestionar charlas**: Cargar, encolar y agendar charlas de cualquier orador.
 
-## 👮 LICENCIA
+## :computer: Demo
+[![Youtube demo][demo-prev]][demo-link]
+
+## :cop: LICENCIA
 - [GPLv3](LICENSE)
 
 [backlog]: https://trello.com/b/A3IsSe1r/smartopenspace
 [backlog-badge]: https://img.shields.io/badge/trello-backlog-blue?style=flat-square&logo=trello
 [build]: https://travis-ci.org/AugustoConti/smart-open-space
 [build-badge]: https://img.shields.io/travis/AugustoConti/smart-open-space?logo=travis&style=flat-square
+[demo-link]:https://www.youtube.com/watch?v=cm3D5IztoL0
+[demo-prev]:https://img.youtube.com/vi/cm3D5IztoL0/0.jpg
 [dependabot]: https://dependabot.com
 [dependabot-badge]: https://api.dependabot.com/badges/status?host=github&repo=AugustoConti/smart-open-space
 [git]: https://help.github.com/set-up-git-redirect
