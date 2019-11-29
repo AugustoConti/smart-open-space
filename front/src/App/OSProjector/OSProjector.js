@@ -34,9 +34,9 @@ const LabelTimeLeft = () => (
   </Row>
 );
 
-const BoxTime = ({ background = 'status-critical', label }) => (
+const BoxTime = ({ background = 'status-critical', label, size = 'large' }) => (
   <Box alignSelf="center" background={background} pad="medium" round>
-    <Text size="large" weight="bold">
+    <Text size={size} weight="bold">
       {label}
     </Text>
   </Box>
@@ -44,6 +44,7 @@ const BoxTime = ({ background = 'status-critical', label }) => (
 BoxTime.propTypes = {
   background: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  size: PropTypes.string,
 };
 
 const TimeLeft = ({ time }) => (
@@ -52,12 +53,12 @@ const TimeLeft = ({ time }) => (
       <BoxTime label="Se acabó tu tiempo!" />
     ) : time <= 5 ? (
       <Box gap="medium">
-        <BoxTime label={time} />
+        <BoxTime label={time} size="xxlarge" />
         <LabelTimeLeft />
       </Box>
     ) : (
       <Box gap="medium">
-        <BoxTime background="dark-1" label={time} />
+        <BoxTime background="dark-1" label={time} size="xxlarge" />
         <LabelTimeLeft />
       </Box>
     )}
@@ -118,6 +119,28 @@ const EmptyProjector = () => (
   </Box>
 );
 
+const TalkDetails = ({ talk }) => (
+  <Box align="center">
+    <Heading size="medium" margin="small">
+      {talk.name}
+    </Heading>
+    <Text textAlign="center" size="xlarge">
+      {talk.description}
+    </Text>
+    <Row>
+      <UserIcon />
+      <Text size="large">{talk.speaker.name}</Text>
+    </Row>
+  </Box>
+);
+TalkDetails.propTypes = {
+  talk: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    speaker: PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
+  }).isRequired,
+};
+
 const OSProjector = () => {
   const user = useUser();
   const [time, setTime] = useState();
@@ -152,18 +175,7 @@ const OSProjector = () => {
           }}
         />
       </RowBetween>
-      <Box align="center">
-        <Heading size="medium" margin="small">
-          {currentTalk.name}
-        </Heading>
-        <Row>
-          <UserIcon />
-          <Text size="large">{currentTalk.speaker.name}</Text>
-        </Row>
-        <Text textAlign="center" size="xlarge">
-          {currentTalk.description}
-        </Text>
-      </Box>
+      <TalkDetails talk={currentTalk} />
       <Row
         direction="row-responsive"
         gap="large"

@@ -162,6 +162,8 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
+  const hasTalks = talks && myTalks && (amTheOrganizer ? talks : myTalks).length > 0;
+
   return (
     <>
       <MainHeader>
@@ -173,7 +175,7 @@ const MyTalks = () => {
           label={amTheOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
         />
         <MainHeader.Buttons>
-          {myTalks.length > 0 && os && !os.finishedQueue && (
+          {hasTalks && os && !os.finishedQueue && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
           {os && !os.finishedQueue && amTheOrganizer && (
@@ -186,9 +188,9 @@ const MyTalks = () => {
           )}
         </MainHeader.Buttons>
       </MainHeader>
-      {!queue || (myTalks.length === 0 && isPending) ? (
+      {!queue || (!hasTalks && isPending) ? (
         <Spinner />
-      ) : myTalks.length === 0 ? (
+      ) : !hasTalks ? (
         os && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>

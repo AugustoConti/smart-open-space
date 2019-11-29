@@ -96,7 +96,7 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
   <MainHeader.Button
     color="accent-1"
     icon={<TalkIcon />}
-    label={amTheOrganizer ? 'Charlas' : 'Mis charlas'}
+    label={amTheOrganizer ? 'Gestionar Charlas' : 'Mis charlas'}
     onClick={usePushToMyTalks()}
   />
 );

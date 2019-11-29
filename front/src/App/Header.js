@@ -7,7 +7,7 @@ import logo from '#assets/logo.svg';
 import useAuth, { useUser } from '#helpers/useAuth';
 import useLoading from '#helpers/useLoading';
 import useSize from '#helpers/useSize';
-import { DownIcon, MenuIcon, ExitIcon } from '#shared/icons';
+import { DownIcon, MenuIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
 import { useInRegister, usePushToLogin, usePushToRoot } from '#helpers/routes';
@@ -65,12 +65,7 @@ const MyMenu = ({ user }) => {
     //   onClick: () => {},
     // },
     {
-      label: (
-        <Row pad={isSmall ? 'medium' : 'xsmall'}>
-          <ExitIcon color="status-critical" />
-          Salir
-        </Row>
-      ),
+      label: <Text color="status-error">Cerrar sesión</Text>,
       onClick: withLoading(() => logout().then(pushToLogin)),
     },
   ];

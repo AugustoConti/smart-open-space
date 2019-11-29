@@ -19,8 +19,8 @@
     "test": "jest --config .jest.config.json",
     "start": "serve -s dist",
     "watch": "parcel src/index.html --open",
-    "clean": "rm -rf dist/*",
-    "heroku-postbuild": "parcel build src/index.html"
+    "build": "rm -rf dist && parcel build src/index.html",
+    "heroku-postbuild": "yarn build"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",

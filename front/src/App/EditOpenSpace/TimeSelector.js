@@ -12,12 +12,16 @@ const OTHER_SLOT = 'OtherSlot';
 const Slot = ({ color, onRemove, start, text }) => (
   <>
     <HourHeader hour={start} />
-    <Box direction="row" justify="center">
-      <Box background={{ color, opacity: 'medium' }} pad="medium" round="small">
-        <Text alignSelf="center" color="dark-1">
-          {text}
-        </Text>
-      </Box>
+    <Box
+      background={{ color, opacity: 'medium' }}
+      direction="row"
+      justify="center"
+      pad={onRemove ? 'small' : 'medium'}
+      round="small"
+    >
+      <Text alignSelf="center" color="dark-1">
+        {text}
+      </Text>
       {onRemove && <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />}
     </Box>
   </>
