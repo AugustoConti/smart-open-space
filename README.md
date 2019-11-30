@@ -126,8 +126,9 @@ cd front && yarn && yarn watch
 #### Entrega 4
 ![Caso de uso entrega 4](/other/CasoDeUso4.png)
 - Organizador:
-  - **Crear Open Space** (modificado): Cargar estructura de slots (charla - otro)
+  - **Crear Open Space** (modificado): Cargar estructura de slots (charla - otro).
   - **Gestionar charlas**: Cargar, encolar y agendar charlas de cualquier orador.
+  - **Intercambiar charlas**: de cualquier orador a otra sala y horario.
 
 ## :computer: Demo
 [![Youtube demo][demo-prev]][demo-link]
