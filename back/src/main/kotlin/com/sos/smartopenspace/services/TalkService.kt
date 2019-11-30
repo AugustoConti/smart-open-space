@@ -32,6 +32,12 @@ class TalkService(
     return os
   }
 
+  fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime): OpenSpace {
+    val os = findTalk(talkID).exchange(time, findRoom(roomID))
+    scheduleSocket.sendFor(os)
+    return os
+  }
+
   fun nextTalk(userID: Long, osID: Long): OpenSpace {
     val os = findOpenSpace(osID).nextTalk(findUser(userID))
     queueSocket.sendFor(os)

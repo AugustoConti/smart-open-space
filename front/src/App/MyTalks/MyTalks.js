@@ -214,6 +214,7 @@ const MyTalks = () => {
                 onEnqueue={reload}
                 onSchedule={pushToOS}
                 toSchedule={isToSchedule(talk.id)}
+                assignableSlots={os.assignableSlots}
                 {...talk}
               />
             ))}

@@ -26,6 +26,9 @@ const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id }
 const scheduleTalk = (talkID, roomID, hour) =>
   put(`talk/schedule/${talkID}/${roomID}/${hour}`);
 
+const exchangeTalk = (talkID, roomID, hour) =>
+  put(`talk/exchange/${talkID}/${roomID}/${hour}`);
+
 const activateQueue = osId =>
   withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
 
@@ -59,4 +62,5 @@ export {
   useGetTalks,
   useGetMyTalks,
   scheduleTalk,
+  exchangeTalk,
 };

@@ -39,9 +39,9 @@ class OtherSlot(startTime: LocalTime, endTime: LocalTime, val description: Strin
 @Entity
 class AssignedSlot(
   @ManyToOne
-  val slot: TalkSlot,
+  var slot: TalkSlot,
   @ManyToOne
-  val room: Room,
+  var room: Room,
   @OneToOne
   val talk: Talk,
   @Id
@@ -49,4 +49,9 @@ class AssignedSlot(
   val id: Long = 0
 ) {
   fun startAt(time: LocalTime) = slot.startTime == time
+
+  fun moveTo(slot: TalkSlot, room: Room) {
+    this.slot = slot
+    this.room = room
+  }
 }

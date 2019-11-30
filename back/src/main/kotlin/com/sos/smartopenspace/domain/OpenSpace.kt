@@ -27,11 +27,12 @@ class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
 class FinishedQueuingException : RuntimeException("Encolamiento finalizado")
 class InactiveQueueException : RuntimeException("No está activo el encolamiento")
 class NotOrganizerException : RuntimeException("No sos el organizador")
+class SlotNotFoundException : RuntimeException("No existe un slot en ese horario")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
 class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
-class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
-class SlotNotFound : RuntimeException("No existe un slot en ese horario")
+class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
+class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
 
 @Entity
 class OpenSpace(
@@ -95,6 +96,11 @@ class OpenSpace(
   @JsonProperty
   fun endTime() = slots.map { it.endTime }.max()
 
+  @JsonProperty
+  fun assignableSlots() = rooms.map { room ->
+    room to slots.filter { it.isAssignable() }.map { it.startTime }
+  }.filter { it.second.isNotEmpty() }
+
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
     talk.openSpace = this
@@ -113,13 +119,22 @@ class OpenSpace(
     isBusySlot(room, time) && throw BusySlotException()
   }
 
+  private fun findTalkSlot(time: LocalTime) = slots.find { it.startTime == time && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
+
   fun scheduleTalk(talk: Talk, time: LocalTime, room: Room): AssignedSlot {
-    val slot = slots.find { it.startTime == time && it.isAssignable() } ?: throw SlotNotFound()
+    val slot = findTalkSlot(time)
     checkScheduleTalk(talk, time, room)
-    val assignedSlot = AssignedSlot(slot as TalkSlot, room, talk)
+    val assignedSlot = AssignedSlot(slot, room, talk)
     assignedSlots.add(assignedSlot)
     toSchedule.remove(talk)
     return assignedSlot
+  }
+
+  fun exchangeSlot(talk: Talk, time: LocalTime, room: Room) {
+    val slot = findTalkSlot(time)
+    val current = assignedSlots.find { it.talk == talk } ?: throw TalkIsNotScheduledException()
+    assignedSlots.find { it.room == room && it.slot == slot }?.moveTo(current.slot, current.room)
+    current.moveTo(slot, room)
   }
 
   @JsonProperty
@@ -127,7 +142,7 @@ class OpenSpace(
     room to slots.filter {
       it.isAssignable() && !isBusySlot(room, it.startTime)
     }.map { it.startTime }
-  }
+  }.filter { it.second.isNotEmpty() }
 
   private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotOrganizerException()
 

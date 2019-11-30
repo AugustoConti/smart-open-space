@@ -35,5 +35,10 @@ class Talk(
     return openSpace
   }
 
+  fun exchange(time: LocalTime, room: Room): OpenSpace {
+    openSpace.exchangeSlot(this, time, room)
+    return openSpace
+  }
+
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 }

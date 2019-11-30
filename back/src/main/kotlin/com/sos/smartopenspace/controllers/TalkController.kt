@@ -14,6 +14,10 @@ class TalkController(private val talkService: TalkService) {
   fun scheduleTalk(@PathVariable talkID: Long, @PathVariable roomID: Long, @PathVariable time: LocalTime) =
     talkService.scheduleTalk(talkID, roomID, time)
 
+  @PutMapping("/exchange/{talkID}/{roomID}/{time}")
+  fun exchangeTalk(@PathVariable talkID: Long, @PathVariable roomID: Long, @PathVariable time: LocalTime) =
+    talkService.exchangeTalk(talkID, roomID, time)
+
   @PutMapping("/nextTalk/{userID}/{osID}")
   fun nextTalk(@PathVariable userID: Long, @PathVariable osID: Long) =
     talkService.nextTalk(userID, osID)

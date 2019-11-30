@@ -53,7 +53,7 @@ class SlotTest {
   @Test
   fun `No se puede agendar una charla fuera de horario`() {
     val os = anyOsWithQueued(setOf(talk1))
-    assertThrows(SlotNotFound::class.java) {
+    assertThrows(SlotNotFoundException::class.java) {
       os.scheduleTalk(talk1, LocalTime.parse("03:00"), room1)
     }
   }
@@ -110,6 +110,44 @@ class SlotTest {
     os.scheduleTalk(talk2, LocalTime.parse("09:30"), room1)
     os.scheduleTalk(talk3, LocalTime.parse("10:45"), room1)
     val freeSlots = os.freeSlots()
-    assertIterableEquals(listOf<Int>(), freeSlots[0].second)
+    assertTrue(freeSlots.isEmpty())
   }
+
+  @Test
+  fun `Cambiar charla de slot a uno vacio`() {
+    val os = anyOsWithQueued(setOf(talk1))
+    os.scheduleTalk(talk1, LocalTime.parse("09:00"), room1)
+    os.exchangeSlot(talk1, LocalTime.parse("09:30"), room1)
+    val freeSlots = os.freeSlots()
+    assertTrue(freeSlots[0].second.contains(LocalTime.parse("09:00")))
+    assertFalse(freeSlots[0].second.contains(LocalTime.parse("09:30")))
+  }
+
+  @Test
+  fun `Cambiar charla de slot a uno ocupado`() {
+    val os = anyOsWithQueued(setOf(talk1, talk2))
+    os.scheduleTalk(talk1, LocalTime.parse("09:00"), room1)
+    os.scheduleTalk(talk2, LocalTime.parse("09:30"), room1)
+    os.exchangeSlot(talk1, LocalTime.parse("09:30"), room1)
+    assertEquals(talk1, os.assignedSlots.find { it.room == room1 && it.startAt(LocalTime.parse("09:30")) }?.talk)
+    assertEquals(talk2, os.assignedSlots.find { it.room == room1 && it.startAt(LocalTime.parse("09:00")) }?.talk)
+  }
+
+  @Test
+  fun `Cambiar charla de slot pero la charla no esta agendada`() {
+    val os = anyOsWithQueued(setOf(talk1))
+    assertThrows(TalkIsNotScheduledException::class.java) {
+      os.exchangeSlot(talk1, LocalTime.parse("09:30"), room1)
+    }
+  }
+
+  @Test
+  fun `Cambiar charla de slot a un horario inexistente`() {
+    val os = anyOsWithQueued(setOf(talk1))
+    os.scheduleTalk(talk1, LocalTime.parse("09:00"), room1)
+    assertThrows(SlotNotFoundException::class.java) {
+      os.exchangeSlot(talk1, LocalTime.parse("01:00"), room1)
+    }
+  }
+
 }

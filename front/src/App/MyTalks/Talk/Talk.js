@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 
-import { Box, Text } from 'grommet';
+import { Box, Button, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { enqueueTalk, scheduleTalk } from '#api/os-client';
+import { enqueueTalk, exchangeTalk, scheduleTalk } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { UserIcon } from '#shared/icons';
+import { TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
@@ -29,6 +29,7 @@ const ButtonAction = props => (
 const Talk = ({
   activeQueue,
   assigned,
+  assignableSlots,
   description,
   enqueued,
   freeSlots,
@@ -41,10 +42,14 @@ const Talk = ({
   toSchedule,
 }) => {
   const user = useUser();
-  const [open, setOpen] = useState(false);
+  const [openSchedule, setOpenSchedule] = useState(false);
+  const [openExchange, setOpenExchange] = useState(false);
 
-  const onSubmit = ({ value: { time, room } }) =>
+  const onSubmitSchedule = ({ value: { time, room } }) =>
     scheduleTalk(id, room.id, time).then(onSchedule);
+
+  const onSubmitExchange = ({ value: { time, room } }) =>
+    exchangeTalk(id, room.id, time).then(onSchedule);
 
   const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
   const amTheOrganizer = user && user.id !== speaker.id;
@@ -62,11 +67,23 @@ const Talk = ({
         )}
       </Box>
       {assigned ? (
-        <Badge color={color} text="Agendada" />
+        <Box direction="row" justify="evenly">
+          <Badge color={color} text="Agendada" />
+          <Button
+            hoverIndicator
+            icon={<TransactionIcon />}
+            onClick={() => setOpenExchange(true)}
+            plain
+          />
+        </Box>
       ) : enqueued ? (
         <Badge color={color} text="Esperando turno" />
       ) : toSchedule ? (
-        <ButtonAction color={color} label="Agendar" onClick={() => setOpen(true)} />
+        <ButtonAction
+          color={color}
+          label="Agendar"
+          onClick={() => setOpenSchedule(true)}
+        />
       ) : (
         activeQueue && (
           <ButtonAction
@@ -77,12 +94,20 @@ const Talk = ({
           />
         )
       )}
-      {open && freeSlots && (
+      {openSchedule && freeSlots && (
         <SelectSlot
           freeSlots={freeSlots}
           name={name}
-          onExit={() => setOpen(false)}
-          onSubmit={onSubmit}
+          onExit={() => setOpenSchedule(false)}
+          onSubmit={onSubmitSchedule}
+        />
+      )}
+      {openExchange && (
+        <SelectSlot
+          freeSlots={assignableSlots}
+          name={name}
+          onExit={() => setOpenExchange(false)}
+          onSubmit={onSubmitExchange}
         />
       )}
     </Card>
@@ -90,6 +115,7 @@ const Talk = ({
 };
 Talk.propTypes = {
   activeQueue: PropTypes.bool.isRequired,
+  assignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
   assigned: PropTypes.bool.isRequired,
   description: PropTypes.string.isRequired,
   enqueued: PropTypes.bool.isRequired,
