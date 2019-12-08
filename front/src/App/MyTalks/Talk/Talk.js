@@ -69,12 +69,14 @@ const Talk = ({
       {assigned ? (
         <Box direction="row" justify="evenly">
           <Badge color={color} text="Agendada" />
-          <Button
-            hoverIndicator
-            icon={<TransactionIcon />}
-            onClick={() => setOpenExchange(true)}
-            plain
-          />
+          {amTheOrganizer && (
+            <Button
+              hoverIndicator
+              icon={<TransactionIcon />}
+              onClick={() => setOpenExchange(true)}
+              plain
+            />
+          )}
         </Box>
       ) : enqueued ? (
         <Badge color={color} text="Esperando turno" />

@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.OtherSlot
 import com.sos.smartopenspace.domain.Room
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.domain.TalkSlot
@@ -35,7 +36,7 @@ class DataService(private val userRepository: UserRepository) {
     val proy = Talk("Proyectos de software con impacto social")
     val desSinJefe = Talk("Desarrollando software sin jefes ni competencia")
     val cuis = Talk(
-      "Creando un framework web en Cuis y hosteando en raspberry pi",
+      "Creando un framework web en Cuis",
       "Contar la travesía de implementar un framework web para Cuis smalltalk y luego hacer una aplicación con él, usando con D3.js y visor 3D de proteínas, deployar todo eso en una raspberry pi."
     )
     val api = Talk(
@@ -50,14 +51,21 @@ class DataService(private val userRepository: UserRepository) {
       "Evaluando JavaScript con Haskell",
       "Hace algún tiempo, gracias a Mumuki, Ludat tuvo la rara oportunidad de escribir un intérprete para Javascript en un proyecto del mundo real, y en Haskell nada menos!\nEn esta charla, vamos a estar explorando el extraño mundo de evaluar lenguajes de programación, redescubriendo cosas que para todos son obvias en cualquier lenguaje moderno y entendiendo porque los lenguajes actuales son como son.\nTodo esto mientras aprendemos un poco de las poderosas abstracciones en Haskell que permitieron que todo esto pasara en el tiempo que 10Pines amablemente nos donó para completar este desarrollo: poco menos de una semana."
     )
-    val room213 = Room("213")
+    val room213 = Room("Aula 213")
+    val room60 = Room("Aula 60")
+    val room37b = Room("Aula 37b")
     val cpi = OpenSpace(
       "CPI-Conf",
       LocalDate.now().plusDays(2),
-      setOf(room213),
-      (14..23).map {
-        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it, 59))
-      }.toSet(),
+      setOf(room213, room60, room37b),
+      setOf(
+        OtherSlot(LocalTime.parse("14:00"), LocalTime.parse("14:30"), "Marketplace"),
+        TalkSlot(LocalTime.parse("14:30"), LocalTime.parse("15:00")),
+        TalkSlot(LocalTime.parse("15:00"), LocalTime.parse("16:00")),
+        OtherSlot(LocalTime.parse("16:00"), LocalTime.parse("16:15"), "Break"),
+        TalkSlot(LocalTime.parse("16:15"), LocalTime.parse("17:00")),
+        TalkSlot(LocalTime.parse("17:00"), LocalTime.parse("18:00"))
+      ),
       mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js)
     )
 
@@ -104,15 +112,15 @@ class DataService(private val userRepository: UserRepository) {
 
     val augusto = User(
       "augusto@sos.sos", "Augusto", "Augusto",
-      mutableSetOf(practicas), mutableSetOf(master, winter, agileMeetings, contrato)
-    )
-    val fede = User(
-      "fede@sos.sos", "Fede", "Fede",
-      mutableSetOf(cpi), mutableSetOf(dessAgil, front, proy, appLenta)
+      mutableSetOf(cpi, practicas), mutableSetOf(master, winter, agileMeetings, contrato)
     )
     userRepository.saveAll(
       setOf(
-        augusto, fede,
+        augusto,
+        User(
+          "fede@sos.sos", "Fede", "Fede",
+          mutableSetOf(), mutableSetOf(dessAgil, front, proy, appLenta)
+        ),
         User(
           "juan@sos.sos", "Juan", "Juan",
           mutableSetOf(os1), mutableSetOf(testear, desSinJefe, charla1)
@@ -128,7 +136,7 @@ class DataService(private val userRepository: UserRepository) {
       )
     )
 
-    cpi.activeQueue(fede)
+    cpi.activeQueue(augusto)
     practicas.activeQueue(augusto)
 
     judo.enqueue()
@@ -137,11 +145,12 @@ class DataService(private val userRepository: UserRepository) {
     front.enqueue()
     master.enqueue()
 
-    schedule(cpi, dessAgil, LocalTime.parse("14:00"), room213)
-    schedule(cpi, proy, LocalTime.parse("16:00"), room213)
-    schedule(cpi, desSinJefe, LocalTime.parse("18:00"), room213)
-    schedule(cpi, cuis, LocalTime.parse("20:00"), room213)
-    schedule(cpi, api, LocalTime.parse("22:00"), room213)
+    schedule(cpi, api, LocalTime.parse("15:00"), room60)
+    schedule(cpi, dessAgil, LocalTime.parse("15:00"), room213)
+    schedule(cpi, js, LocalTime.parse("17:00"), room60)
+    desSinJefe.enqueue()
+    cuis.enqueue()
+    dessDeberia.enqueue()
   }
 
   private fun schedule(os: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
