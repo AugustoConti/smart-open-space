@@ -17,6 +17,10 @@
 [![License: GPLv3][license-badge]][license]
 [![Issues][issues-badge]][issues]
 
+### [:pencil: Informe](/other/Conti-TIP-Informe-SmartOpenSpace.pdf.pdf)
+### [:rocket: Presentación Prueba de Concepto](/other/Presentación-PoC.pdf)
+### [:sparkles: Presentación Final](/other/Presentación-Final.pdf)
+
 ## :book: Índice
 - [:-1: Problema](#-1-problema)
 - [:trophy: Solución](#trophy-solución)
