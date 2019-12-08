@@ -60,7 +60,7 @@ const PlaceBox = ({ place }) => (
       pad="small"
       round
     >
-      {`Queda${place > 1 && 'n'}`}
+      {`Queda${place > 1 ? 'n' : ''}`}
       <Heading alignSelf="center" margin="none">
         {place}
       </Heading>
@@ -231,7 +231,7 @@ const MyTalks = () => {
                   <Detail text={!speaker.id ? 'Orador no registrado' : speaker.name} />
                 </>
               ) : (
-                <Title level="2" label="¿Para cual orador?" />
+                <Title level="2" label="¿Para qué Orador?" />
               )}
             </Box>
             {speaker ? (
