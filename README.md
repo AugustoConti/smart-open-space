@@ -34,7 +34,7 @@
 exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupando las charlas muy requeridas en espacios más grandes.
 
 ## :tada: Diferencial
-- A diferencia del método actual, Pizarrón + Google SpreedSheet, el nuestro no requiere carga manual, se encuentra siempre actualizado, y sugiere optimizaciones inteligentes.
+- A diferencia del método actual, Pizarrón + Google SpreadSheet, el nuestro no requiere carga manual, se encuentra siempre actualizado, y sugiere optimizaciones inteligentes.
 
 ## :wrench: Instalación
 ### Antes de empezar, vas a necesitar:
@@ -86,7 +86,7 @@ cd front && yarn && yarn watch
 
 - Frontend:
   - **App.js**: Punto de entrada de la aplicación.
-  - **Routes**: Detecta la ruta, y elige que componente que corresponde renderizar.
+  - **Routes**: Detecta la ruta, y elige qué componente que corresponde renderizar.
   - **OpenSpace.js**: Renderiza la pantalla con los datos del Open Space.
   - **os-client.js**: Conseguir los datos del Open Space, conectandose con el backend.
 - Backend:
@@ -119,7 +119,7 @@ cd front && yarn && yarn watch
 #### Entrega 3
 ![Caso de uso entrega 3](/other/CasoDeUso3.png)
 - Organizador:
-  - **Finalizar Marketplace**: Deshabilitar encolamiento para que no se puedan agendar mas charlas.
+  - **Finalizar Marketplace**: Deshabilitar encolamiento para que no se puedan agendar más charlas.
 - Orador:
   - **Ingresar con mail**: Ingresar a la app solo con email y nombre.
 
