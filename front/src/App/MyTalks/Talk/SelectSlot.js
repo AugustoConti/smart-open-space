@@ -13,14 +13,14 @@ const toTime = time => time.map(pad).join(':');
 const sortTimes = times =>
   times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
 
-const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
+const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
   const [freeHours, setFreeHours] = useState([]);
 
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
         <Box margin={{ vertical: 'medium' }}>
-          <Title level="2">Agendate!</Title>
+          <Title level="2">{title}</Title>
           <Detail size="large" text={name} textAlign="center" />
         </Box>
         <MyForm onSecondary={onExit} onSubmit={onSubmit}>
@@ -47,14 +47,15 @@ const SelectSlot = ({ name, onExit, freeSlots, onSubmit }) => {
   );
 };
 SelectSlot.propTypes = {
-  name: PropTypes.string.isRequired,
-  onExit: PropTypes.func.isRequired,
   freeSlots: PropTypes.arrayOf(
     PropTypes.shape({
       second: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
     }).isRequired
   ).isRequired,
+  name: PropTypes.string.isRequired,
+  onExit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default SelectSlot;

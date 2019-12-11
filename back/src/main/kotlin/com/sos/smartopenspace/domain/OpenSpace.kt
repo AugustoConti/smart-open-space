@@ -59,6 +59,7 @@ class OpenSpace(
   @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
+  val urlImage: String = "",
   @Id @GeneratedValue
   val id: Long = 0
 ) {

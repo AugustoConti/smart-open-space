@@ -102,6 +102,7 @@ const Talk = ({
           name={name}
           onExit={() => setOpenSchedule(false)}
           onSubmit={onSubmitSchedule}
+          title="Agendate!"
         />
       )}
       {openExchange && (
@@ -110,6 +111,7 @@ const Talk = ({
           name={name}
           onExit={() => setOpenExchange(false)}
           onSubmit={onSubmitExchange}
+          title="Mover a:"
         />
       )}
     </Card>

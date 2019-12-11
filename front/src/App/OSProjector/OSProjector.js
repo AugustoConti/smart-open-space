@@ -36,7 +36,7 @@ const LabelTimeLeft = () => (
 
 const BoxTime = ({ background = 'status-critical', label, size = 'large' }) => (
   <Box alignSelf="center" background={background} pad="medium" round>
-    <Text size={size} weight="bold">
+    <Text textAlign="center" size={size} weight="bold">
       {label}
     </Text>
   </Box>
@@ -51,14 +51,13 @@ const TimeLeft = ({ time }) => (
   <Box alignSelf="center" margin={{ top: 'medium' }}>
     {time === 0 ? (
       <BoxTime label="Se acabó tu tiempo!" />
-    ) : time <= 5 ? (
-      <Box gap="medium">
-        <BoxTime label={time} size="xxlarge" />
-        <LabelTimeLeft />
-      </Box>
     ) : (
       <Box gap="medium">
-        <BoxTime background="dark-1" label={time} size="xxlarge" />
+        <BoxTime
+          background={time <= 5 ? undefined : 'dark-1'}
+          label={time}
+          size="xxlarge"
+        />
         <LabelTimeLeft />
       </Box>
     )}

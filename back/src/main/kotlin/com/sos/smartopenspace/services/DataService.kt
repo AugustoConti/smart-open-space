@@ -66,7 +66,8 @@ class DataService(private val userRepository: UserRepository) {
         TalkSlot(LocalTime.parse("16:15"), LocalTime.parse("17:00")),
         TalkSlot(LocalTime.parse("17:00"), LocalTime.parse("18:00"))
       ),
-      mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js)
+      mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js),
+      "http://www.unq.edu.ar/images/logo_unqui.png"
     )
 
     val master = Talk(
@@ -96,7 +97,8 @@ class DataService(private val userRepository: UserRepository) {
       (19..21).map {
         TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
       }.toSet(),
-      mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter)
+      mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter),
+      "https://secure.meetupstatic.com/photos/event/7/1/a/f/highres_482189103.jpeg"
     )
 
     val charla1 = Talk("Charla 1")
