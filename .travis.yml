@@ -30,7 +30,7 @@ jobs:
       install: yarn
 
     - stage: deploy-back
-      if: branch = master
+      if: branch = master AND type =~ pull_request
       language: java
       before_cache:
         - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -51,7 +51,7 @@ jobs:
           repo: AugustoConti/smart-open-space
 
     - stage: deploy-front
-      if: branch = master
+      if: branch = master AND $TRAVIS_PULL_REQUEST = false
       language: node_js
       node_js: node
       cache: yarn
