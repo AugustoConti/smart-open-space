@@ -22,7 +22,7 @@ jobs:
         - bash <(curl -s https://codecov.io/bash)
 
     - stage: test
-      name: front
+      name: Front
       language: node_js
       node_js: node
       cache: yarn
