@@ -51,7 +51,7 @@ jobs:
           repo: AugustoConti/smart-open-space
 
     - stage: deploy-front
-      if: branch = master AND $TRAVIS_PULL_REQUEST = false
+      if: branch = master AND  $TRAVIS_PULL_REQUEST = false
       language: node_js
       node_js: node
       cache: yarn
