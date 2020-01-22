@@ -32,7 +32,7 @@
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
     "babel-eslint": "10.x",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
     "eslint": "6.x",
     "eslint-config-prettier": "^6.9.0",
     "eslint-config-react-app": "^5.1.0",
