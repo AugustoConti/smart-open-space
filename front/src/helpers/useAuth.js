@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
+import LogRocket from 'logrocket';
 import useLocalStorage from './useLocalStorage';
 import * as userClient from './api/user-client';
 
@@ -8,6 +9,11 @@ const AuthContext = React.createContext();
 
 const AuthProvider = props => {
   const [user, setUser] = useLocalStorage(localStorageKey, null);
+
+  useEffect(() => {
+    const { email = '', id = '-1', name = '' } = user || {};
+    LogRocket.identify(id, { name, email });
+  }, [user]);
 
   const handleUserResponse = u => {
     setUser(u);
