@@ -14,7 +14,7 @@ module.exports = {
     'no-nested-ternary': 'off',
     'prettier/prettier': 'error',
     'react/jsx-curly-newline': 'off',
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-props-no-spreading': 'off',
     'react/jsx-wrap-multilines': 'off',
     'react/require-default-props': 'off',
