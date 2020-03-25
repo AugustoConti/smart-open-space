@@ -13,7 +13,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   mode: 'production',
   module: {
     rules: [

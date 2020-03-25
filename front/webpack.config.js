@@ -1,5 +1,6 @@
 const Dotenv = require('dotenv-webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 const dotEnv = new Dotenv();
 
@@ -9,7 +10,18 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
+  mode: 'development',
   devtool: 'inline-source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'output'),
+    compress: true,
+    historyApiFallback: true,
+    publicPath: '/',
+  },
+  output: {
+    path: path.join(__dirname, 'output'),
+    publicPath: '/',
+  },
   module: {
     rules: [
       {
