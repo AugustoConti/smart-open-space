@@ -13,8 +13,11 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
-  devtool: 'source-map',
   mode: 'production',
+  devtool: 'source-map',
+  output: {
+    publicPath: '/',
+  },
   module: {
     rules: [
       {
