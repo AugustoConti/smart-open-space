@@ -11,8 +11,8 @@ const getNextYear = () => new Date(new Date().setFullYear(new Date().getFullYear
 const MyCalendar = ({ onChange, value, ...props }) => {
   const [open, setOpen] = useState(false);
 
-  const onSelect = nextDate => {
-    onChange({ value: nextDate });
+  const onSelect = (nextDate) => {
+    onChange({ target: { value: nextDate } });
     setOpen(false);
   };
 

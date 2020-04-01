@@ -24,26 +24,26 @@ const MyField = ({ icon, label, ...props }) => (
 );
 MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string };
 
-const MyFieldText = props => (
+const MyFieldText = (props) => (
   <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />
 );
 
-const MyFieldTextArea = props => (
+const MyFieldTextArea = (props) => (
   <MyField
     icon={<TextAreaIcon />}
     label="Descripción"
     name="description"
-    component={TextArea}
+    component={(props) => <TextArea {...props} />}
     required={false}
     {...props}
   />
 );
 
-const MyFieldEmail = props => (
+const MyFieldEmail = (props) => (
   <MyField icon={<EmailIcon />} label="Email" name="email" type="email" {...props} />
 );
 
-const MyFieldPassword = props => (
+const MyFieldPassword = (props) => (
   <MyField
     icon={<PasswordIcon />}
     label="Contraseña"
@@ -53,8 +53,18 @@ const MyFieldPassword = props => (
   />
 );
 
-const MyFieldSelect = props => (
-  <MyField label="Elegir" name="select" component={Select} {...props} />
+const MyFieldSelect = (props) => (
+  <MyField
+    label="Elegir"
+    name="select"
+    component={({ onChange, ...props }) => (
+      <Select
+        onChange={(e) => onChange({ ...e, target: { value: e.value } })}
+        {...props}
+      />
+    )}
+    {...props}
+  />
 );
 
 const Footer = ({ children }) => (

@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 import { AddIcon, TrashIcon } from '#shared/icons';
 import RowBetween from '#shared/RowBetween';
 
-const List = props => (
+const List = (props) => (
   <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
 );
 
-const ListItem = props => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
+const ListItem = (props) => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
 
 const RoomItem = ({ room, onRemove }) => (
   <ListItem>
@@ -30,7 +30,7 @@ const Rooms = ({ value, onChange }) => {
     <Box pad="small">
       <RowBetween>
         <TextInput
-          onChange={event => setTextValue(event.target.value)}
+          onChange={(event) => setTextValue(event.target.value)}
           placeholder="Nombre de sala"
           value={textValue}
         />
@@ -39,7 +39,7 @@ const Rooms = ({ value, onChange }) => {
           icon={<AddIcon />}
           onClick={() => {
             if (textValue.trim().length < 1) return;
-            onChange({ value: [...value, textValue.trim()] });
+            onChange({ target: { value: [...value, textValue.trim()] } });
             setTextValue('');
           }}
         />
@@ -50,7 +50,9 @@ const Rooms = ({ value, onChange }) => {
             // eslint-disable-next-line react/no-array-index-key
             key={`${room}-${index}`}
             room={room}
-            onRemove={() => onChange({ value: value.filter((_, i) => i !== index) })}
+            onRemove={() =>
+              onChange({ target: { value: value.filter((_, i) => i !== index) } })
+            }
           />
         ))}
       </List>

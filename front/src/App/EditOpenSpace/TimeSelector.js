@@ -43,20 +43,22 @@ CloseSlot.propTypes = {
 const TimeSelector = ({ onChange, onNewSlot, value }) => {
   const lastEnd = value.length > 0 ? value.slice(-1)[0].endTime : undefined;
 
-  const addSlot = type =>
-    onNewSlot(type, lastEnd, ({ value: { startTime, endTime, description } }) =>
+  const addSlot = (type) =>
+    onNewSlot(type, lastEnd, ({ value: { startTime, endTime, description } }) => {
       onChange({
-        value: [
-          ...value,
-          {
-            type,
-            startTime: lastEnd || startTime,
-            endTime,
-            description,
-          },
-        ],
-      })
-    );
+        target: {
+          value: [
+            ...value,
+            {
+              type,
+              startTime: lastEnd || startTime,
+              endTime,
+              description,
+            },
+          ],
+        },
+      });
+    });
 
   return (
     <Box>
@@ -69,7 +71,7 @@ const TimeSelector = ({ onChange, onNewSlot, value }) => {
             text={type === TALK_SLOT ? 'Charla' : description}
             onRemove={
               i === value.length - 1
-                ? () => onChange({ value: value.slice(0, -1) })
+                ? () => onChange({ target: { value: value.slice(0, -1) } })
                 : null
             }
           />
