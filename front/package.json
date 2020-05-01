@@ -70,7 +70,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
-    "grommet": "^2.11.3",
+    "grommet": "^2.13.0",
     "grommet-icons": "^4.4.0",
     "logrocket": "^1.0.7",
     "prop-types": "^15.7.2",
