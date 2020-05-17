@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.controllers
 
 import com.sos.smartopenspace.services.TalkService
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,11 +12,19 @@ import java.time.LocalTime
 @RequestMapping("talk")
 class TalkController(private val talkService: TalkService) {
   @PutMapping("/schedule/{talkID}/{roomID}/{time}")
-  fun scheduleTalk(@PathVariable talkID: Long, @PathVariable roomID: Long, @PathVariable time: LocalTime) =
+  fun scheduleTalk(
+    @PathVariable talkID: Long,
+    @PathVariable roomID: Long,
+    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) time: LocalTime
+  ) =
     talkService.scheduleTalk(talkID, roomID, time)
 
   @PutMapping("/exchange/{talkID}/{roomID}/{time}")
-  fun exchangeTalk(@PathVariable talkID: Long, @PathVariable roomID: Long, @PathVariable time: LocalTime) =
+  fun exchangeTalk(
+    @PathVariable talkID: Long,
+    @PathVariable roomID: Long,
+    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) time: LocalTime
+  ) =
     talkService.exchangeTalk(talkID, roomID, time)
 
   @PutMapping("/nextTalk/{userID}/{osID}")
