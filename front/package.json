@@ -84,6 +84,6 @@
     "serve": "^11.3.0",
     "slick-carousel": "^1.8.1",
     "sockjs-client": "^1.4.0",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.2.0"
   }
 }
