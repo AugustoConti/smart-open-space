@@ -39,7 +39,7 @@ exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupa
 ## :wrench: Instalación
 ### Antes de empezar, vas a necesitar:
   - [Git][git]
-  - [PostgreSQL][postgresql]
+  - [PostgreSQL][postgresql] o Docker
   - [JDK 8 update 60 o superior][java8] (Asegurate que la variable de entorno `JAVA_HOME` apunte a la carpeta `jdk1.8.0` que sacaste de la descarga del JDK).
   - [NodeJS][node]
   - [Yarn][yarn]
@@ -51,11 +51,23 @@ cd smart-open-space
 ```
 
 ### Levantar backend
-- Crear base de datos, ejemplo:
+
+#### Con Docker:
+```sh
+docker-compose up
+```
+Esto va a generar una carpeta `./db-data` con el volumen.
+
+#### Sin docker, con postgreSQL local
+Crear la base de datos, ejemplo:
 ```sh
 psql -c 'create database SOS;' -U postgres
 ```
+
+#### Config
 - Crear el archivo `application-default.properties` en la ruta `/back/src/main/resources/`. Configurando url, usuario y contraseña:
+
+El puerto sera `6543` si usaste Docker, y si no `5432`
 ```groovy
 spring.datasource.url=jdbc:postgresql://localhost:5432/sos
 spring.datasource.username=postgres
@@ -66,7 +78,7 @@ logging.appender.email.password=""
 logging.appender.email.to=""
 ```
 
-- Ejecutar back
+#### Ejecucion
 ```sh
 cd back && ./gradlew bootRun
 ```
