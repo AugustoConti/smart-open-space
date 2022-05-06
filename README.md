@@ -72,8 +72,19 @@ cd back && ./gradlew bootRun
 ```
 
 ### Levantar frontend
+Asegurate de tener la version de node correspondiente:
 ```sh
-cd front && yarn && yarn watch
+cd front && nvm use
+```
+
+Si no tenes yarn instalado:
+```sh
+npm install -g yarn
+```
+
+Para instalar dependencias y levantar el proyecto:
+```sh
+yarn && yarn watch
 ```
 
 ## :scroll: Documentación
