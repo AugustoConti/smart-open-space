@@ -19,7 +19,7 @@ class OpenSpaceTest {
             )
 
     @Test
-    fun `Cuando se crea un OS este contiene sus datos`() {
+    fun `an open space is created with necessary fields and contains them`() {
         val nameOS = "os"
         val date = LocalDate.now()
         val os = OpenSpace(
@@ -29,5 +29,18 @@ class OpenSpaceTest {
 
         assertEquals(os.name, nameOS)
         assertEquals(os.date, date)
+    }
+
+    @Test
+    fun `an open space is created with description and contains it`() {
+        val nameOS = "os"
+        val date = LocalDate.now()
+        val description = "A description"
+        val os = OpenSpace(
+            nameOS, date, setOf(),
+            setOf(), mutableSetOf(), description
+        )
+
+        assertEquals(os.description, description)
     }
 }
