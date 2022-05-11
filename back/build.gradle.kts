@@ -30,7 +30,7 @@ dependencies {
   // implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-websocket")
-
+  runtimeOnly("com.h2database:h2")
   testImplementation("org.springframework.boot:spring-boot-starter-test"){
     exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
   }

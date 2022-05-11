@@ -4,20 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalTime
-import javax.persistence.CascadeType
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.FetchType
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OrderColumn
+import javax.persistence.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.Size
 
 class AlreadyActivedQueuingException : RuntimeException("Encolamiento ya se encuentra activo")
 class AnotherTalkIsEnqueuedException : RuntimeException("Existe otra charla encolada")
@@ -59,6 +50,8 @@ class OpenSpace(
   @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
+  @Column(length=1000)
+  @Size(min=0, max=1000)
   val description: String = "",
 
   val urlImage: String = "",
