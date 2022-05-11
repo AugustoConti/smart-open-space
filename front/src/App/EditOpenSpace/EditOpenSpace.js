@@ -152,7 +152,11 @@ const EditOpenSpace = () => {
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
         <MyForm.Text placeholder="¿Como se va a llamar?" />
-        <MyForm.TextArea placeholder="Añade una descripcion" />
+        <MyForm.TextAreaWithCounter
+          placeholder="Añade una descripcion."
+          maxLength={1000}
+        />
+
         <Box direction="row">
           <MyForm.Field
             component={MyCalendar}
