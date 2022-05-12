@@ -16,7 +16,7 @@ create table if not exists flyway_schema_history
 
 delete from flyway_schema_history where 1 = 1;
 
-create table if not exists usersos
+create table if not exists user
 (
     id bigint not null,
     email varchar(255) unique,
