@@ -1,9 +1,7 @@
 package com.sos.smartopenspace.controllers
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.UserRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -32,7 +30,6 @@ class OpenSpaceControllerTest {
     lateinit var mockMvc: MockMvc
 
 
-
     @Autowired
     lateinit var repoUser: UserRepository
 
@@ -50,20 +47,20 @@ class OpenSpaceControllerTest {
 
     }
 
-    //    @Test
-//    fun `when creates an OS with 1001 characters description get a 400`() {
-//        val user = repoUser.save(anyUser());
-//        val osBody = generateCreateBody("W".repeat(1001))
-//        mockMvc.perform(
-//            MockMvcRequestBuilders.post("/openSpace/${user.id}")
-//                .contentType("application/json")
-//                .content(osBody)
-//        )
-//            .andExpect(MockMvcResultMatchers.status().isOk)
-//            .andExpect(MockMvcResultMatchers.jsonPath("$.id").exists())
-//    }
     @Test
-    fun `Asking for an OS we get it with description`() {
+    fun `when creates an OS with 1001 characters description get a 400`() {
+        val user = repoUser.save(anyUser())
+        val osBody = generateCreateBody("W".repeat(1001))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/openSpace/${user.id}")
+                .contentType("application/json")
+                .content(osBody)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `Asking for an OS and we get it with description`() {
         val user = repoUser.save(anyUser())
         val osBody = generateCreateBody("Test")
         val entityResponse = mockMvc.perform(
@@ -71,9 +68,11 @@ class OpenSpaceControllerTest {
                 .contentType("application/json")
                 .content(osBody)
         ).andReturn().response
-        val id= JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+        val id = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/openSpace/${id}"))
+            MockMvcRequestBuilders.get("/openSpace/${id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test"))
     }
 

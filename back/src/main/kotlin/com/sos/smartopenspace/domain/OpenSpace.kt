@@ -50,8 +50,8 @@ class OpenSpace(
   @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
-  @Column(length=1000)
-  @Size(min=0, max=1000)
+  @field:Column(length=1000)
+  @field:Size(min=0, max=1000)
   val description: String = "",
 
   val urlImage: String = "",
