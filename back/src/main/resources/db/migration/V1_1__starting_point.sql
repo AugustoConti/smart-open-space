@@ -16,7 +16,7 @@ create table if not exists flyway_schema_history
 
 delete from flyway_schema_history where 1 = 1;
 
-create table if not exists usersos
+create table if not exists users
 (
     id bigint not null,
     email varchar(255) unique,
@@ -34,7 +34,7 @@ create table if not exists open_space
     url_image varchar(255),
     organizer_id bigint,
     primary key(id),
-    foreign key(organizer_id) references usersos(id)
+    foreign key(organizer_id) references users(id)
 );
 
 create table if not exists talk
@@ -45,7 +45,7 @@ create table if not exists talk
     open_space_id bigint,
     speaker_id    bigint
     constraint fknjpfgrjrcr8k9bw44oba71jdi
-    references usersos,
+    references users,
     primary key(id),
     foreign key(open_space_id) references open_space(id)
     );
