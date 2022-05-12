@@ -9,7 +9,7 @@ import { EmailIcon, PasswordIcon, TextAreaIcon, TextIcon } from '#shared/icons';
 import { TinySpinner } from '#shared/Spinner';
 import Row from './Row';
 import RowBetween from './RowBetween';
-import { TextAreaWithCounter } from '#shared/TextAreaWithCounter';
+import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 
 const MyField = ({ icon, label, ...props }) => (
   <FormField
@@ -40,13 +40,13 @@ const MyFieldTextArea = (props) => (
   />
 );
 
-TextAreaWithCounter.propTypes = { props: PropTypes.any };
+TextAreaWithCharacterCounter.propTypes = { props: PropTypes.any };
 const MyFieldTextAreaWithCounter = (props) => (
   <MyField
     icon={<TextAreaIcon />}
     label="Descripción"
     name="description"
-    component={(props) => <TextAreaWithCounter {...props} />}
+    component={(props) => <TextAreaWithCharacterCounter {...props} />}
     required={false}
     {...props}
   />
@@ -128,7 +128,7 @@ MyForm.propTypes = {
 
 MyForm.Text = MyFieldText;
 MyForm.TextArea = MyFieldTextArea;
-MyForm.TextAreaWithCounter = MyFieldTextAreaWithCounter;
+MyForm.TextAreaWithCharacterCounter = MyFieldTextAreaWithCounter;
 MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
