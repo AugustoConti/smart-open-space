@@ -1,2 +1,2 @@
 alter table open_space
-    add description varchar(1000) default '';
+    add column if not exists description varchar(1000) default '';

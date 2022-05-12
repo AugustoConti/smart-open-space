@@ -36,11 +36,13 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese al menos una sala")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val rooms: Set<Room>,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos un slot")
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val slots: Set<Slot>,
 
   @JsonIgnore
@@ -48,6 +50,7 @@ class OpenSpace(
   @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
+  @field:Column(length=1000)
   @field:Size(min=0, max=1000)
   val description: String = "",
 
@@ -65,6 +68,7 @@ class OpenSpace(
 
   @JsonIgnore
   @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
   val assignedSlots: MutableSet<AssignedSlot> = mutableSetOf()
 
   @OrderColumn
