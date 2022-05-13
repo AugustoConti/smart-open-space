@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Layer } from 'grommet';
+import { Anchor, Box, Button, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { FormCloseIcon, HomeIcon, UserIcon } from '#shared/icons';
+import { FormCloseIcon, HomeIcon, LinkIcon, UserIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
 
-const DescriptionInfo = ({ title, speaker, info, onClose }) => (
+const DescriptionInfo = ({ title, speaker, info, onClose, meeting }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box gap="medium" pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Row justify="end">
@@ -18,6 +18,7 @@ const DescriptionInfo = ({ title, speaker, info, onClose }) => (
       <Title level="2">{title}</Title>
       <Detail icon={UserIcon} text={speaker} />
       <Detail color="dark-1" text={info} />
+      <Anchor icon={<LinkIcon />} color="dark-1" href={meeting} label={meeting} />
     </Box>
   </Layer>
 );
@@ -26,6 +27,7 @@ DescriptionInfo.propTypes = {
   onClose: PropTypes.func.isRequired,
   speaker: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  meeting: PropTypes.string.isRequired,
 };
 
 const ButtonMoreInfo = ({ onClick }) => (
@@ -39,7 +41,7 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({ talk: { description, name, speaker }, room }) => {
+const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -64,6 +66,7 @@ const Talk = ({ talk: { description, name, speaker }, room }) => {
           speaker={speaker.name}
           info={description}
           onClose={() => setOpen(false)}
+          meeting={meeting}
         />
       )}
     </>
