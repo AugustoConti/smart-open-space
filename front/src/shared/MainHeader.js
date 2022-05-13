@@ -49,13 +49,13 @@ MySubTitle.propTypes = {
   label: PropTypes.string,
 };
 
-const DescriptionOpenSpace = ({ children, description, ...props }) => (
+const Description = ({ children, description, ...props }) => (
   <Paragraph fill={true} {...props}>
     {description}
     {children}
   </Paragraph>
 );
-DescriptionOpenSpace.propTypes = {
+Description.propTypes = {
   children: MyProps.children,
   description: PropTypes.string,
 };
@@ -71,10 +71,10 @@ Buttons.propTypes = { children: MyProps.children };
 
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
-  const childs = React.Children.toArray(children);
-  const titles = getAllByTypes(childs, MyTitle, MyTitleLink, MySubTitle);
-  const description = getByType(childs, DescriptionOpenSpace);
-  const buttons = getByType(childs, Buttons);
+  const theChildren = React.Children.toArray(children);
+  const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle);
+  const description = getByType(theChildren, Description);
+  const buttons = getByType(theChildren, Buttons);
   return (
     <>
       <RowBetween
@@ -99,7 +99,7 @@ MainHeader.propTypes = { children: MyProps.children.isRequired };
 MainHeader.Title = MyTitle;
 MainHeader.TitleLink = MyTitleLink;
 MainHeader.SubTitle = MySubTitle;
-MainHeader.DescriptionOpenSpace = DescriptionOpenSpace;
+MainHeader.Description = Description;
 MainHeader.Button = MyButton;
 MainHeader.ButtonNew = ButtonNew;
 MainHeader.ButtonLoading = ButtonLoading;

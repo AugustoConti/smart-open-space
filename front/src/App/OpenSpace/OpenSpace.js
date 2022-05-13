@@ -192,7 +192,7 @@ const OpenSpace = () => {
         ) : (
           <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         )}
-        <MainHeader.DescriptionOpenSpace description={description} />
+        <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
           {user ? (

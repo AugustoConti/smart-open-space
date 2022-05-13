@@ -149,13 +149,14 @@ const MyTalks = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const amTheOrganizer = openSpace && user && openSpace.organizer.id === user.id;
-  const isAssigned = (idTalk) => assignedSlots.some((s) => s.talk.id === idTalk);
-  const isEnqueue = (idTalk) => queue.some((t) => t.id === idTalk);
-  const isMyTalk = (talk) => myTalks.some((t) => t.id === talk.id);
+  const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
+  const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
+  const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
-  const isToSchedule = (idTalk) => openSpace.toSchedule.some((t) => t.id === idTalk);
+  const isToSchedule = (idTalk) =>
+    openSpace.toSchedule.some((talk) => talk.id === idTalk);
 
   const onCloseQuerySpeaker = () => {
     setShowQuerySpeaker(false);
@@ -174,7 +175,7 @@ const MyTalks = () => {
           icon={TalkIcon}
           label={amTheOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
         />
-        <MainHeader.DescriptionOpenSpace
+        <MainHeader.Description
           description={!openSpace ? <TinySpinner /> : openSpace.description}
         />
         <MainHeader.Buttons>
