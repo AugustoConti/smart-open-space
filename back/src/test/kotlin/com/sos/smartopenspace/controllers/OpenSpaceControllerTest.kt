@@ -2,6 +2,7 @@ package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.UserRepository
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -32,6 +33,9 @@ class OpenSpaceControllerTest {
 
     @Autowired
     lateinit var repoUser: UserRepository
+
+    @Autowired
+    lateinit var repoOpenSpace: OpenSpaceRepository
 
     @Test
     fun `when creates an OS with 1000 characters description get a 200`() {
@@ -76,6 +80,29 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test"))
     }
 
+    @Test
+    fun `creating a valid talk returns an OK status response`() {
+        val user = repoUser.save(anyUser())
+
+        val anOpenSpace = repoOpenSpace.save(anyOS())
+
+        val aMeetingLink = "https://aLink"
+        val entityResponse = mockMvc.perform(
+            MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(aMeetingLink))
+        ).andReturn().response
+
+        val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].meeting").value(aMeetingLink))
+    }
+
     private fun anyOS(): OpenSpace {
         return OpenSpace(
             "os", LocalDate.now(), setOf(Room("1")),
@@ -106,6 +133,12 @@ class OpenSpaceControllerTest {
         }
     ]
 }
+        """.trimIndent()
+    }
+
+    private fun generateTalkBody(aMeeting: String): String {
+        return """
+            {"name":"asdf","meeting":"$aMeeting"}
         """.trimIndent()
     }
 }
