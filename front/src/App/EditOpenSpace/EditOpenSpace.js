@@ -19,10 +19,10 @@ import TimeSelector from './TimeSelector';
 // const TALK_SLOT = 'TalkSlot';
 const OTHER_SLOT = 'OtherSlot';
 
-const pad = n => (n < 10 ? '0' : '') + n;
+const pad = (n) => (n < 10 ? '0' : '') + n;
 
-const splitTime = time =>
-  time === undefined ? [0, -1] : time.split(':').map(t => Number(t));
+const splitTime = (time) =>
+  time === undefined ? [0, -1] : time.split(':').map((t) => Number(t));
 
 const InputTime = ({ onChange, start, title, value }) => {
   const [startHour, startMinutes] = splitTime(start);
@@ -43,7 +43,7 @@ const InputTime = ({ onChange, start, title, value }) => {
           {
             length: 2,
             options: ['00', '15', '30', '45'].filter(
-              minutes => currentHour !== startHour || minutes > startMinutes
+              (minutes) => currentHour !== startHour || minutes > startMinutes
             ),
             regexp: /^[0-5][0-9]|[0-5]$/,
             placeholder: 'mm',
@@ -64,8 +64,8 @@ InputTime.propTypes = {
 };
 
 const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]):[0-5][0-9]$/;
-const validateTime = time => !timeRegex.test(time) && 'Hora inválida';
-const newHour = time => new Date().setHours(...time.split(':'));
+const validateTime = (time) => !timeRegex.test(time) && 'Hora inválida';
+const newHour = (time) => new Date().setHours(...time.split(':'));
 
 const InputSlot = ({ onExit, onSubmit, type, start }) => {
   const [startTime, setStartTime] = useState();
@@ -115,7 +115,7 @@ InputSlot.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-const beforeToday = date =>
+const beforeToday = (date) =>
   new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
 
 const initialValues = {
@@ -132,11 +132,12 @@ const EditOpenSpace = () => {
 
   if (!user) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { date, name, rooms, slots } }) =>
+  const onSubmit = ({ value: { date, name, description, rooms, slots } }) =>
     createOS({
       date: new Date(date),
       name,
-      rooms: rooms.map(r => ({ name: r })),
+      description,
+      rooms: rooms.map((r) => ({ name: r })),
       slots: slots.map(({ endTime, startTime, ...rest }) => ({
         ...rest,
         endTime: splitTime(endTime),
@@ -151,13 +152,18 @@ const EditOpenSpace = () => {
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit} value={initialValues}>
         <MyForm.Text placeholder="¿Como se va a llamar?" />
+        <MyForm.TextAreaWithCharacterCounter
+          placeholder="Añade una descripcion."
+          maxLength={1000}
+        />
+
         <Box direction="row">
           <MyForm.Field
             component={MyCalendar}
             icon={<CalendarIcon />}
             label="Fecha"
             name="date"
-            validate={date =>
+            validate={(date) =>
               beforeToday(date) && 'Ingresa una fecha mayor o igual a hoy'
             }
           />
@@ -170,20 +176,20 @@ const EditOpenSpace = () => {
           onNewSlot={(type, start, onSubmitSlot) => {
             setShowInputSlot({ onSubmitSlot, start, type });
           }}
-          validate={times => times.length < 1 && 'Ingresa al menos un slot'}
+          validate={(times) => times.length < 1 && 'Ingresa al menos un slot'}
         />
         <MyForm.Field
           component={Rooms}
           icon={<HomeIcon />}
           label="Salas"
           name="rooms"
-          validate={rooms => rooms.length < 1 && 'Ingresa al menos una sala'}
+          validate={(rooms) => rooms.length < 1 && 'Ingresa al menos una sala'}
         />
       </MyForm>
       {showInputSlot !== null && (
         <InputSlot
           onExit={() => setShowInputSlot(null)}
-          onSubmit={data => {
+          onSubmit={(data) => {
             showInputSlot.onSubmitSlot(data);
             setShowInputSlot(null);
           }}

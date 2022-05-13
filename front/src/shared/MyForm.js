@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 
 import MyProps from '#helpers/MyProps';
 import useLoading from '#helpers/useLoading';
-import { EmailIcon, PasswordIcon, TextIcon, TextAreaIcon } from '#shared/icons';
+import { EmailIcon, PasswordIcon, TextAreaIcon, TextIcon } from '#shared/icons';
 import { TinySpinner } from '#shared/Spinner';
 import Row from './Row';
 import RowBetween from './RowBetween';
+import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 
 const MyField = ({ icon, label, ...props }) => (
   <FormField
@@ -34,6 +35,18 @@ const MyFieldTextArea = (props) => (
     label="Descripción"
     name="description"
     component={(props) => <TextArea {...props} />}
+    required={false}
+    {...props}
+  />
+);
+
+TextAreaWithCharacterCounter.propTypes = { props: PropTypes.any };
+const MyFieldTextAreaWithCounter = (props) => (
+  <MyField
+    icon={<TextAreaIcon />}
+    label="Descripción"
+    name="description"
+    component={(props) => <TextAreaWithCharacterCounter {...props} />}
     required={false}
     {...props}
   />
@@ -115,6 +128,7 @@ MyForm.propTypes = {
 
 MyForm.Text = MyFieldText;
 MyForm.TextArea = MyFieldTextArea;
+MyForm.TextAreaWithCharacterCounter = MyFieldTextAreaWithCounter;
 MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;

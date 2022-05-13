@@ -13,7 +13,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
-@Entity(name = "UserSOS")
+@Entity(name = "Users")
 class User(
   @field:NotEmpty(message = "Ingrese un email")
   @field:Email
