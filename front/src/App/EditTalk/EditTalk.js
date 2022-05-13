@@ -18,8 +18,8 @@ const EditTalk = () => {
   if (!user || isRejected) return <RedirectToRoot />;
   if (os && os.finishedQueue) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { name, description } }) =>
-    createTalk(os.id, { name, description }).then(pushToMyTalks);
+  const onSubmit = ({ value: { name, description, link } }) =>
+    createTalk(os.id, { name, description, link }).then(pushToMyTalks);
 
   return (
     <>
@@ -30,6 +30,7 @@ const EditTalk = () => {
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text label="Título" placeholder="¿De que trata tu charla?" />
         <MyForm.TextArea placeholder="Describí tu charla con mas detalle..." />
+        <MyForm.Link label="Link" placeholder="Link a la reunion" />
       </MyForm>
     </>
   );
