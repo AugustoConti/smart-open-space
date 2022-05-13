@@ -58,7 +58,7 @@ const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
         </Box>
-        {description && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+        {(description || meeting) && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
       {open && (
         <DescriptionInfo
