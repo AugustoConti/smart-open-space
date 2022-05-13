@@ -18,8 +18,8 @@ const EditTalk = () => {
   if (!user || isRejected) return <RedirectToRoot />;
   if (os && os.finishedQueue) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { name, description, link } }) =>
-    createTalk(os.id, { name, description, link }).then(pushToMyTalks);
+  const onSubmit = ({ value: { name, description, meeting } }) =>
+    createTalk(os.id, { name, description, meeting }).then(pushToMyTalks);
 
   return (
     <>

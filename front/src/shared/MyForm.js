@@ -30,11 +30,11 @@ const MyFieldText = (props) => (
   <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />
 );
 
-const MyFieldLink = (props) => (
+const MyFieldMeeting = (props) => (
   <MyField
     icon={<LinkIcon />}
-    label="Link"
-    name="link"
+    label="Meeting"
+    name="meeting"
     validate={validateUrl}
     required={false}
     {...props}
@@ -145,6 +145,6 @@ MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
 MyForm.Select = MyFieldSelect;
-MyForm.Link = MyFieldLink;
+MyForm.Link = MyFieldMeeting;
 
 export default MyForm;
