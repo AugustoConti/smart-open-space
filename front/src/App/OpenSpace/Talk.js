@@ -9,7 +9,7 @@ import { FormCloseIcon, HomeIcon, LinkIcon, UserIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
 
-const DescriptionInfo = ({ title, speaker, info, onClose, meeting }) => (
+const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box gap="medium" pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Row justify="end">
@@ -17,8 +17,15 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meeting }) => (
       </Row>
       <Title level="2">{title}</Title>
       <Detail icon={UserIcon} text={speaker} />
-      <Detail color="dark-1" text={info} />
-      <Anchor icon={<LinkIcon />} color="dark-1" href={meeting} label={meeting} />
+      {info && <Detail color="dark-1" text={info} />}
+      {meetingLink && (
+        <Anchor
+          icon={<LinkIcon />}
+          color="dark-1"
+          href={meetingLink}
+          label={meetingLink}
+        />
+      )}
     </Box>
   </Layer>
 );
@@ -27,7 +34,7 @@ DescriptionInfo.propTypes = {
   onClose: PropTypes.func.isRequired,
   speaker: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  meeting: PropTypes.string.isRequired,
+  meetingLink: PropTypes.string.isRequired,
 };
 
 const ButtonMoreInfo = ({ onClick }) => (
@@ -43,6 +50,8 @@ ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
 const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
   const [open, setOpen] = useState(false);
+
+  let shouldDisplayMoreInfo = description || meeting;
   return (
     <>
       <Card
@@ -58,7 +67,7 @@ const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
         </Box>
-        {(description || meeting) && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+        {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
       {open && (
         <DescriptionInfo
@@ -66,7 +75,7 @@ const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
           speaker={speaker.name}
           info={description}
           onClose={() => setOpen(false)}
-          meeting={meeting}
+          meetingLink={meeting}
         />
       )}
     </>
