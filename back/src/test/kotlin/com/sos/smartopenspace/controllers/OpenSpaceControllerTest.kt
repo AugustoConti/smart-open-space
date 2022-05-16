@@ -64,23 +64,6 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
-    
-    @Test
-    fun `Asking for an OS and we get it with description`() {
-        val user = repoUser.save(anyUser())
-        val osBody = generateCreateBody("Test")
-        val entityResponse = mockMvc.perform(
-            MockMvcRequestBuilders.post("/openSpace/${user.id}")
-                .contentType("application/json")
-                .content(osBody)
-        ).andReturn().response
-        val id = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/openSpace/${id}")
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Test"))
-    }
 
     @Test
     fun `creating a valid talk returns an OK status response`() {
