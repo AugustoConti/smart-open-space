@@ -102,7 +102,7 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].meeting").value(aMeetingLink))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].meetingLink").value(aMeetingLink))
     }
 
     @Test
@@ -154,7 +154,10 @@ class OpenSpaceControllerTest {
 
     private fun generateTalkBody(aMeeting: String): String {
         return """
-            {"name":"asdf","meeting":"$aMeeting"}
+            {
+                "name": "asdf",
+                "meetingLink": "$aMeeting"
+            }
         """.trimIndent()
     }
 }
