@@ -48,10 +48,10 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
+const Talk = ({ talk: { description, name, speaker, meeting: meetingLink }, room }) => {
   const [open, setOpen] = useState(false);
 
-  let shouldDisplayMoreInfo = description || meeting;
+  let shouldDisplayMoreInfo = description || meetingLink;
   return (
     <>
       <Card
@@ -75,7 +75,7 @@ const Talk = ({ talk: { description, name, speaker, meeting }, room }) => {
           speaker={speaker.name}
           info={description}
           onClose={() => setOpen(false)}
-          meetingLink={meeting}
+          meetingLink={meetingLink}
         />
       )}
     </>

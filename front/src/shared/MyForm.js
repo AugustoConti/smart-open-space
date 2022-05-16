@@ -34,7 +34,7 @@ const MyFieldMeeting = (props) => (
   <MyField
     icon={<LinkIcon />}
     label="Meeting"
-    name="meeting"
+    name="meetingLink"
     validate={validateUrl}
     required={false}
     {...props}
