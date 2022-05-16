@@ -48,7 +48,7 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({ talk: { description, name, speaker, meeting: meetingLink }, room }) => {
+const Talk = ({ talk: { description, name, speaker, meetingLink }, room }) => {
   const [open, setOpen] = useState(false);
 
   let shouldDisplayMoreInfo = description || meetingLink;
