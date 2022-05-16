@@ -8,7 +8,7 @@ class TalkTest {
     @Test
     fun `creating a talk with an URL`() {
         val aMeeting = URL("https://meet.google.com/ise-vfbf-yos")
-        val aTalk = Talk(name = "aName", description = "aDescription", meeting = aMeeting)
-        assertEquals(aMeeting, aTalk.meeting)
+        val aTalk = Talk(name = "aName", description = "aDescription", meetingLink = aMeeting)
+        assertEquals(aMeeting, aTalk.meetingLink)
     }
 }
