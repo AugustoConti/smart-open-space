@@ -24,6 +24,7 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
           color="dark-1"
           href={meetingLink}
           label={meetingLink}
+          target="_blank"
         />
       )}
     </Box>
