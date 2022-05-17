@@ -13,7 +13,6 @@ import { validateUrl } from '#helpers/validateUrl';
 
 import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 
-
 const MyField = ({ icon, label, ...props }) => (
   <FormField
     label={
@@ -32,7 +31,7 @@ const MyFieldText = (props) => (
   <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />
 );
 
-const MyFieldMeeting = (props) => (
+const LinkField = (props) => (
   <MyField
     icon={<LinkIcon />}
     label="Meeting"
@@ -147,6 +146,6 @@ MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
 MyForm.Select = MyFieldSelect;
-MyForm.Link = MyFieldMeeting;
+MyForm.Link = LinkField;
 
 export default MyForm;
