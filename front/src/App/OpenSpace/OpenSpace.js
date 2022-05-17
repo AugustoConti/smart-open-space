@@ -6,7 +6,12 @@ import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import MyProps from '#helpers/MyProps';
 import useAuth, { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToProjector, usePushToMyTalks } from '#helpers/routes';
+import {
+  RedirectToRoot,
+  usePushToProjector,
+  usePushToMyTalks,
+  RedirectToLogin,
+} from '#helpers/routes';
 import Detail from '#shared/Detail';
 import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
@@ -206,7 +211,7 @@ const OpenSpace = () => {
       <Box margin={{ bottom: 'medium' }}>
         {pendingQueue ? <TalksGrid /> : <Schedule slots={slots} />}
       </Box>
-      {showIdentify && <Identify onExit={() => setShowIdentify(false)} />}
+      {showIdentify && <RedirectToLogin />}
       {showQuery && (
         <QueryForm
           title="¿Seguro?"
