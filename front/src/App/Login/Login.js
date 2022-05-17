@@ -8,11 +8,14 @@ import {
   usePushToRoot,
   usePushToRegister,
   useInRegister,
+  usePushToOS,
 } from '#helpers/routes';
 
-const Login = () => {
+const Login = ({ location }) => {
   const pushToRoot = usePushToRoot();
   const pushToRegister = usePushToRegister();
+  const pushToOS = usePushToOS(location.state ? location.state.openSpaceId : 0);
+  const afterSubmitting = location.state ? pushToOS : pushToRoot;
   const { login, register } = useAuth();
   const isRegister = useInRegister();
   const data = {
@@ -22,7 +25,9 @@ const Login = () => {
     primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
-  const onSubmit = ({ value: userData }) => data.action(userData).then(pushToRoot);
+  const onSubmit = ({ value: userData }) => {
+    return data.action(userData).then(afterSubmitting);
+  };
 
   if (useUser()) return <RedirectToRoot />;
 
