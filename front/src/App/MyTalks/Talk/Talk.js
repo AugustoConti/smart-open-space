@@ -40,6 +40,7 @@ const Talk = ({
   onSchedule,
   speaker,
   toSchedule,
+  amTheOrganizer,
 }) => {
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -52,7 +53,6 @@ const Talk = ({
     exchangeTalk(id, room.id, time).then(onSchedule);
 
   const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
-  const amTheOrganizer = user && user.id !== speaker.id;
 
   return (
     <Card borderColor={color}>

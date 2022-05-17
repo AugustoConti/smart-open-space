@@ -219,6 +219,7 @@ const MyTalks = () => {
                 onSchedule={pushToOS}
                 toSchedule={isToSchedule(talk.id)}
                 assignableSlots={openSpace.assignableSlots}
+                amTheOrganizer={amTheOrganizer}
                 {...talk}
               />
             ))}
