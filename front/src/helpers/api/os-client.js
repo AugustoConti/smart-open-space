@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom';
 import { get, post, put } from './api-client';
 import { getUser } from '../useAuth';
 
-const withUser = fn => fn(getUser());
+const withUser = (fn) => fn(getUser());
 
-const createOS = osData => withUser(({ id }) => post(`openSpace/${id}`, osData));
+const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData));
 
 const createTalkFor = (userId, osId, talkData) =>
   post(`openSpace/talk/${userId}/${osId}`, talkData);
@@ -23,22 +23,22 @@ const useGetOS = () => useAsync({ promiseFn: getOS, osId: useParams().id });
 const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
-const scheduleTalk = (talkID, roomID, hour) =>
-  put(`talk/schedule/${talkID}/${roomID}/${hour}`);
+const scheduleTalk = (talkID, roomID, hour, userID) =>
+  put(`talk/schedule/${userID}/${talkID}/${roomID}/${hour}`);
 
 const exchangeTalk = (talkID, roomID, hour) =>
   put(`talk/exchange/${talkID}/${roomID}/${hour}`);
 
-const activateQueue = osId =>
+const activateQueue = (osId) =>
   withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
 
-const finishQueue = osId =>
+const finishQueue = (osId) =>
   withUser(({ id }) => put(`openSpace/finishQueue/${id}/${osId}`));
 
-const enqueueTalk = talkId =>
+const enqueueTalk = (talkId) =>
   withUser(({ id }) => put(`openSpace/enqueueTalk/${id}/${talkId}`));
 
-const nextTalk = osId => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`));
+const nextTalk = (osId) => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`));
 
 const getMyTalks = ({ osId }) =>
   withUser(({ id }) => {

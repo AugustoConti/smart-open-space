@@ -47,7 +47,7 @@ const Talk = ({
   const [openExchange, setOpenExchange] = useState(false);
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(id, room.id, time).then(onSchedule);
+    scheduleTalk(id, room.id, time, user.id).then(onSchedule);
 
   const onSubmitExchange = ({ value: { time, room } }) =>
     exchangeTalk(id, room.id, time).then(onSchedule);
