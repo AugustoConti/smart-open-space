@@ -66,20 +66,18 @@ class OpenSpaceControllerTest {
     }
 
     @Test
-    fun `creating a valid talk returns an OK status response`() {
+    fun `can create a valid talk and get it correctly`() {
         val user = repoUser.save(anyUser())
-
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
-
         val aMeetingLink = "https://aLink"
+
         val entityResponse = mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
                 .content(generateTalkBody(aMeetingLink))
-        ).andReturn().response
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
 
         val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
-
         mockMvc.perform(
             MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
         )
