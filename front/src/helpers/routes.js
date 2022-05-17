@@ -25,6 +25,8 @@ const pushTo = (history, path) => () => history.push(path);
 export const usePushToRoot = () => pushTo(useHistory(), toRoot);
 export const usePushToLogin = () => pushTo(useHistory(), toLogin);
 export const usePushToRegister = () => pushTo(useHistory(), toRegister);
+export const usePushToRegisterFromOS = (openSpaceId) =>
+  pushTo(useHistory(), { pathname: toRegister, state: { openSpaceId } });
 export const usePushToMyTalks = (id) => pushTo(useHistory(), useToMyTalks(id));
 export const usePushToNewOS = () => pushTo(useHistory(), toNewOS);
 export const usePushToOS = (id) => pushTo(useHistory(), useToOS(id));

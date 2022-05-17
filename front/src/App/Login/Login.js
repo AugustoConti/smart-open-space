@@ -9,13 +9,19 @@ import {
   usePushToRegister,
   useInRegister,
   usePushToOS,
+  usePushToRegisterFromOS,
 } from '#helpers/routes';
 
 const Login = ({ location }) => {
   const pushToRoot = usePushToRoot();
-  const pushToRegister = usePushToRegister();
   const pushToOS = usePushToOS(location.state ? location.state.openSpaceId : 0);
+  const pushToRegisterWithoutOS = usePushToRegister();
+  const pushToRegisterFromOS = usePushToRegisterFromOS(
+    location.state ? location.state.openSpaceId : 0
+  );
   const afterSubmitting = location.state ? pushToOS : pushToRoot;
+  const pushToRegister = location.state ? pushToRegisterFromOS : pushToRegisterWithoutOS;
+
   const { login, register } = useAuth();
   const isRegister = useInRegister();
   const data = {
