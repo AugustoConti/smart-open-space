@@ -8,19 +8,22 @@ import {
   usePushToRoot,
   usePushToRegister,
   useInRegister,
-  usePushToOS,
-  usePushToRegisterFromOS,
+  usePushToOpenSpace,
+  usePushToRegisterFromOpenSpace,
 } from '#helpers/routes';
 
-const Login = ({ location }) => {
+const Login = ({ location: { state } }) => {
+  const returnToOpenSpace = hasOpenSpaceId(state);
+  const openSpaceId = state?.openSpaceId;
   const pushToRoot = usePushToRoot();
-  const pushToOS = usePushToOS(location.state ? location.state.openSpaceId : 0);
-  const pushToRegisterWithoutOS = usePushToRegister();
-  const pushToRegisterFromOS = usePushToRegisterFromOS(
-    location.state ? location.state.openSpaceId : 0
-  );
-  const afterSubmitting = location.state ? pushToOS : pushToRoot;
-  const pushToRegister = location.state ? pushToRegisterFromOS : pushToRegisterWithoutOS;
+  const pushToOpenSpace = usePushToOpenSpace(openSpaceId);
+  const pushToRegisterAndThenGoToRoot = usePushToRegister();
+  const pushToRegisterAndThenGoToOpenSpace = usePushToRegisterFromOpenSpace(openSpaceId);
+
+  const pushToRoute = returnToOpenSpace ? pushToOpenSpace : pushToRoot;
+  const pushToRegister = returnToOpenSpace
+    ? pushToRegisterAndThenGoToOpenSpace
+    : pushToRegisterAndThenGoToRoot;
 
   const { login, register } = useAuth();
   const isRegister = useInRegister();
@@ -32,7 +35,7 @@ const Login = ({ location }) => {
     action: isRegister ? register : login,
   };
   const onSubmit = ({ value: userData }) => {
-    return data.action(userData).then(afterSubmitting);
+    return data.action(userData).then(pushToRoute);
   };
 
   if (useUser()) return <RedirectToRoot />;
@@ -52,5 +55,9 @@ const Login = ({ location }) => {
     </MyForm>
   );
 };
+
+function hasOpenSpaceId(state) {
+  return state && state.openSpaceId;
+}
 
 export default Login;

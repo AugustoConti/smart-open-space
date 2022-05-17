@@ -12,7 +12,7 @@ import Row from '#shared/Row';
 import RowBetween from '#shared/RowBetween';
 import { ClockIcon, NextIcon, TalkIcon, UserIcon } from '#shared/icons';
 import Spinner from '#shared/Spinner';
-import { RedirectToOS, RedirectToRoot, usePushToOS } from '#helpers/routes';
+import { RedirectToOS, RedirectToRoot, usePushToOpenSpace } from '#helpers/routes';
 
 const TIME_FOR_SPEAKER = 30;
 
@@ -74,7 +74,7 @@ const NextTalks = ({ restTalks, size }) =>
         SIGUIENTES
         {size > 0 && ` (${size})`}
       </Text>
-      {restTalks.map(t => (
+      {restTalks.map((t) => (
         <Row
           background="light-1"
           border={{ color: 'dark-3' }}
@@ -99,11 +99,11 @@ NextTalks.propTypes = {
   size: PropTypes.number.isRequired,
 };
 
-const StartButton = props => (
+const StartButton = (props) => (
   <Button color="status-warning" icon={<ClockIcon />} label="30''" primary {...props} />
 );
 
-const NextButton = props => (
+const NextButton = (props) => (
   <ButtonLoading gap="none" icon={<NextIcon />} label="Siguiente" reverse {...props} />
 );
 
@@ -112,7 +112,7 @@ const EmptyProjector = () => (
     <EmptyData
       buttonText="Ir al OpenSpace"
       img={ideasFlow}
-      onClick={usePushToOS()}
+      onClick={usePushToOpenSpace()}
       text="No hay oradores para exponer"
     />
   </Box>
