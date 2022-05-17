@@ -119,7 +119,7 @@ const beforeToday = (date) =>
   new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
 
 const initialValues = {
-  date: new Date().toLocaleDateString(),
+  date: new Date().toISOString(),
   rooms: [],
   slots: [],
 };
