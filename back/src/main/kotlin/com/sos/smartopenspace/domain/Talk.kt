@@ -24,7 +24,6 @@ class Talk(
   @GeneratedValue
   val id: Long = 0,
 
-  @Column(name = "meeting")
   val meetingLink: URL? = null
 ) {
   @ManyToOne
