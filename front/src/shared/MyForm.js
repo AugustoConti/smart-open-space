@@ -5,10 +5,12 @@ import PropTypes from 'prop-types';
 
 import MyProps from '#helpers/MyProps';
 import useLoading from '#helpers/useLoading';
-import { EmailIcon, PasswordIcon, TextAreaIcon, TextIcon } from '#shared/icons';
+import { EmailIcon, LinkIcon, PasswordIcon, TextAreaIcon, TextIcon } from '#shared/icons';
 import { TinySpinner } from '#shared/Spinner';
 import Row from './Row';
 import RowBetween from './RowBetween';
+import { validateUrl } from '#helpers/validateUrl';
+
 import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 
 const MyField = ({ icon, label, ...props }) => (
@@ -27,6 +29,17 @@ MyField.propTypes = { icon: PropTypes.node, label: PropTypes.string };
 
 const MyFieldText = (props) => (
   <MyField icon={<TextIcon />} label="Nombre" name="name" {...props} />
+);
+
+const LinkField = (props) => (
+  <MyField
+    icon={<LinkIcon />}
+    label="Meeting"
+    name="meetingLink"
+    validate={validateUrl}
+    required={false}
+    {...props}
+  />
 );
 
 const MyFieldTextArea = (props) => (
@@ -133,5 +146,6 @@ MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
 MyForm.Select = MyFieldSelect;
+MyForm.Link = LinkField;
 
 export default MyForm;
