@@ -9,5 +9,5 @@ const isUrl = (aUrl) => {
 export const validateUrl = (value, _valueObj) => {
   if (!value) return;
   if (isUrl(value)) return;
-  return 'La url no es valida';
+  return 'La url no es válida';
 };
