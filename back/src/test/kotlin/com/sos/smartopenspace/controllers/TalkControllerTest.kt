@@ -51,7 +51,7 @@ class TalkControllerTest {
     }
 
     @Test
-    fun `when cannot be schedule a talk returns a bad request response`() {
+    fun `when a talk cannot be scheduled it should return a bad request response`() {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
         val speaker = userRepository.save(anyUser(talk))
