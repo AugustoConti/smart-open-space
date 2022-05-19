@@ -155,9 +155,9 @@ class DataService(private val userRepository: UserRepository) {
     dessDeberia.enqueue()
   }
 
-  private fun schedule(os: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
+  private fun schedule(openSpace: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
     talk.enqueue()
-    os.nextTalk(os.organizer)
-    talk.schedule(time, room, os.organizer)
+    openSpace.nextTalk(openSpace.organizer)
+    talk.schedule(time, room, openSpace.organizer)
   }
 }

@@ -27,9 +27,9 @@ class TalkService(
   private fun findRoom(id: Long) = roomRepository.findByIdOrNull(id) ?: throw RoomNotFoundException()
 
   fun scheduleTalk(talkID: Long, roomID: Long, time: LocalTime, userID: Long): OpenSpace {
-    val os = findTalk(talkID).schedule(time, findRoom(roomID), findUser(userID))
-    scheduleSocket.sendFor(os)
-    return os
+    val openSpace = findTalk(talkID).schedule(time, findRoom(roomID), findUser(userID))
+    scheduleSocket.sendFor(openSpace)
+    return openSpace
   }
 
   fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime): OpenSpace {

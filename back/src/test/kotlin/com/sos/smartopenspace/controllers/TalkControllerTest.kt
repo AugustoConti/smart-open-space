@@ -1,6 +1,5 @@
 package com.sos.smartopenspace.controllers
 
-import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
@@ -38,10 +37,10 @@ class TalkControllerTest {
     lateinit var roomRepository: RoomRepository
 
     @Test
-    fun `schedule a valid talk returns an ok status response`() {
-        val organizer = userRepository.save(User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf()))
-        val talk = talkRepository.save(Talk("Charla"))
-        val room = roomRepository.save(Room("Sala"))
+    fun `schedule a talk returns an ok status response`() {
+        val organizer = anySavedUser()
+        val talk = anySavedTalk()
+        val room = anySavedRoom()
         openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
         val time = LocalTime.parse("09:30")
 
@@ -52,11 +51,11 @@ class TalkControllerTest {
     }
 
     @Test
-    fun `schedule a invalid talk returns a bad request response`() {
-        val organizer = userRepository.save(User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf()))
-        val talk = talkRepository.save(Talk("Charla"))
+    fun `when cannot be schedule a talk returns a bad request response`() {
+        val organizer = anySavedUser()
+        val talk = anySavedTalk()
         val speaker = userRepository.save(anyUser(talk))
-        val room = roomRepository.save(Room("Sala"))
+        val room = anySavedRoom()
         openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
         val time = LocalTime.parse("09:30")
 
@@ -65,13 +64,19 @@ class TalkControllerTest {
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
+    private fun anySavedRoom() = roomRepository.save(Room("Sala"))
+
+    private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
+
+    private fun anySavedUser() = userRepository.save(User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf()))
+
     private fun anyOpenSpaceWith(talk: Talk, organizer: User, room: Room): OpenSpace {
-        val os = anyOS(mutableSetOf(talk), room)
-        organizer.addOpenSpace(os)
-        return os
+        val openSpace = anyOpenSpace(mutableSetOf(talk), room)
+        organizer.addOpenSpace(openSpace)
+        return openSpace
     }
 
-    private fun anyOS(talks: MutableSet<Talk> = mutableSetOf(Talk("charla")), room: Room) = OpenSpace(
+    private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf(Talk("charla")), room: Room) = OpenSpace(
             "os", LocalDate.now(), setOf(room),
             setOf(
                     TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
