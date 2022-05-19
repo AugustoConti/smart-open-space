@@ -148,7 +148,7 @@ const MyTalks = () => {
 
   if (isRejected) return <RedirectToRoot />;
 
-  const amTheOrganizer = openSpace && user && openSpace.organizer.id === user.id;
+  const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
   const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
   const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
   const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
@@ -163,7 +163,8 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
-  const hasTalks = talks && myTalks && (amTheOrganizer ? talks : myTalks).length > 0;
+  const hasTalks =
+    talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
 
   return (
     <>
@@ -173,7 +174,7 @@ const MyTalks = () => {
         </MainHeader.TitleLink>
         <MainHeader.SubTitle
           icon={TalkIcon}
-          label={amTheOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
+          label={currentUserIsOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
         />
         <MainHeader.Description
           description={!openSpace ? <TinySpinner /> : openSpace.description}
@@ -182,7 +183,7 @@ const MyTalks = () => {
           {hasTalks && openSpace && !openSpace.finishedQueue && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
-          {openSpace && !openSpace.finishedQueue && amTheOrganizer && (
+          {openSpace && !openSpace.finishedQueue && currentUserIsOrganizer && (
             <MainHeader.ButtonNew
               color="accent-1"
               label="Charla para Orador"
@@ -207,7 +208,7 @@ const MyTalks = () => {
             />
           )}
           <MyGrid>
-            {(amTheOrganizer ? talks : myTalks).map((talk) => (
+            {(currentUserIsOrganizer ? talks : myTalks).map((talk) => (
               <Talk
                 activeQueue={openSpace.activeQueue}
                 assigned={isAssigned(talk.id)}
@@ -219,7 +220,7 @@ const MyTalks = () => {
                 onSchedule={pushToOS}
                 toSchedule={isToSchedule(talk.id)}
                 assignableSlots={openSpace.assignableSlots}
-                amTheOrganizer={amTheOrganizer}
+                currentUserIsOrganizer={currentUserIsOrganizer}
                 {...talk}
               />
             ))}

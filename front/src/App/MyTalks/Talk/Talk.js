@@ -40,7 +40,7 @@ const Talk = ({
   onSchedule,
   speaker,
   toSchedule,
-  amTheOrganizer,
+  currentUserIsOrganizer,
 }) => {
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -59,7 +59,7 @@ const Talk = ({
       <Box>
         <Title>{name}</Title>
         <Detail size="small" text={description} truncate />
-        {amTheOrganizer && (
+        {currentUserIsOrganizer && (
           <>
             <Detail icon={UserIcon} text={speaker.name} />
             <Detail size="small" text={speaker.email} />
@@ -69,7 +69,7 @@ const Talk = ({
       {assigned ? (
         <Box direction="row" justify="evenly">
           <Badge color={color} text="Agendada" />
-          {amTheOrganizer && (
+          {currentUserIsOrganizer && (
             <Button
               hoverIndicator
               icon={<TransactionIcon />}
@@ -79,7 +79,7 @@ const Talk = ({
           )}
         </Box>
       ) : (
-        (amTheOrganizer || toSchedule) && (
+        (currentUserIsOrganizer || toSchedule) && (
           <ButtonAction
             color={color}
             label="Agendar"
@@ -95,7 +95,7 @@ const Talk = ({
         activeQueue && (
           <ButtonAction
             color={color}
-            disabled={!amTheOrganizer && hasAnother}
+            disabled={!currentUserIsOrganizer && hasAnother}
             label="Encolar"
             onClick={() => enqueueTalk(id).then(onEnqueue)}
           />
