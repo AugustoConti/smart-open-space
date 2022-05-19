@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-const doFetch = method => async (endpoint, body) => {
+const doFetch = (method) => async (endpoint, body) => {
   const config = {
     method,
     headers: { 'content-type': 'application/json' },

@@ -7,7 +7,7 @@ const localStorageKey = '__smartopenspace_user__';
 
 const AuthContext = React.createContext();
 
-const AuthProvider = props => {
+const AuthProvider = (props) => {
   const [user, setUser] = useLocalStorage(localStorageKey, null);
 
   useEffect(() => {
@@ -15,16 +15,16 @@ const AuthProvider = props => {
     LogRocket.identify(id, { name, email });
   }, [user]);
 
-  const handleUserResponse = u => {
+  const handleUserResponse = (u) => {
     setUser(u);
     return u;
   };
 
-  const identify = email => userClient.identify(email).then(handleUserResponse);
+  const identify = (email) => userClient.identify(email).then(handleUserResponse);
 
-  const login = userData => userClient.login(userData).then(handleUserResponse);
+  const login = (userData) => userClient.login(userData).then(handleUserResponse);
 
-  const register = userData => userClient.register(userData).then(handleUserResponse);
+  const register = (userData) => userClient.register(userData).then(handleUserResponse);
 
   const logout = () => {
     setUser(null);

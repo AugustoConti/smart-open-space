@@ -22,7 +22,7 @@ const Badge = ({ color, text }) => (
 );
 Badge.propTypes = { color: PropTypes.string, text: PropTypes.string };
 
-const ButtonAction = props => (
+const ButtonAction = (props) => (
   <ButtonLoading alignSelf="center" margin={{ top: 'medium' }} {...props} />
 );
 
