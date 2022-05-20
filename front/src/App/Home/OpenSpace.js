@@ -6,13 +6,13 @@ import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import { CalendarIcon, ClockIcon } from '#shared/icons';
 import Title from '#shared/Title';
-import { usePushToOS } from '#helpers/routes';
+import { usePushToOpenSpace } from '#helpers/routes';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
 
 const OpenSpace = ({ date, endTime, id, name, startTime, urlImage }) => (
-  <Button fill onClick={usePushToOS(id)} plain>
+  <Button fill onClick={usePushToOpenSpace(id)} plain>
     {({ hover }) => (
       <Card
         borderColor={hover ? 'accent-1' : 'brand'}

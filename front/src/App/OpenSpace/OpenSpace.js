@@ -4,9 +4,13 @@ import { Box, Layer } from 'grommet';
 
 import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
-import MyProps from '#helpers/MyProps';
-import useAuth, { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToProjector, usePushToMyTalks } from '#helpers/routes';
+import { useUser } from '#helpers/useAuth';
+import {
+  RedirectToRoot,
+  usePushToProjector,
+  usePushToMyTalks,
+  RedirectToLoginFromOpenSpace,
+} from '#helpers/routes';
 import Detail from '#shared/Detail';
 import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
@@ -15,57 +19,6 @@ import Spinner from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import Schedule from './Schedule';
-
-const IdentifyForm = ({ children, onSecondary, onSubmit, title }) => (
-  <>
-    <Box margin={{ vertical: 'medium' }}>
-      <Title level="2" label={title} />
-    </Box>
-    <MyForm onSecondary={onSecondary} onSubmit={onSubmit}>
-      {children}
-    </MyForm>
-  </>
-);
-IdentifyForm.propTypes = {
-  children: MyProps.children.isRequired,
-  onSecondary: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
-};
-
-const Identify = ({ onExit }) => {
-  const [email, setEmail] = useState();
-  const { identify, register } = useAuth();
-
-  const onRegister = ({ value: { name } }) => register({ email, name }).then(onExit);
-
-  const onIdentify = ({ value: { email } }) =>
-    identify(email).then((data) => {
-      if (data) {
-        onExit();
-      } else {
-        setEmail(email);
-      }
-      return data;
-    });
-
-  return (
-    <Layer onEsc={onExit} onClickOutside={onExit}>
-      <Box pad="medium">
-        {email ? (
-          <IdentifyForm onSecondary={onExit} onSubmit={onRegister} title="¿Tu nombre?">
-            <MyForm.Text label="Para mostrarlo en tus charlas" />
-          </IdentifyForm>
-        ) : (
-          <IdentifyForm onSecondary={onExit} onSubmit={onIdentify} title="¿Quien sos?">
-            <MyForm.Email />
-          </IdentifyForm>
-        )}
-      </Box>
-    </Layer>
-  );
-};
-Identify.propTypes = { onExit: PropTypes.func.isRequired };
 
 const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
   <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -140,7 +93,7 @@ const ButtonFinishMarketplace = (props) => (
 const OpenSpace = () => {
   const user = useUser();
   const [showQuery, setShowQuery] = useState(false);
-  const [showIdentify, setShowIdentify] = useState(false);
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
   const {
     data: {
       id,
@@ -193,7 +146,7 @@ const OpenSpace = () => {
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
           ) : (
-            <ButtonSingIn onClick={() => setShowIdentify(true)} />
+            <ButtonSingIn onClick={() => setRedirectToLogin(true)} />
           )}
           {amTheOrganizer && organizerButtons()}
         </MainHeader.Buttons>
@@ -201,7 +154,7 @@ const OpenSpace = () => {
       <Box margin={{ bottom: 'medium' }}>
         <Schedule slots={slots} />
       </Box>
-      {showIdentify && <Identify onExit={() => setShowIdentify(false)} />}
+      {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (
         <QueryForm
           title="¿Seguro?"

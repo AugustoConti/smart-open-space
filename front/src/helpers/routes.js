@@ -15,6 +15,9 @@ const useToProjector = (id) => `/os/${useID(id)}/projector`;
 
 export const RedirectToRoot = () => <Redirect to={toRoot} />;
 export const RedirectToLogin = () => <Redirect to={toLogin} />;
+export const RedirectToLoginFromOpenSpace = ({ openSpaceId }) => (
+  <Redirect to={{ pathname: toLogin, state: { openSpaceId } }} />
+);
 export const RedirectToOS = ({ id }) => <Redirect to={useToOS(id)} />;
 RedirectToOS.propTypes = { id: PropTypes.string.isRequired };
 
@@ -22,9 +25,11 @@ const pushTo = (history, path) => () => history.push(path);
 export const usePushToRoot = () => pushTo(useHistory(), toRoot);
 export const usePushToLogin = () => pushTo(useHistory(), toLogin);
 export const usePushToRegister = () => pushTo(useHistory(), toRegister);
+export const usePushToRegisterFromOpenSpace = (openSpaceId) =>
+  pushTo(useHistory(), { pathname: toRegister, state: { openSpaceId } });
 export const usePushToMyTalks = (id) => pushTo(useHistory(), useToMyTalks(id));
 export const usePushToNewOS = () => pushTo(useHistory(), toNewOS);
-export const usePushToOS = (id) => pushTo(useHistory(), useToOS(id));
+export const usePushToOpenSpace = (id) => pushTo(useHistory(), useToOS(id));
 export const usePushToNewTalk = (id) => pushTo(useHistory(), useToNewTalk(id));
 export const usePushToProjector = (id) => pushTo(useHistory(), useToProjector(id));
 

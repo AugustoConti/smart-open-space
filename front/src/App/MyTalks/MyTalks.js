@@ -8,7 +8,7 @@ import { useQueue } from '#api/sockets-client';
 import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToOS, usePushToNewTalk } from '#helpers/routes';
+import { RedirectToRoot, usePushToOpenSpace, usePushToNewTalk } from '#helpers/routes';
 import ButtonLoading from '#shared/ButtonLoading';
 import Detail from '#shared/Detail';
 import { TalkIcon, UserIcon } from '#shared/icons';
@@ -126,7 +126,7 @@ MyEnqueuedTalk.propTypes = {
 };
 
 const MyTalks = () => {
-  const pushToOS = usePushToOS();
+  const pushToOS = usePushToOpenSpace();
   const pushToNewTalk = usePushToNewTalk();
   const user = useUser();
   const [showQuerySpeaker, setShowQuerySpeaker] = useState(false);

@@ -8,11 +8,23 @@ import {
   usePushToRoot,
   usePushToRegister,
   useInRegister,
+  usePushToOpenSpace,
+  usePushToRegisterFromOpenSpace,
 } from '#helpers/routes';
 
-const Login = () => {
+const Login = ({ location: { state } }) => {
+  const returnToOpenSpace = hasOpenSpaceId(state);
+  const openSpaceId = state?.openSpaceId;
   const pushToRoot = usePushToRoot();
-  const pushToRegister = usePushToRegister();
+  const pushToOpenSpace = usePushToOpenSpace(openSpaceId);
+  const pushToRegisterAndThenGoToRoot = usePushToRegister();
+  const pushToRegisterAndThenGoToOpenSpace = usePushToRegisterFromOpenSpace(openSpaceId);
+
+  const pushToRoute = returnToOpenSpace ? pushToOpenSpace : pushToRoot;
+  const pushToRegister = returnToOpenSpace
+    ? pushToRegisterAndThenGoToOpenSpace
+    : pushToRegisterAndThenGoToRoot;
+
   const { login, register } = useAuth();
   const isRegister = useInRegister();
   const data = {
@@ -22,7 +34,9 @@ const Login = () => {
     primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
     action: isRegister ? register : login,
   };
-  const onSubmit = ({ value: userData }) => data.action(userData).then(pushToRoot);
+  const onSubmit = ({ value: userData }) => {
+    return data.action(userData).then(pushToRoute);
+  };
 
   if (useUser()) return <RedirectToRoot />;
 
@@ -41,5 +55,9 @@ const Login = () => {
     </MyForm>
   );
 };
+
+function hasOpenSpaceId(state) {
+  return state && state.openSpaceId;
+}
 
 export default Login;
