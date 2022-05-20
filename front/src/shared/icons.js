@@ -24,6 +24,7 @@ import {
   Video,
   Workshop,
   Link,
+  Unlock,
 } from 'grommet-icons';
 
 export {
@@ -52,4 +53,6 @@ export {
   UserAdd as UserAddIcon,
   Video as VideoIcon,
   Link as LinkIcon,
+  Lock as LockIcon,
+  Unlock as UnlockIcon,
 };

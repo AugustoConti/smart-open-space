@@ -12,7 +12,15 @@ import {
   RedirectToLoginFromOpenSpace,
 } from '#helpers/routes';
 import Detail from '#shared/Detail';
-import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
+import {
+  CartIcon,
+  ScheduleIcon,
+  TalkIcon,
+  UserAddIcon,
+  VideoIcon,
+  UnlockIcon,
+  LockIcon,
+} from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
@@ -54,6 +62,14 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
 
+const ButtonCallForPapers = (props) => (
+  <MainHeader.Button
+    color="accent-3"
+    icon={<UnlockIcon />}
+    label="Abrir convocatoria"
+    {...props}
+  />
+);
 const ButtonSingIn = (props) => (
   <MainHeader.Button
     color="accent-3"
@@ -117,23 +133,26 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () =>
-    (pendingQueue && (
-      <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
-    )) ||
-    (activeQueue && [
-      <ButtonProjector key="projector" />,
-      <ButtonFinishMarketplace
-        key="finishMarketplace"
-        onClick={() => {
-          if (queue && queue.length > 0) {
-            setShowQuery(true);
-            return Promise.resolve();
-          }
-          return doFinishQueue();
-        }}
-      />,
-    ]);
+  const organizerButtons = () => (
+    <>
+      {(pendingQueue && (
+        <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
+      )) ||
+        (activeQueue && [
+          <ButtonProjector key="projector" />,
+          <ButtonFinishMarketplace
+            key="finishMarketplace"
+            onClick={() => {
+              if (queue && queue.length > 0) {
+                setShowQuery(true);
+                return Promise.resolve();
+              }
+              return doFinishQueue();
+            }}
+          />,
+        ])}
+    </>
+  );
 
   return (
     <>
@@ -143,6 +162,7 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
+          {amTheOrganizer && <ButtonCallForPapers />}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
           ) : (
