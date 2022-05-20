@@ -9,7 +9,7 @@ import {
   RedirectToRoot,
   usePushToProjector,
   usePushToMyTalks,
-  RedirectToLogin,
+  RedirectToLoginFromOpenSpace,
 } from '#helpers/routes';
 import Detail from '#shared/Detail';
 import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
@@ -159,7 +159,7 @@ const OpenSpace = () => {
       <Box margin={{ bottom: 'medium' }}>
         {pendingQueue ? <TalksGrid /> : <Schedule slots={slots} />}
       </Box>
-      {redirectToLogin && <RedirectToLogin />}
+      {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (
         <QueryForm
           title="¿Seguro?"
