@@ -23,8 +23,8 @@ const useGetOS = () => useAsync({ promiseFn: getOS, osId: useParams().id });
 const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
-const scheduleTalk = (talkID, roomID, hour) =>
-  put(`talk/schedule/${talkID}/${roomID}/${hour}`);
+const scheduleTalk = (talkID, roomID, hour, userID) =>
+  put(`talk/schedule/${userID}/${talkID}/${roomID}/${hour}`);
 
 const exchangeTalk = (talkID, roomID, hour) =>
   put(`talk/exchange/${talkID}/${roomID}/${hour}`);

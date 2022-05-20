@@ -40,26 +40,26 @@ const Talk = ({
   onSchedule,
   speaker,
   toSchedule,
+  currentUserIsOrganizer,
 }) => {
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(id, room.id, time).then(onSchedule);
+    scheduleTalk(id, room.id, time, user.id).then(onSchedule);
 
   const onSubmitExchange = ({ value: { time, room } }) =>
     exchangeTalk(id, room.id, time).then(onSchedule);
 
   const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
-  const amTheOrganizer = user && user.id !== speaker.id;
 
   return (
     <Card borderColor={color}>
       <Box>
         <Title>{name}</Title>
         <Detail size="small" text={description} truncate />
-        {amTheOrganizer && (
+        {currentUserIsOrganizer && (
           <>
             <Detail icon={UserIcon} text={speaker.name} />
             <Detail size="small" text={speaker.email} />
@@ -69,7 +69,7 @@ const Talk = ({
       {assigned ? (
         <Box direction="row" justify="evenly">
           <Badge color={color} text="Agendada" />
-          {amTheOrganizer && (
+          {currentUserIsOrganizer && (
             <Button
               hoverIndicator
               icon={<TransactionIcon />}
@@ -78,19 +78,24 @@ const Talk = ({
             />
           )}
         </Box>
-      ) : enqueued ? (
-        <Badge color={color} text="Esperando turno" />
-      ) : toSchedule ? (
-        <ButtonAction
-          color={color}
-          label="Agendar"
-          onClick={() => setOpenSchedule(true)}
-        />
       ) : (
+        (currentUserIsOrganizer || toSchedule) && (
+          <ButtonAction
+            color={color}
+            label="Agendar"
+            onClick={() => setOpenSchedule(true)}
+          />
+        )
+      )}
+      {enqueued ? (
+        <Badge color={color} text="Esperando turno" />
+      ) : (
+        !assigned &&
+        !toSchedule &&
         activeQueue && (
           <ButtonAction
             color={color}
-            disabled={!amTheOrganizer && hasAnother}
+            disabled={!currentUserIsOrganizer && hasAnother}
             label="Encolar"
             onClick={() => enqueueTalk(id).then(onEnqueue)}
           />

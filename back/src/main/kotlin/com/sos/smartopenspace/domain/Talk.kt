@@ -33,8 +33,8 @@ class Talk(
   @JsonIgnore
   lateinit var openSpace: OpenSpace
 
-  fun schedule(time: LocalTime, room: Room): OpenSpace {
-    openSpace.scheduleTalk(this, time, room)
+  fun schedule(time: LocalTime, room: Room, user: User): OpenSpace {
+    openSpace.scheduleTalk(this, time, room, user)
     return openSpace
   }
 
