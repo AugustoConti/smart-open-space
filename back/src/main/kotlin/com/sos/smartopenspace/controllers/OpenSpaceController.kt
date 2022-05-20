@@ -48,4 +48,8 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   @PutMapping("/enqueueTalk/{userID}/{talkID}")
   fun enqueueTalk(@PathVariable userID: Long, @PathVariable talkID: Long) =
     openSpaceService.enqueueTalk(userID, talkID)
+
+  @PutMapping("/{openSpaceId}/user/{userID}/callForPapers")
+  fun callForPapers(@PathVariable userID: Long, @PathVariable openSpaceId: Long) =
+    openSpaceService.toggleCallForPapers(openSpaceId, userID)
 }

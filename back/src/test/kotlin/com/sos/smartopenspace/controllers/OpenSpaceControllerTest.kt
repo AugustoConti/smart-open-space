@@ -101,6 +101,17 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
+    @Test
+    fun `start a call for papers`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${user.id}/callForPapers")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
     private fun anyOpenSpace(): OpenSpace {
         return OpenSpace(
             "os", LocalDate.now(), setOf(Room("1")),

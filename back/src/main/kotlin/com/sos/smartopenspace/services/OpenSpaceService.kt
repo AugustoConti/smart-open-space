@@ -64,4 +64,9 @@ class OpenSpaceService(
     queueSocket.sendFor(os)
     return os
   }
+
+  fun toggleCallForPapers(openSpaceId: Long, userID: Long) {
+    val openSpace = openSpaceRepository.findByIdOrNull(openSpaceId) ?: throw OpenSpaceNotFoundException()
+    openSpace.startCallForPapers()
+  }
 }
