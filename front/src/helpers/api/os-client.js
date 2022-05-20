@@ -30,7 +30,7 @@ const exchangeTalk = (talkID, roomID, hour) =>
   put(`talk/exchange/${talkID}/${roomID}/${hour}`);
 
 const startCallForPapers = (openSpaceId) =>
-  withUser(({ userId }) => put(`openSpace/${openSpaceId}/user/${userId}/callForPapers`));
+  withUser(({ id }) => put(`openSpace/${openSpaceId}/user/${id}/callForPapers`));
 
 const activateQueue = (osId) =>
   withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
