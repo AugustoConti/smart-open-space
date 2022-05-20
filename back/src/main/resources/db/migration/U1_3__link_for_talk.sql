@@ -1,2 +1,2 @@
 ALTER TABLE talk
-DROP COLUMN meeting;
+DROP COLUMN if exists meeting;

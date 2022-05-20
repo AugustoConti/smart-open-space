@@ -1,20 +1,20 @@
-drop table assigned_slot;
+drop table if exists assigned_slot;
 
-drop table slot;
+drop table if exists slot;
 
-drop table room;
+drop table if exists room;
 
-drop table open_space_to_schedule;
+drop table if exists open_space_to_schedule;
 
-drop table open_space_queue;
+drop table if exists open_space_queue;
 
-drop table talk;
+drop table if exists talk;
 
-drop table open_space;
+drop table if exists open_space;
 
-drop table users;
+drop table if exists users;
 
-drop table flyway_schema_history;
+drop table if exists flyway_schema_history;
 
 
 

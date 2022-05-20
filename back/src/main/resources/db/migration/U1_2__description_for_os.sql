@@ -1,2 +1,2 @@
 alter table open_space
-drop column description;
+drop column if exists description;
