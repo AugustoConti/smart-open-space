@@ -179,6 +179,10 @@ class OpenSpace(
     queue.clear()
     return this
   }
+
+  fun activeCallForPapers(): Boolean {
+    return false
+  }
 }
 
 enum class QueueState {
