@@ -82,6 +82,8 @@ class OpenSpace(
   @Enumerated(EnumType.STRING)
   var queueState: QueueState = QueueState.PENDING
 
+  var activeCallForPapers: Boolean = false
+
   fun isPendingQueue() = queueState == QueueState.PENDING
   fun isActiveQueue() = queueState == QueueState.ACTIVE
   fun isFinishedQueue() = queueState == QueueState.FINISHED
@@ -181,7 +183,11 @@ class OpenSpace(
   }
 
   fun activeCallForPapers(): Boolean {
-    return false
+    return activeCallForPapers
+  }
+
+  fun startCallForPapers() {
+    activeCallForPapers = true
   }
 }
 

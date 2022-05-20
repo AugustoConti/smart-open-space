@@ -1,7 +1,6 @@
 package com.sos.smartopenspace.domain
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalTime
@@ -49,5 +48,14 @@ class OpenSpaceTest {
         val openSpace = anyOpenSpace()
 
         assertFalse(openSpace.activeCallForPapers())
+    }
+
+    @Test
+    fun `an open space starts a call for papers`() {
+        val openSpace = anyOpenSpace()
+
+        openSpace.startCallForPapers()
+
+        assertTrue(openSpace.activeCallForPapers())
     }
 }
