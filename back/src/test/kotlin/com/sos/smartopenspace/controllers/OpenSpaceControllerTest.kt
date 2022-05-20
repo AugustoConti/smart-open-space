@@ -51,6 +51,7 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(description))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.activeCallForPapers").value(false))
     }
 
     @Test

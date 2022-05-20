@@ -82,6 +82,7 @@ class OpenSpace(
   @Enumerated(EnumType.STRING)
   var queueState: QueueState = QueueState.PENDING
 
+  @JsonIgnore
   var activeCallForPapers: Boolean = false
 
   fun isPendingQueue() = queueState == QueueState.PENDING
@@ -182,6 +183,7 @@ class OpenSpace(
     return this
   }
 
+  @JsonProperty
   fun activeCallForPapers(): Boolean {
     return activeCallForPapers
   }
