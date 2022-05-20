@@ -8,9 +8,9 @@ import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 
-const pad = n => (n < 10 ? '0' : '') + n;
-const toTime = time => time.map(pad).join(':');
-const sortTimes = times =>
+const pad = (n) => (n < 10 ? '0' : '') + n;
+const toTime = (time) => time.map(pad).join(':');
+const sortTimes = (times) =>
   times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
 
 const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
@@ -28,7 +28,7 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             icon={<HomeIcon />}
             label="Sala"
             name="room"
-            options={freeSlots.map(p => p.first)}
+            options={freeSlots.map((p) => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
               setFreeHours(sortTimes(freeSlots[selected].second).map(toTime));

@@ -8,9 +8,9 @@ import HourHeader from '#shared/HourHeader';
 import Talk from './Talk';
 import Talks from './Talks';
 
-const pad = n => (n < 10 ? '0' : '') + n;
-const toTime = time => time.map(pad).join(':');
-const sortTimes = times =>
+const pad = (n) => (n < 10 ? '0' : '') + n;
+const toTime = (time) => time.map(pad).join(':');
+const sortTimes = (times) =>
   times.sort(({ startTime: [h1, m1] }, { startTime: [h2, m2] }) =>
     h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1
   );
@@ -39,10 +39,10 @@ TalkSlot.propTypes = { slots: PropTypes.arrayOf(PropTypes.shape()).isRequired };
 const Schedule = ({ slots: unsortedSlots }) => {
   const slotsSchedule = useSlots();
   const slots = sortTimes(unsortedSlots);
-  const talksOf = slotId => slotsSchedule.filter(s => s.slot.id === slotId);
+  const talksOf = (slotId) => slotsSchedule.filter((s) => s.slot.id === slotId);
 
   return [
-    ...slots.map(s => (
+    ...slots.map((s) => (
       <React.Fragment key={s.id}>
         <HourHeader hour={toTime(s.startTime)} />
         {!s.assignable ? (
