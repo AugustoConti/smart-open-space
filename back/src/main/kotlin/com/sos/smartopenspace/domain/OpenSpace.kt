@@ -108,18 +108,18 @@ class OpenSpace(
 
   private fun checkTalkBelongs(talk: Talk) = !talks.contains(talk) && throw TalkDoesntBelongException()
 
-  private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room) {
+  private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User) {
     checkTalkBelongs(talk)
     assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
-    !toSchedule.contains(talk) && throw TalkIsNotForScheduledException()
+    !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
     isBusySlot(room, time) && throw BusySlotException()
   }
 
   private fun findTalkSlot(time: LocalTime) = slots.find { it.startTime == time && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
 
-  fun scheduleTalk(talk: Talk, time: LocalTime, room: Room): AssignedSlot {
+  fun scheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User): AssignedSlot {
     val slot = findTalkSlot(time)
-    checkScheduleTalk(talk, time, room)
+    checkScheduleTalk(talk, time, room, user)
     val assignedSlot = AssignedSlot(slot, room, talk)
     assignedSlots.add(assignedSlot)
     toSchedule.remove(talk)

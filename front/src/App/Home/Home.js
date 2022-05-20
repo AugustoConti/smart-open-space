@@ -31,7 +31,7 @@ const Home = () => {
         <EmptyOpenSpaces onClick={pushToNewOS} />
       ) : (
         <MyGrid>
-          {openSpaces.map(os => (
+          {openSpaces.map((os) => (
             <OpenSpace key={os.id} {...os} />
           ))}
         </MyGrid>

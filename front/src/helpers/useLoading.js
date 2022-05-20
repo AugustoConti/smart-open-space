@@ -5,7 +5,7 @@ const useLoading = () => {
   const isMounted = useIsMounted();
   const [loading, setLoading] = useState(false);
 
-  const fn = cb => async value => {
+  const fn = (cb) => async (value) => {
     setLoading(true);
     try {
       const res = await cb(value);

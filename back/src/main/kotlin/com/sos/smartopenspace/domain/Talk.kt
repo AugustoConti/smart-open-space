@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import java.net.URL
 import java.time.LocalTime
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -21,7 +22,9 @@ class Talk(
 
   @Id
   @GeneratedValue
-  val id: Long = 0
+  val id: Long = 0,
+
+  val meetingLink: URL? = null
 ) {
   @ManyToOne
   lateinit var speaker: User
@@ -30,8 +33,8 @@ class Talk(
   @JsonIgnore
   lateinit var openSpace: OpenSpace
 
-  fun schedule(time: LocalTime, room: Room): OpenSpace {
-    openSpace.scheduleTalk(this, time, room)
+  fun schedule(time: LocalTime, room: Room, user: User): OpenSpace {
+    openSpace.scheduleTalk(this, time, room, user)
     return openSpace
   }
 

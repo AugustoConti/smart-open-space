@@ -26,7 +26,7 @@ const TalksGrid = () => {
     <EmptyOpenSpace />
   ) : (
     <MyGrid>
-      {talks.map(talk => (
+      {talks.map((talk) => (
         <Talk key={talk.id} talk={talk} />
       ))}
     </MyGrid>

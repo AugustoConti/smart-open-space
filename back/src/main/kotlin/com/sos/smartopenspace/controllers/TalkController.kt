@@ -11,13 +11,14 @@ import java.time.LocalTime
 @RestController
 @RequestMapping("talk")
 class TalkController(private val talkService: TalkService) {
-  @PutMapping("/schedule/{talkID}/{roomID}/{time}")
+  @PutMapping("/schedule/{userID}/{talkID}/{roomID}/{time}")
   fun scheduleTalk(
+    @PathVariable userID: Long,
     @PathVariable talkID: Long,
     @PathVariable roomID: Long,
     @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) time: LocalTime
   ) =
-    talkService.scheduleTalk(talkID, roomID, time)
+    talkService.scheduleTalk(talkID, roomID, time, userID)
 
   @PutMapping("/exchange/{talkID}/{roomID}/{time}")
   fun exchangeTalk(

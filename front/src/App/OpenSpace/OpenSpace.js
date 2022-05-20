@@ -19,7 +19,6 @@ import Spinner from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import Schedule from './Schedule';
-import TalksGrid from './TalksGrid';
 
 const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
   <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -140,11 +139,7 @@ const OpenSpace = () => {
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        {pendingQueue ? (
-          <MainHeader.SubTitle icon={TalkIcon} label="CHARLAS" />
-        ) : (
-          <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
-        )}
+        <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
@@ -157,7 +152,7 @@ const OpenSpace = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        {pendingQueue ? <TalksGrid /> : <Schedule slots={slots} />}
+        <Schedule slots={slots} />
       </Box>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (
