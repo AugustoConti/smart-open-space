@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Layer } from 'grommet';
 
-import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
+import { activateQueue, finishQueue, startCallForPapers, useGetOS } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import {
@@ -62,14 +62,16 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
 
-const ButtonCallForPapers = (props) => (
+const ButtonCallForPapers = ({ openSpaceID, setData, ...props }) => (
   <MainHeader.Button
     color="accent-3"
     icon={<UnlockIcon />}
     label="Abrir convocatoria"
+    onClick={() => startCallForPapers(openSpaceID).then(setData)}
     {...props}
   />
 );
+
 const ButtonSingIn = (props) => (
   <MainHeader.Button
     color="accent-3"
@@ -120,6 +122,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       slots,
+      activeCallForPapers,
     } = {},
     isPending,
     isRejected,
@@ -162,7 +165,9 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
-          {amTheOrganizer && <ButtonCallForPapers />}
+          {!activeCallForPapers && amTheOrganizer && (
+            <ButtonCallForPapers openSpaceID={id} setData={setData} />
+          )}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
           ) : (

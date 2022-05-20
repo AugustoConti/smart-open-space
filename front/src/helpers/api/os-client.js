@@ -29,6 +29,9 @@ const scheduleTalk = (talkID, roomID, hour, userID) =>
 const exchangeTalk = (talkID, roomID, hour) =>
   put(`talk/exchange/${talkID}/${roomID}/${hour}`);
 
+const startCallForPapers = (openSpaceId) =>
+  withUser(({ userId }) => put(`openSpace/${openSpaceId}/user/${userId}/callForPapers`));
+
 const activateQueue = (osId) =>
   withUser(({ id }) => put(`openSpace/activateQueue/${id}/${osId}`));
 
@@ -63,4 +66,5 @@ export {
   useGetMyTalks,
   scheduleTalk,
   exchangeTalk,
+  startCallForPapers,
 };

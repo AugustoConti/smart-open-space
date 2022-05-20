@@ -65,8 +65,9 @@ class OpenSpaceService(
     return os
   }
 
-  fun toggleCallForPapers(openSpaceId: Long, userID: Long) {
-    val openSpace = openSpaceRepository.findByIdOrNull(openSpaceId) ?: throw OpenSpaceNotFoundException()
+  fun toggleCallForPapers(openSpaceId: Long, userID: Long): OpenSpace {
+    val openSpace = findById(openSpaceId)
     openSpace.startCallForPapers()
+    return openSpace
   }
 }
