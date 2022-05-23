@@ -134,6 +134,8 @@ const OpenSpace = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const amTheOrganizer = user && organizer.id === user.id;
+  const shouldDisplayButtonToCallForPapers = !activeCallForPapers && amTheOrganizer;
+
   const doFinishQueue = () => finishQueue(id).then(setData);
 
   const organizerButtons = () =>
@@ -162,7 +164,7 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
-          {!activeCallForPapers && amTheOrganizer && (
+          {shouldDisplayButtonToCallForPapers && (
             <ButtonCallForPapers openSpaceID={id} setData={setData} />
           )}
           {user ? (
