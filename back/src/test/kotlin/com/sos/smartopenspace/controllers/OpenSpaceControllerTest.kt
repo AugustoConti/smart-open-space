@@ -102,16 +102,17 @@ class OpenSpaceControllerTest {
     }
 
     @Test
-    fun `start a call for papers`() {
+    fun `finish a call for papers`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        anOpenSpace.toggleCallForPapers()
 
         mockMvc.perform(
             MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${user.id}/callForPapers")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(anOpenSpace.id))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.activeCallForPapers").value(true))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.activeCallForPapers").value(false))
     }
 
     private fun anyOpenSpaceWith(organizer: User): OpenSpace {

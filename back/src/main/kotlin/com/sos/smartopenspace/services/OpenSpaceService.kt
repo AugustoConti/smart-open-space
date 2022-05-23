@@ -65,9 +65,9 @@ class OpenSpaceService(
     return os
   }
 
-  fun startCallForPapers(openSpaceId: Long, userID: Long): OpenSpace {
+  fun toggleCallForPapers(openSpaceId: Long, userID: Long): OpenSpace {
     val openSpace = findById(openSpaceId)
-    openSpace.startCallForPapers()
+    openSpace.toggleCallForPapers()
     return openSpace
   }
 }

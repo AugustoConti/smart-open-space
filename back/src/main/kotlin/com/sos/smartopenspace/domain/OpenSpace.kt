@@ -188,8 +188,8 @@ class OpenSpace(
     return activeCallForPapers
   }
 
-  fun startCallForPapers() {
-    activeCallForPapers = true
+  fun toggleCallForPapers() {
+    activeCallForPapers = !activeCallForPapers
   }
 }
 

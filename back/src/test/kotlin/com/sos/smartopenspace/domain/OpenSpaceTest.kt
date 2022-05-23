@@ -54,8 +54,18 @@ class OpenSpaceTest {
     fun `an open space starts a call for papers`() {
         val openSpace = anyOpenSpace()
 
-        openSpace.startCallForPapers()
+        openSpace.toggleCallForPapers()
 
         assertTrue(openSpace.activeCallForPapers())
+    }
+
+    @Test
+    fun `an open space finishes a call for papers`() {
+        val openSpace = anyOpenSpace()
+
+        openSpace.toggleCallForPapers()
+        openSpace.toggleCallForPapers()
+
+        assertFalse(openSpace.activeCallForPapers())
     }
 }
