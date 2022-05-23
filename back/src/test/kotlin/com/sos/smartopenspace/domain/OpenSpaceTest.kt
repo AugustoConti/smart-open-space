@@ -66,11 +66,11 @@ class OpenSpaceTest {
         val organizer = anyUser()
         val openSpace = anyOpenSpaceWith(organizer)
 
-        openSpace.startCallForPapers(organizer)
+        openSpace.toggleCallForPapers(organizer)
 
         assertTrue(openSpace.isActiveCallForPapers())
     }
-
+ }
     @Test
     fun `a user thats not the organizer cant start call for papers`() {
         val anUser = anyUser()
@@ -80,5 +80,15 @@ class OpenSpaceTest {
        assertThrows<NotOrganizerException> {
             openSpace.startCallForPapers(anUser)
         }
+
+    @Test
+    fun `an open space finishes a call for papers`() {
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
+
+        openSpace.toggleCallForPapers()
+        openSpace.toggleCallForPapers()
+
+        assertFalse(openSpace.activeCallForPapers())
     }
 }
