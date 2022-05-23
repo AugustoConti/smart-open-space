@@ -103,6 +103,20 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    fun `creating a talk when call for papers is closed return an unprocessable entity status`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        val aMeetingLink = "https://aLink"
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                        .contentType("application/json")
+                        .content(generateTalkBody(aMeetingLink))
+        )
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+    }
+
+    @Test
     fun `start a call for papers returns an ok status response and the modified Open Space`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
