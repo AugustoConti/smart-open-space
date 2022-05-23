@@ -102,7 +102,7 @@ class OpenSpaceControllerTest {
     }
 
     @Test
-    fun `start a call for papers`() {
+    fun `start a call for papers returns an ok status response and the modified Open Space`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
 
