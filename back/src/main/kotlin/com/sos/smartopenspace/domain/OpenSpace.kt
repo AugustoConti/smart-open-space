@@ -24,6 +24,7 @@ class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada"
 class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
 class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
+class TalkCannotBeAddedException : RuntimeException("Charla no puede ser agregada")
 
 @Entity
 class OpenSpace(
@@ -101,14 +102,21 @@ class OpenSpace(
 
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
+    checkIsActiveCallForPapers()
     talk.openSpace = this
     talks.add(talk)
     return this
   }
 
+  fun containsTalk(talk: Talk) = talks.contains(talk)
+
+  private fun checkIsActiveCallForPapers() {
+    !activeCallForPapers && throw TalkCannotBeAddedException()
+  }
+
   private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
 
-  private fun checkTalkBelongs(talk: Talk) = !talks.contains(talk) && throw TalkDoesntBelongException()
+  private fun checkTalkBelongs(talk: Talk) = !containsTalk(talk) && throw TalkDoesntBelongException()
 
   private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User) {
     checkTalkBelongs(talk)

@@ -81,4 +81,24 @@ class OpenSpaceTest {
             openSpace.startCallForPapers(anUser)
         }
     }
+
+    @Test
+    fun `an open space cannot be add a talk when call for papers is closed`() {
+        val openSpace = anyOpenSpace()
+
+        assertThrows(TalkCannotBeAddedException::class.java) {
+            openSpace.addTalk(Talk("Talk"))
+        }
+    }
+
+    @Test
+    fun `an open space add a talk when call for papers is open`() {
+        val openSpace = anyOpenSpace()
+        openSpace.startCallForPapers()
+        val talk = Talk("Talk")
+
+        openSpace.addTalk(talk)
+
+        openSpace.containsTalk(talk)
+    }
 }
