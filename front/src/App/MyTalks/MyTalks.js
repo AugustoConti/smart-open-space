@@ -151,8 +151,6 @@ const MyTalks = () => {
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
   const isActiveCallForPapers = openSpace && openSpace.isActiveCallForPapers;
-  const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
-  const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
   const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
@@ -240,8 +238,8 @@ const MyTalks = () => {
             {(currentUserIsOrganizer ? newTalks : myNewTalks).map((talk) => (
               <Talk
                 activeQueue={openSpace.activeQueue}
-                assigned={isAssigned(talk.id)}
-                enqueued={isEnqueue(talk.id)}
+                assigned={talk.isAssigned(assignedSlots)}
+                enqueued={talk.isInqueue(queue)}
                 freeSlots={openSpace.freeSlots}
                 hasAnother={hasAnother(talk.id)}
                 key={talk.id}

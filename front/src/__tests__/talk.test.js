@@ -27,4 +27,18 @@ describe('talk', () => {
     ];
     expect(talk.isAssigned(slots)).toBe(true);
   });
+
+  it('can be not in the queue', () => {
+    const talk = anyTalk();
+    const queue = [];
+
+    expect(talk.isInqueue(queue)).toBe(false);
+  });
+
+  it('can be inqueue', () => {
+    const talk = anyTalk();
+    const queue = [talk];
+
+    expect(talk.isInqueue(queue)).toBe(true);
+  });
 });

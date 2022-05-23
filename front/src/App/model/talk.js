@@ -10,4 +10,8 @@ export default class Talk {
   isAssigned(slots) {
     return slots.some((slot) => slot.talk.id === this.id);
   }
+
+  isInqueue(queue) {
+    return queue.some((talk) => talk === this);
+  }
 }
