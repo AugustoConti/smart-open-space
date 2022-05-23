@@ -21,6 +21,7 @@ import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
 import Talk from './Talk';
+import ModelTalk from '../model/talk';
 
 const slideDownAnimation = {
   type: 'slideDown',
@@ -167,6 +168,7 @@ const MyTalks = () => {
   const hasTalks =
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
 
+
   function shouldDisplayTalkForSpeakerButton() {
     return (
       openSpace &&
@@ -180,6 +182,15 @@ const MyTalks = () => {
     return openSpace && isActiveCallForPapers;
   }
 
+  const newTalks = talks?.map(
+    (talk) =>
+      new ModelTalk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
+  );
+
+  const myNewTalks = myTalks?.map(
+    (talk) =>
+      new ModelTalk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
+  );
   return (
     <>
       <MainHeader>
@@ -226,7 +237,7 @@ const MyTalks = () => {
             />
           )}
           <MyGrid>
-            {(currentUserIsOrganizer ? talks : myTalks).map((talk) => (
+            {(currentUserIsOrganizer ? newTalks : myNewTalks).map((talk) => (
               <Talk
                 activeQueue={openSpace.activeQueue}
                 assigned={isAssigned(talk.id)}
