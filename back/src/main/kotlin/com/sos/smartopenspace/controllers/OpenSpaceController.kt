@@ -51,5 +51,5 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
 
   @PutMapping("/{openSpaceId}/user/{userID}/callForPapers")
   fun callForPapers(@PathVariable userID: Long, @PathVariable openSpaceId: Long) =
-    openSpaceService.toggleCallForPapers(openSpaceId, userID)
+    openSpaceService.startCallForPapers(openSpaceId, userID)
 }
