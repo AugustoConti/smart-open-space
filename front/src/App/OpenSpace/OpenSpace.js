@@ -146,26 +146,23 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () => (
-    <>
-      {(pendingQueue && (
-        <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
-      )) ||
-        (activeQueue && [
-          <ButtonProjector key="projector" />,
-          <ButtonFinishMarketplace
-            key="finishMarketplace"
-            onClick={() => {
-              if (queue && queue.length > 0) {
-                setShowQuery(true);
-                return Promise.resolve();
-              }
-              return doFinishQueue();
-            }}
-          />,
-        ])}
-    </>
-  );
+  const organizerButtons = () =>
+    (pendingQueue && (
+      <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
+    )) ||
+    (activeQueue && [
+      <ButtonProjector key="projector" />,
+      <ButtonFinishMarketplace
+        key="finishMarketplace"
+        onClick={() => {
+          if (queue && queue.length > 0) {
+            setShowQuery(true);
+            return Promise.resolve();
+          }
+          return doFinishQueue();
+        }}
+      />,
+    ]);
 
   return (
     <>
