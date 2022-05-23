@@ -62,11 +62,21 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
 
-const ButtonCallForPapers = ({ openSpaceID, setData, ...props }) => (
+const ButtonOpenCallForPapers = ({ openSpaceID, setData, ...props }) => (
   <MainHeader.Button
     color="accent-3"
     icon={<UnlockIcon />}
     label="Abrir convocatoria"
+    onClick={() => startCallForPapers(openSpaceID).then(setData)}
+    {...props}
+  />
+);
+
+const ButtonCloseCallForPapers = ({ openSpaceID, setData, ...props }) => (
+  <MainHeader.Button
+    color="accent-3"
+    icon={<LockIcon />}
+    label="Cerrar convocatoria"
     onClick={() => startCallForPapers(openSpaceID).then(setData)}
     {...props}
   />
@@ -166,7 +176,10 @@ const OpenSpace = () => {
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
           {!activeCallForPapers && amTheOrganizer && (
-            <ButtonCallForPapers openSpaceID={id} setData={setData} />
+            <ButtonOpenCallForPapers openSpaceID={id} setData={setData} />
+          )}
+          {activeCallForPapers && amTheOrganizer && (
+            <ButtonCloseCallForPapers openSpaceID={id} setData={setData} />
           )}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
