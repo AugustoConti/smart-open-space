@@ -188,7 +188,8 @@ class OpenSpace(
     return activeCallForPapers
   }
 
-  fun startCallForPapers() {
+  fun startCallForPapers(user: User) {
+    checkIsOrganizer(user)
     activeCallForPapers = true
   }
 }

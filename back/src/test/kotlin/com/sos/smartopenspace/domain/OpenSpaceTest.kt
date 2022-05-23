@@ -2,6 +2,7 @@ package com.sos.smartopenspace.domain
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -16,6 +17,15 @@ class OpenSpaceTest {
                             TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
                     ), talks
             )
+
+    private fun anyOpenSpaceWith(organizer: User): OpenSpace {
+        val openSpace = anyOpenSpace()
+        organizer.addOpenSpace(openSpace)
+        return openSpace
+    }
+
+    private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
+        User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
 
     @Test
     fun `an open space is created with necessary fields and contains them`() {
@@ -45,17 +55,30 @@ class OpenSpaceTest {
 
     @Test
     fun `an open space starts with inactive call for papers`() {
-        val openSpace = anyOpenSpace()
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
 
         assertFalse(openSpace.activeCallForPapers())
     }
 
     @Test
     fun `an open space starts a call for papers`() {
-        val openSpace = anyOpenSpace()
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
 
-        openSpace.startCallForPapers()
+        openSpace.startCallForPapers(organizer)
 
         assertTrue(openSpace.activeCallForPapers())
+    }
+
+    @Test
+    fun `a user thats not the organizer cant start call for papers`() {
+        val anUser = anyUser()
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
+
+       assertThrows<NotOrganizerException> {
+            openSpace.startCallForPapers(anUser)
+        }
     }
 }

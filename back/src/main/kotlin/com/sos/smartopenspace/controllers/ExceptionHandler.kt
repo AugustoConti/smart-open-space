@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.controllers
 
+import com.sos.smartopenspace.domain.NotOrganizerException
 import com.sos.smartopenspace.domain.TalkIsNotForScheduledException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ControllerAdvice
 class ExceptionHandler {
 
-    @ExceptionHandler(TalkIsNotForScheduledException::class)
+    @ExceptionHandler(TalkIsNotForScheduledException::class, NotOrganizerException::class)
     fun badRequestHandler(exception: Exception) : ResponseEntity<BadRequestException> {
         return ResponseEntity(BadRequestException(exception.message), HttpStatus.BAD_REQUEST)
     }
