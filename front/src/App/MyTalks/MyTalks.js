@@ -184,14 +184,17 @@ const MyTalks = () => {
           {hasTalks && openSpace && !openSpace.finishedQueue && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
-          {openSpace && !openSpace.finishedQueue && currentUserIsOrganizer && (
-            <MainHeader.ButtonNew
-              color="accent-1"
-              label="Charla para Orador"
-              key="newTalkSpeaker"
-              onClick={() => setShowQuerySpeaker(true)}
-            />
-          )}
+          {openSpace &&
+            !openSpace.finishedQueue &&
+            currentUserIsOrganizer &&
+            activeCallForPapers && (
+              <MainHeader.ButtonNew
+                color="accent-1"
+                label="Charla para Orador"
+                key="newTalkSpeaker"
+                onClick={() => setShowQuerySpeaker(true)}
+              />
+            )}
         </MainHeader.Buttons>
       </MainHeader>
       {!queue || (!hasTalks && isPending) ? (
