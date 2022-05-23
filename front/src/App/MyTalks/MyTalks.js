@@ -149,6 +149,7 @@ const MyTalks = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
+  const activeCallForPapers = openSpace && openSpace.activeCallForPapers;
   const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
   const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
   const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
@@ -196,7 +197,7 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        openSpace && <EmptyTalk onClick={pushToNewTalk} />
+        openSpace && activeCallForPapers && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
