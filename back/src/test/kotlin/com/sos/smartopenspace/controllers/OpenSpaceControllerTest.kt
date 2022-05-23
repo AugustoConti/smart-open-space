@@ -51,7 +51,7 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(description))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.activeCallForPapers").value(false))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.isActiveCallForPapers").value(false))
     }
 
     @Test
@@ -111,7 +111,7 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(anOpenSpace.id))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.activeCallForPapers").value(true))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.isActiveCallForPapers").value(true))
     }
 
     @Test

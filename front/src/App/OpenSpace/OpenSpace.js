@@ -122,7 +122,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       slots,
-      activeCallForPapers,
+      isActiveCallForPapers,
     } = {},
     isPending,
     isRejected,
@@ -134,7 +134,7 @@ const OpenSpace = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const amTheOrganizer = user && organizer.id === user.id;
-  const shouldDisplayButtonToCallForPapers = !activeCallForPapers && amTheOrganizer;
+  const shouldDisplayButtonToCallForPapers = !isActiveCallForPapers && amTheOrganizer;
 
   const doFinishQueue = () => finishQueue(id).then(setData);
 

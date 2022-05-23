@@ -83,7 +83,7 @@ class OpenSpace(
   var queueState: QueueState = QueueState.PENDING
 
   @JsonIgnore
-  var activeCallForPapers: Boolean = false
+  private var isActiveCallForPapers: Boolean = false
 
   fun isPendingQueue() = queueState == QueueState.PENDING
   fun isActiveQueue() = queueState == QueueState.ACTIVE
@@ -184,13 +184,13 @@ class OpenSpace(
   }
 
   @JsonProperty
-  fun activeCallForPapers(): Boolean {
-    return activeCallForPapers
+  fun isActiveCallForPapers(): Boolean {
+    return isActiveCallForPapers
   }
 
   fun startCallForPapers(user: User) {
     checkIsOrganizer(user)
-    activeCallForPapers = true
+    isActiveCallForPapers = true
   }
 }
 
