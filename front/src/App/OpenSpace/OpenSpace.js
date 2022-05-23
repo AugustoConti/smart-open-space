@@ -62,11 +62,21 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
 
-const ButtonCallForPapers = ({ openSpaceID, setData, ...props }) => (
+const ButtonOpenCallForPapers = ({ openSpaceID, setData, ...props }) => (
   <MainHeader.Button
     color="accent-3"
     icon={<UnlockIcon />}
     label="Abrir convocatoria"
+    onClick={() => startCallForPapers(openSpaceID).then(setData)}
+    {...props}
+  />
+);
+
+const ButtonCloseCallForPapers = ({ openSpaceID, setData, ...props }) => (
+  <MainHeader.Button
+    color="accent-3"
+    icon={<LockIcon />}
+    label="Cerrar convocatoria"
     onClick={() => startCallForPapers(openSpaceID).then(setData)}
     {...props}
   />
@@ -122,7 +132,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       slots,
-      isActiveCallForPapers,
+      activeCallForPapers,
     } = {},
     isPending,
     isRejected,
@@ -134,27 +144,28 @@ const OpenSpace = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const amTheOrganizer = user && organizer.id === user.id;
-  const shouldDisplayButtonToCallForPapers = !isActiveCallForPapers && amTheOrganizer;
-
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () =>
-    (pendingQueue && (
-      <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
-    )) ||
-    (activeQueue && [
-      <ButtonProjector key="projector" />,
-      <ButtonFinishMarketplace
-        key="finishMarketplace"
-        onClick={() => {
-          if (queue && queue.length > 0) {
-            setShowQuery(true);
-            return Promise.resolve();
-          }
-          return doFinishQueue();
-        }}
-      />,
-    ]);
+  const organizerButtons = () => (
+    <>
+      {(pendingQueue && (
+        <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
+      )) ||
+        (activeQueue && [
+          <ButtonProjector key="projector" />,
+          <ButtonFinishMarketplace
+            key="finishMarketplace"
+            onClick={() => {
+              if (queue && queue.length > 0) {
+                setShowQuery(true);
+                return Promise.resolve();
+              }
+              return doFinishQueue();
+            }}
+          />,
+        ])}
+    </>
+  );
 
   return (
     <>
@@ -164,8 +175,11 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
-          {shouldDisplayButtonToCallForPapers && (
-            <ButtonCallForPapers openSpaceID={id} setData={setData} />
+          {!activeCallForPapers && amTheOrganizer && (
+            <ButtonOpenCallForPapers openSpaceID={id} setData={setData} />
+          )}
+          {activeCallForPapers && amTheOrganizer && (
+            <ButtonCloseCallForPapers openSpaceID={id} setData={setData} />
           )}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
