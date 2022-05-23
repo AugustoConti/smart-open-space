@@ -200,7 +200,11 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        openSpace && activeCallForPapers && <EmptyTalk onClick={pushToNewTalk} />
+        openSpace && activeCallForPapers ? (
+          <EmptyTalk onClick={pushToNewTalk} />
+        ) : (
+          <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
+        )
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
