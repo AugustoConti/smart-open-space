@@ -70,6 +70,7 @@ class OpenSpaceControllerTest {
     fun `can create a valid talk and get it correctly`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        anOpenSpace.startCallForPapers()
         val aMeetingLink = "https://aLink"
 
         val entityResponse = mockMvc.perform(
