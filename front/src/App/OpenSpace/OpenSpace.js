@@ -132,7 +132,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       slots,
-      activeCallForPapers,
+      isActiveCallForPapers,
     } = {},
     isPending,
     isRejected,
@@ -146,27 +146,23 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () => (
-    <>
-      {(pendingQueue && (
-        <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
-      )) ||
-        (activeQueue && [
-          <ButtonProjector key="projector" />,
-          <ButtonFinishMarketplace
-            key="finishMarketplace"
-            onClick={() => {
-              if (queue && queue.length > 0) {
-                setShowQuery(true);
-                return Promise.resolve();
-              }
-              return doFinishQueue();
-            }}
-          />,
-        ])}
-    </>
-  );
-
+  const organizerButtons = () =>
+    (pendingQueue && (
+      <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
+    )) ||
+    (activeQueue && [
+      <ButtonProjector key="projector" />,
+      <ButtonFinishMarketplace
+        key="finishMarketplace"
+        onClick={() => {
+          if (queue && queue.length > 0) {
+            setShowQuery(true);
+            return Promise.resolve();
+          }
+          return doFinishQueue();
+        }}
+      />,
+    ]);
   return (
     <>
       <MainHeader>
@@ -175,10 +171,10 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
-          {!activeCallForPapers && amTheOrganizer && (
+          {!isActiveCallForPapers && amTheOrganizer && (
             <ButtonOpenCallForPapers openSpaceID={id} setData={setData} />
           )}
-          {activeCallForPapers && amTheOrganizer && (
+          {isActiveCallForPapers && amTheOrganizer && (
             <ButtonCloseCallForPapers openSpaceID={id} setData={setData} />
           )}
           {user ? (
