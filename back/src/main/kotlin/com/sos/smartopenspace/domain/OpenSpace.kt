@@ -111,12 +111,16 @@ class OpenSpace(
   fun containsTalk(talk: Talk) = talks.contains(talk)
 
   private fun checkIsActiveCallForPapers() {
-    !isActiveCallForPapers && throw CallForPapersClosedException()
+    if (!isActiveCallForPapers )
+      throw CallForPapersClosedException()
   }
 
   private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
 
-  private fun checkTalkBelongs(talk: Talk) = !containsTalk(talk) && throw TalkDoesntBelongException()
+  private fun checkTalkBelongs(talk: Talk) {
+    if (!containsTalk(talk))
+      throw TalkDoesntBelongException()
+  }
 
   private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User) {
     checkTalkBelongs(talk)
