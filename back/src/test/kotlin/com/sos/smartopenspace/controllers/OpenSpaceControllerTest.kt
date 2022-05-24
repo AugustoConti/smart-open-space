@@ -69,7 +69,8 @@ class OpenSpaceControllerTest {
     @Test
     fun `can create a valid talk and get it correctly`() {
         val user = repoUser.save(anyUser())
-        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        anOpenSpace.startCallForPapers(user)
         val aMeetingLink = "https://aLink"
 
         val entityResponse = mockMvc.perform(
@@ -99,6 +100,20 @@ class OpenSpaceControllerTest {
                 .content(generateTalkBody(anInvalidLink))
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `creating a talk when call for papers is closed return an unprocessable entity status`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        val aMeetingLink = "https://aLink"
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                        .contentType("application/json")
+                        .content(generateTalkBody(aMeetingLink))
+        )
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
     }
 
     @Test

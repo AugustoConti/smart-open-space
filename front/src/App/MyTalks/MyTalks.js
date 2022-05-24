@@ -149,6 +149,7 @@ const MyTalks = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
+  const activeCallForPapers = openSpace && openSpace.activeCallForPapers;
   const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
   const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
   const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
@@ -165,6 +166,19 @@ const MyTalks = () => {
 
   const hasTalks =
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
+
+  function shouldDisplayTalkForSpeakerButton() {
+    return (
+      openSpace &&
+      !openSpace.finishedQueue &&
+      currentUserIsOrganizer &&
+      activeCallForPapers
+    );
+  }
+
+  function shouldDisplayUploadTalkButton() {
+    return openSpace && activeCallForPapers;
+  }
 
   return (
     <>
@@ -183,7 +197,7 @@ const MyTalks = () => {
           {hasTalks && openSpace && !openSpace.finishedQueue && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
-          {openSpace && !openSpace.finishedQueue && currentUserIsOrganizer && (
+          {shouldDisplayTalkForSpeakerButton() && (
             <MainHeader.ButtonNew
               color="accent-1"
               label="Charla para Orador"
@@ -196,7 +210,11 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        openSpace && <EmptyTalk onClick={pushToNewTalk} />
+        shouldDisplayUploadTalkButton() ? (
+          <EmptyTalk onClick={pushToNewTalk} />
+        ) : (
+          <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
+        )
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
