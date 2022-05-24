@@ -190,7 +190,7 @@ class OpenSpace(
 
   fun toggleCallForPapers(user: User) {
     checkIsOrganizer(user)
-    isActiveCallForPapers = !isActiveCallForPapers()
+    isActiveCallForPapers = !isActiveCallForPapers
   }
 }
 
