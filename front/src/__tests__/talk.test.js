@@ -23,6 +23,18 @@ function queueWithTalk(talk) {
   return [talk];
 }
 
+function anyOpenSpaceWithNoTalksScheduled() {
+  return {
+    toSchedule: [],
+  };
+}
+
+function anyOpenSpaceWithTalkScheduled(talk) {
+  return {
+    toSchedule: [talk],
+  };
+}
+
 describe('talk', () => {
   it('a talk can be not assigned to a slot', () => {
     const talk = anyTalk();
@@ -41,22 +53,25 @@ describe('talk', () => {
   it('can be not in the queue', () => {
     const talk = anyTalk();
     const queue = [];
+
     talk.checkIsInqueue(queue);
+
     expect(talk.isInqueue).toBe(false);
   });
 
-  it('can be inqueue', () => {
+  it('can be in queue', () => {
     const talk = anyTalk();
     const queue = queueWithTalk(talk);
+
     talk.checkIsInqueue(queue);
+
     expect(talk.isInqueue).toBe(true);
   });
 
   it('can be not to schedule', () => {
     const talk = anyTalk();
-    const openSpace = {
-      toSchedule: [],
-    };
+    const openSpace = anyOpenSpaceWithNoTalksScheduled();
+
     talk.checkIsToSchedule(openSpace);
 
     expect(talk.isToSchedule).toBe(false);
@@ -64,9 +79,8 @@ describe('talk', () => {
 
   it('can be to schedule', () => {
     const talk = anyTalk();
-    const openSpace = {
-      toSchedule: [talk],
-    };
+    const openSpace = anyOpenSpaceWithTalkScheduled(talk);
+
     talk.checkIsToSchedule(openSpace);
 
     expect(talk.isToSchedule).toBe(true);

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { get, post, put } from './api-client';
 import { getUser } from '../useAuth';
+import Talk from '../../App/model/talk';
 
 const withUser = (fn) => fn(getUser());
 
@@ -14,13 +15,19 @@ const createTalkFor = (userId, osId, talkData) =>
 const createTalk = (osId, talkData) =>
   withUser(({ id }) => createTalkFor(id, osId, talkData));
 
-const getAllOS = () => withUser(({ id }) => get(`openSpace/user/${id}`));
-const useGetAllOS = () => useAsync({ promiseFn: getAllOS });
+const getAllOpenSpace = () => withUser(({ id }) => get(`openSpace/user/${id}`));
+const useGetAllOS = () => useAsync({ promiseFn: getAllOpenSpace });
 
-const getOS = ({ osId }) => get(`openSpace/${osId}`);
-const useGetOS = () => useAsync({ promiseFn: getOS, osId: useParams().id });
+const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
+const useGetOS = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
-const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
+const getTalks = ({ osId }) =>
+  get(`openSpace/talks/${osId}`).then((talks) =>
+    talks.map(
+      (talk) =>
+        new Talk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
+    )
+  );
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, hour, userID) =>
@@ -43,11 +50,17 @@ const enqueueTalk = (talkId) =>
 
 const nextTalk = (osId) => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`));
 
-const getMyTalks = ({ osId }) =>
+function talkToModel(talk) {
+  return new Talk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker);
+}
+
+const getMyTalks = ({ osId: openSpaceId }) =>
   withUser(({ id }) => {
-    const os = getOS({ osId });
-    const assignedSlots = get(`openSpace/assignedSlots/${osId}`);
-    const myTalks = get(`openSpace/talks/${id}/${osId}`);
+    const os = getOpenSpace({ osId: openSpaceId });
+    const assignedSlots = get(`openSpace/assignedSlots/${openSpaceId}`);
+    const myTalks = get(`openSpace/talks/${id}/${openSpaceId}`).then((talks) =>
+      talks.map(talkToModel)
+    );
     return Promise.all([os, assignedSlots, myTalks]);
   });
 const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });

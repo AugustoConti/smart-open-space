@@ -3,12 +3,12 @@ import React, { useCallback, useState } from 'react';
 import { Box, Heading, Layer, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { createTalkFor, nextTalk, useGetTalks, useGetMyTalks } from '#api/os-client';
+import { createTalkFor, nextTalk, useGetMyTalks, useGetTalks } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToOpenSpace, usePushToNewTalk } from '#helpers/routes';
+import { RedirectToRoot, usePushToNewTalk, usePushToOpenSpace } from '#helpers/routes';
 import ButtonLoading from '#shared/ButtonLoading';
 import Detail from '#shared/Detail';
 import { TalkIcon, UserIcon } from '#shared/icons';
@@ -20,8 +20,7 @@ import Spinner, { TinySpinner } from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
-import Talk from './Talk';
-import ModelTalk from '../model/talk';
+import TalkView from './Talk';
 
 const slideDownAnimation = {
   type: 'slideDown',
@@ -126,22 +125,6 @@ MyEnqueuedTalk.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-function xxxcreateModelTalk(assignedSlots, queue, openSpace) {
-  return (talk) => {
-    const xxxTalkModel = new ModelTalk(
-      talk.id,
-      talk.name,
-      talk.description,
-      talk.meetingLink,
-      talk.speaker
-    );
-    xxxTalkModel.checkIsInqueue(queue);
-    xxxTalkModel.checkIsAssigned(assignedSlots);
-    xxxTalkModel.checkIsToSchedule(openSpace);
-    return xxxTalkModel;
-  };
-}
-
 const MyTalks = () => {
   const pushToOS = usePushToOpenSpace();
   const pushToNewTalk = usePushToNewTalk();
@@ -149,12 +132,12 @@ const MyTalks = () => {
   const [showQuerySpeaker, setShowQuerySpeaker] = useState(false);
   const [speaker, setSpeaker] = useState();
   const {
-    data: [openSpace, assignedSlots, myTalks = []] = [],
+    data: [openSpace, assignedSlots, currentUserTalks = []] = [],
     isPending,
     isRejected,
     reload: reloadMyTalks,
   } = useGetMyTalks();
-  const { data: talks, reload: reloadTalks } = useGetTalks();
+  const { data: allTalks, reload: reloadTalks } = useGetTalks();
 
   const reload = useCallback(() => {
     reloadMyTalks();
@@ -167,7 +150,7 @@ const MyTalks = () => {
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
   const isActiveCallForPapers = openSpace && openSpace.isActiveCallForPapers;
-  const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
+  const isMyTalk = (talk) => currentUserTalks.some((eachTalk) => eachTalk.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
@@ -177,8 +160,7 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
-  const hasTalks =
-    talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
+  const talks = currentUserIsOrganizer ? allTalks : currentUserTalks;
 
   function shouldDisplayTalkForSpeakerButton() {
     return (
@@ -193,13 +175,14 @@ const MyTalks = () => {
     return openSpace && isActiveCallForPapers;
   }
 
-  const newTalks = queue
-    ? talks?.map(xxxcreateModelTalk(assignedSlots, queue, openSpace))
-    : undefined;
+  const hasTalks = allTalks && currentUserTalks && talks.length > 0;
 
-  const myNewTalks = queue
-    ? myTalks?.map(xxxcreateModelTalk(assignedSlots, queue, openSpace))
-    : undefined;
+  if (queue)
+    talks.forEach((talk) => {
+      talk.checkIsInqueue(queue);
+      talk.checkIsAssigned(assignedSlots);
+      talk.checkIsToSchedule(openSpace);
+    });
   return (
     <>
       <MainHeader>
@@ -246,8 +229,8 @@ const MyTalks = () => {
             />
           )}
           <MyGrid>
-            {(currentUserIsOrganizer ? newTalks : myNewTalks).map((talk) => (
-              <Talk
+            {talks.map((talk) => (
+              <TalkView
                 talk={talk}
                 activeQueue={openSpace.activeQueue}
                 freeSlots={openSpace.freeSlots}
