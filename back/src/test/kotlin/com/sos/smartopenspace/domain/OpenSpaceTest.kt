@@ -58,7 +58,7 @@ class OpenSpaceTest {
         val organizer = anyUser()
         val openSpace = anyOpenSpaceWith(organizer)
 
-        assertFalse(openSpace.isActiveCallForPapers())
+        assertFalse(openSpace.isActiveCallForPapers)
     }
 
     @Test
@@ -68,7 +68,7 @@ class OpenSpaceTest {
 
         openSpace.startCallForPapers(organizer)
 
-        assertTrue(openSpace.isActiveCallForPapers())
+        assertTrue(openSpace.isActiveCallForPapers)
     }
 
     @Test
