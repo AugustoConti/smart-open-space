@@ -126,6 +126,22 @@ MyEnqueuedTalk.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
+function xxxcreateModelTalk(assignedSlots, queue, openSpace) {
+  return (talk) => {
+    const xxxTalkModel = new ModelTalk(
+      talk.id,
+      talk.name,
+      talk.description,
+      talk.meetingLink,
+      talk.speaker
+    );
+    xxxTalkModel.checkIsInqueue(queue);
+    xxxTalkModel.checkIsAssigned(assignedSlots);
+    xxxTalkModel.checkIsToSchedule(openSpace);
+    return xxxTalkModel;
+  };
+}
+
 const MyTalks = () => {
   const pushToOS = usePushToOpenSpace();
   const pushToNewTalk = usePushToNewTalk();
@@ -155,8 +171,6 @@ const MyTalks = () => {
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
-  const isToSchedule = (idTalk) =>
-    openSpace.toSchedule.some((talk) => talk.id === idTalk);
 
   const onCloseQuerySpeaker = () => {
     setShowQuerySpeaker(false);
@@ -165,7 +179,6 @@ const MyTalks = () => {
 
   const hasTalks =
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
-
 
   function shouldDisplayTalkForSpeakerButton() {
     return (
@@ -180,15 +193,13 @@ const MyTalks = () => {
     return openSpace && isActiveCallForPapers;
   }
 
-  const newTalks = talks?.map(
-    (talk) =>
-      new ModelTalk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
-  );
+  const newTalks = queue
+    ? talks?.map(xxxcreateModelTalk(assignedSlots, queue, openSpace))
+    : undefined;
 
-  const myNewTalks = myTalks?.map(
-    (talk) =>
-      new ModelTalk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
-  );
+  const myNewTalks = queue
+    ? myTalks?.map(xxxcreateModelTalk(assignedSlots, queue, openSpace))
+    : undefined;
   return (
     <>
       <MainHeader>
@@ -237,18 +248,14 @@ const MyTalks = () => {
           <MyGrid>
             {(currentUserIsOrganizer ? newTalks : myNewTalks).map((talk) => (
               <Talk
+                talk={talk}
                 activeQueue={openSpace.activeQueue}
-                assigned={talk.isAssigned(assignedSlots)}
-                enqueued={talk.isInqueue(queue)}
                 freeSlots={openSpace.freeSlots}
                 hasAnother={hasAnother(talk.id)}
-                key={talk.id}
                 onEnqueue={reload}
-                onSchedule={pushToOS}
-                toSchedule={isToSchedule(talk.id)}
                 assignableSlots={openSpace.assignableSlots}
                 currentUserIsOrganizer={currentUserIsOrganizer}
-                {...talk}
+                key={talk.id}
               />
             ))}
           </MyGrid>

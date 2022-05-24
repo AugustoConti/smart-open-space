@@ -7,11 +7,15 @@ export default class Talk {
     this.speaker = speaker;
   }
 
-  isAssigned(slots) {
-    return slots.some((slot) => slot.talk.id === this.id);
+  checkIsAssigned(slots) {
+    this.isAssigned = slots.some((slot) => slot.talk.id === this.id);
   }
 
-  isInqueue(queue) {
-    return queue.some((talk) => talk === this);
+  checkIsInqueue(queue) {
+    this.isInqueue = queue.some((talk) => talk === this);
+  }
+
+  checkIsToSchedule(openSpace) {
+    this.isToSchedule = openSpace.toSchedule.some((talk) => talk.id === this.id);
   }
 }
