@@ -22,12 +22,7 @@ const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
 const getTalks = ({ osId }) =>
-  get(`openSpace/talks/${osId}`).then((talks) =>
-    talks.map(
-      (talk) =>
-        new Talk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker)
-    )
-  );
+  get(`openSpace/talks/${osId}`).then((talks) => talks.map(talkToModel));
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, hour, userID) =>
