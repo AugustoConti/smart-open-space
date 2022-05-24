@@ -17,7 +17,7 @@ class CantFinishTalkException : RuntimeException("No podes terminar la charla ac
 class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
 class FinishedQueuingException : RuntimeException("Encolamiento finalizado")
 class InactiveQueueException : RuntimeException("No está activo el encolamiento")
-class NotOrganizerException : RuntimeException("No sos el organizador")
+class NotTheOrganizerException : RuntimeException("No sos el organizador")
 class SlotNotFoundException : RuntimeException("No existe un slot en ese horario")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
 class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
@@ -142,7 +142,7 @@ class OpenSpace(
     }.map { it.startTime }
   }.filter { it.second.isNotEmpty() }
 
-  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotOrganizerException()
+  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotTheOrganizerException()
 
   fun activeQueue(user: User): OpenSpace {
     !isPendingQueue() && throw AlreadyActivedQueuingException()

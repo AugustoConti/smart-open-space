@@ -77,7 +77,7 @@ class OpenSpaceTest {
         val organizer = anyUser()
         val openSpace = anyOpenSpaceWith(organizer)
 
-       assertThrows<NotOrganizerException> {
+       assertThrows<NotTheOrganizerException> {
             openSpace.startCallForPapers(anUser)
         }
     }
