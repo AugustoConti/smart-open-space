@@ -109,6 +109,6 @@ class OpenSpaceTest {
         openSpace.toggleCallForPapers(organizer)
         openSpace.toggleCallForPapers(organizer)
 
-        assertFalse(openSpace.isActiveCallForPapers())
+        assertFalse(openSpace.isActiveCallForPapers)
     }
 }
