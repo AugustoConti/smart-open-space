@@ -62,21 +62,16 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
 
-const ButtonOpenCallForPapers = ({ openSpaceID, setData, ...props }) => (
+const ButtonToSwitchCallForPapers = ({
+  openSpaceID,
+  setData,
+  isActiveCallForPapers,
+  ...props
+}) => (
   <MainHeader.Button
     color="accent-3"
-    icon={<UnlockIcon />}
-    label="Abrir convocatoria"
-    onClick={() => startCallForPapers(openSpaceID).then(setData)}
-    {...props}
-  />
-);
-
-const ButtonCloseCallForPapers = ({ openSpaceID, setData, ...props }) => (
-  <MainHeader.Button
-    color="accent-3"
-    icon={<LockIcon />}
-    label="Cerrar convocatoria"
+    icon={isActiveCallForPapers ? <LockIcon /> : <UnlockIcon />}
+    label={isActiveCallForPapers ? 'Cerrar convocatoria' : 'Abrir convocatoria'}
     onClick={() => startCallForPapers(openSpaceID).then(setData)}
     {...props}
   />
@@ -146,7 +141,7 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () =>
+  const marketPlaceButtons = () =>
     (pendingQueue && (
       <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
     )) ||
@@ -171,18 +166,19 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
-          {!isActiveCallForPapers && amTheOrganizer && (
-            <ButtonOpenCallForPapers openSpaceID={id} setData={setData} />
-          )}
-          {isActiveCallForPapers && amTheOrganizer && (
-            <ButtonCloseCallForPapers openSpaceID={id} setData={setData} />
+          {amTheOrganizer && (
+            <ButtonToSwitchCallForPapers
+              openSpaceID={id}
+              setData={setData}
+              isActiveCallForPapers={isActiveCallForPapers}
+            />
           )}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
           ) : (
             <ButtonSingIn onClick={() => setRedirectToLogin(true)} />
           )}
-          {amTheOrganizer && organizerButtons()}
+          {amTheOrganizer && marketPlaceButtons()}
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
