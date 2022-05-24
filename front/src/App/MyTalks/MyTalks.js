@@ -168,16 +168,19 @@ const MyTalks = () => {
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
 
   function shouldDisplayTalkForSpeakerButton() {
-    return (
-      openSpace &&
-      !openSpace.finishedQueue &&
-      currentUserIsOrganizer &&
-      isActiveCallForPapers
-    );
+    return currentUserIsOrganizer && canAddATalk();
   }
 
-  function shouldDisplayUploadTalkButton() {
-    return openSpace && isActiveCallForPapers;
+  function shouldDisplayEmptyTalkButton() {
+    return !hasTalks && canAddATalk();
+  }
+
+  function shouldDisplayAddTalkButton() {
+    return hasTalks && canAddATalk();
+  }
+
+  function canAddATalk() {
+    return openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
   }
 
   return (
@@ -194,7 +197,7 @@ const MyTalks = () => {
           description={!openSpace ? <TinySpinner /> : openSpace.description}
         />
         <MainHeader.Buttons>
-          {hasTalks && openSpace && !openSpace.finishedQueue && (
+          {shouldDisplayAddTalkButton() && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
           {shouldDisplayTalkForSpeakerButton() && (
@@ -210,11 +213,7 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        shouldDisplayUploadTalkButton() ? (
-          <EmptyTalk onClick={pushToNewTalk} />
-        ) : (
-          <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
-        )
+        shouldDisplayEmptyTalkButton() && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
@@ -244,6 +243,9 @@ const MyTalks = () => {
             ))}
           </MyGrid>
         </>
+      )}
+      {!isActiveCallForPapers && (
+        <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
       )}
       {showQuerySpeaker && (
         <Layer onEsc={onCloseQuerySpeaker} onClickOutside={onCloseQuerySpeaker}>
