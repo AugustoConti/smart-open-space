@@ -16,10 +16,10 @@ const createTalk = (osId, talkData) =>
   withUser(({ id }) => createTalkFor(id, osId, talkData));
 
 const getAllOpenSpace = () => withUser(({ id }) => get(`openSpace/user/${id}`));
-const useGetAllOS = () => useAsync({ promiseFn: getAllOpenSpace });
+const useGetAllOpenSpace = () => useAsync({ promiseFn: getAllOpenSpace });
 
 const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
-const useGetOS = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
+const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
 const getTalks = ({ osId }) =>
   get(`openSpace/talks/${osId}`).then((talks) =>
@@ -73,8 +73,8 @@ export {
   enqueueTalk,
   finishQueue,
   nextTalk,
-  useGetAllOS,
-  useGetOS,
+  useGetAllOpenSpace,
+  useGetOpenSpace,
   useGetTalks,
   useGetMyTalks,
   scheduleTalk,
