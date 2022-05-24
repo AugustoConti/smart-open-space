@@ -51,6 +51,7 @@ class OpenSpaceControllerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(description))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.isActiveCallForPapers").value(false))
     }
 
     @Test
@@ -68,7 +69,8 @@ class OpenSpaceControllerTest {
     @Test
     fun `can create a valid talk and get it correctly`() {
         val user = repoUser.save(anyUser())
-        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        anOpenSpace.toggleCallForPapers(user)
         val aMeetingLink = "https://aLink"
 
         val entityResponse = mockMvc.perform(
@@ -98,6 +100,51 @@ class OpenSpaceControllerTest {
                 .content(generateTalkBody(anInvalidLink))
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `creating a talk when call for papers is closed return an unprocessable entity status`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
+        val aMeetingLink = "https://aLink"
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                        .contentType("application/json")
+                        .content(generateTalkBody(aMeetingLink))
+        )
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+    }
+
+    @Test
+    fun `start a call for papers returns an ok status response and the modified Open Space`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${user.id}/callForPapers")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(anOpenSpace.id))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.isActiveCallForPapers").value(true))
+    }
+
+    @Test
+    fun `starting a call for papers with a non organizer user return a bad request status`() {
+        val organizer = repoUser.save(anyUser())
+        val aUser = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(organizer))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${aUser.id}/callForPapers")
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    private fun anyOpenSpaceWith(organizer: User): OpenSpace {
+        val openSpace = anyOpenSpace()
+        organizer.addOpenSpace(openSpace)
+        return openSpace
     }
 
     private fun anyOpenSpace(): OpenSpace {

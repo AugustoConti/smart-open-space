@@ -64,4 +64,11 @@ class OpenSpaceService(
     queueSocket.sendFor(os)
     return os
   }
+
+  fun toggleCallForPapers(openSpaceId: Long, userID: Long): OpenSpace {
+    val openSpace = findById(openSpaceId)
+    val user = findUser(userID)
+    openSpace.toggleCallForPapers(user)
+    return openSpace
+  }
 }

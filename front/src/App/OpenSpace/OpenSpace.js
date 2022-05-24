@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Layer } from 'grommet';
 
-import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
+import { activateQueue, finishQueue, startCallForPapers, useGetOS } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import {
@@ -12,7 +12,15 @@ import {
   RedirectToLoginFromOpenSpace,
 } from '#helpers/routes';
 import Detail from '#shared/Detail';
-import { CartIcon, ScheduleIcon, TalkIcon, UserAddIcon, VideoIcon } from '#shared/icons';
+import {
+  CartIcon,
+  ScheduleIcon,
+  TalkIcon,
+  UserAddIcon,
+  VideoIcon,
+  UnlockIcon,
+  LockIcon,
+} from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
@@ -53,6 +61,21 @@ const ButtonMyTalks = ({ amTheOrganizer }) => (
   />
 );
 ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
+
+const ButtonToSwitchCallForPapers = ({
+  openSpaceID,
+  setData,
+  isActiveCallForPapers,
+  ...props
+}) => (
+  <MainHeader.Button
+    color="accent-3"
+    icon={isActiveCallForPapers ? <LockIcon /> : <UnlockIcon />}
+    label={isActiveCallForPapers ? 'Cerrar convocatoria' : 'Abrir convocatoria'}
+    onClick={() => startCallForPapers(openSpaceID).then(setData)}
+    {...props}
+  />
+);
 
 const ButtonSingIn = (props) => (
   <MainHeader.Button
@@ -104,6 +127,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       slots,
+      isActiveCallForPapers,
     } = {},
     isPending,
     isRejected,
@@ -117,7 +141,7 @@ const OpenSpace = () => {
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
 
-  const organizerButtons = () =>
+  const marketPlaceButtons = () =>
     (pendingQueue && (
       <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
     )) ||
@@ -134,7 +158,6 @@ const OpenSpace = () => {
         }}
       />,
     ]);
-
   return (
     <>
       <MainHeader>
@@ -143,12 +166,19 @@ const OpenSpace = () => {
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
+          {amTheOrganizer && (
+            <ButtonToSwitchCallForPapers
+              openSpaceID={id}
+              setData={setData}
+              isActiveCallForPapers={isActiveCallForPapers}
+            />
+          )}
           {user ? (
             <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
           ) : (
             <ButtonSingIn onClick={() => setRedirectToLogin(true)} />
           )}
-          {amTheOrganizer && organizerButtons()}
+          {amTheOrganizer && marketPlaceButtons()}
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>

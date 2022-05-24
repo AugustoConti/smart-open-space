@@ -17,13 +17,14 @@ class CantFinishTalkException : RuntimeException("No podes terminar la charla ac
 class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
 class FinishedQueuingException : RuntimeException("Encolamiento finalizado")
 class InactiveQueueException : RuntimeException("No está activo el encolamiento")
-class NotOrganizerException : RuntimeException("No sos el organizador")
+class NotTheOrganizerException : RuntimeException("No sos el organizador")
 class SlotNotFoundException : RuntimeException("No existe un slot en ese horario")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
 class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
 class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open Space")
 class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
+class CallForPapersClosedException : RuntimeException("La convocatoria se encuentra cerrada")
 
 @Entity
 class OpenSpace(
@@ -82,6 +83,8 @@ class OpenSpace(
   @Enumerated(EnumType.STRING)
   var queueState: QueueState = QueueState.PENDING
 
+  var isActiveCallForPapers: Boolean = false
+
   fun isPendingQueue() = queueState == QueueState.PENDING
   fun isActiveQueue() = queueState == QueueState.ACTIVE
   fun isFinishedQueue() = queueState == QueueState.FINISHED
@@ -99,14 +102,25 @@ class OpenSpace(
 
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
+    checkIsActiveCallForPapers()
     talk.openSpace = this
     talks.add(talk)
     return this
   }
 
+  fun containsTalk(talk: Talk) = talks.contains(talk)
+
+  private fun checkIsActiveCallForPapers() {
+    if (!isActiveCallForPapers )
+      throw CallForPapersClosedException()
+  }
+
   private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
 
-  private fun checkTalkBelongs(talk: Talk) = !talks.contains(talk) && throw TalkDoesntBelongException()
+  private fun checkTalkBelongs(talk: Talk) {
+    if (!containsTalk(talk))
+      throw TalkDoesntBelongException()
+  }
 
   private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User) {
     checkTalkBelongs(talk)
@@ -140,7 +154,7 @@ class OpenSpace(
     }.map { it.startTime }
   }.filter { it.second.isNotEmpty() }
 
-  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotOrganizerException()
+  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotTheOrganizerException()
 
   fun activeQueue(user: User): OpenSpace {
     !isPendingQueue() && throw AlreadyActivedQueuingException()
@@ -178,6 +192,11 @@ class OpenSpace(
     queueState = QueueState.FINISHED
     queue.clear()
     return this
+  }
+
+  fun toggleCallForPapers(user: User) {
+    checkIsOrganizer(user)
+    isActiveCallForPapers = !isActiveCallForPapers
   }
 }
 
