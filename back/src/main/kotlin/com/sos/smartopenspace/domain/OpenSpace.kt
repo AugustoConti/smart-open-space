@@ -17,7 +17,7 @@ class CantFinishTalkException : RuntimeException("No podes terminar la charla ac
 class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
 class FinishedQueuingException : RuntimeException("Encolamiento finalizado")
 class InactiveQueueException : RuntimeException("No está activo el encolamiento")
-class NotOrganizerException : RuntimeException("No sos el organizador")
+class NotTheOrganizerException : RuntimeException("No sos el organizador")
 class SlotNotFoundException : RuntimeException("No existe un slot en ese horario")
 class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
 class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
@@ -82,8 +82,7 @@ class OpenSpace(
   @Enumerated(EnumType.STRING)
   var queueState: QueueState = QueueState.PENDING
 
-  @JsonIgnore
-  private var isActiveCallForPapers: Boolean = false
+  var isActiveCallForPapers: Boolean = false
 
   fun isPendingQueue() = queueState == QueueState.PENDING
   fun isActiveQueue() = queueState == QueueState.ACTIVE
@@ -143,7 +142,7 @@ class OpenSpace(
     }.map { it.startTime }
   }.filter { it.second.isNotEmpty() }
 
-  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotOrganizerException()
+  private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotTheOrganizerException()
 
   fun activeQueue(user: User): OpenSpace {
     !isPendingQueue() && throw AlreadyActivedQueuingException()
@@ -181,11 +180,6 @@ class OpenSpace(
     queueState = QueueState.FINISHED
     queue.clear()
     return this
-  }
-
-  @JsonProperty
-  fun isActiveCallForPapers(): Boolean {
-    return isActiveCallForPapers
   }
 
   fun toggleCallForPapers(user: User) {

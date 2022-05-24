@@ -33,7 +33,7 @@ class QueueTest {
   fun `No puedo activar encolamiento si no soy el organizador`() {
     val os = anyOS()
     anyUser(mutableSetOf(os))
-    assertThrows(NotOrganizerException::class.java) {
+    assertThrows(NotTheOrganizerException::class.java) {
       os.activeQueue(anyUser())
     }
   }
@@ -195,7 +195,7 @@ class QueueTest {
   fun `Solo el organizador puede cerrar el encolamiento`() {
     val os = anyOS()
     anyUser(mutableSetOf(os))
-    assertThrows(NotOrganizerException::class.java) {
+    assertThrows(NotTheOrganizerException::class.java) {
       os.finishQueuing(anyUser())
     }
   }
