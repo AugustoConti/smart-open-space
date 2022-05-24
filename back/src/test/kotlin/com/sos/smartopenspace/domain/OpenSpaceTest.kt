@@ -93,8 +93,9 @@ class OpenSpaceTest {
 
     @Test
     fun `an open space can add a talk when call for papers is open`() {
-        val openSpace = anyOpenSpace()
-        openSpace.startCallForPapers()
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
+        openSpace.startCallForPapers(organizer)
         val talk = Talk("Talk")
 
         openSpace.addTalk(talk)

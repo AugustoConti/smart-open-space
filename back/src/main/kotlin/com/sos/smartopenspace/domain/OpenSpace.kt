@@ -111,7 +111,7 @@ class OpenSpace(
   fun containsTalk(talk: Talk) = talks.contains(talk)
 
   private fun checkIsActiveCallForPapers() {
-    !activeCallForPapers && throw CallForPapersClosedException()
+    !isActiveCallForPapers() && throw CallForPapersClosedException()
   }
 
   private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
