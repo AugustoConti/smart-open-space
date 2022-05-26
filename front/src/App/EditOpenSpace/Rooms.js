@@ -5,23 +5,7 @@ import PropTypes from 'prop-types';
 
 import { AddIcon, TrashIcon } from '#shared/icons';
 import RowBetween from '#shared/RowBetween';
-
-const List = (props) => (
-  <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
-);
-
-const ListItem = (props) => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
-
-const RoomItem = ({ room, onRemove }) => (
-  <ListItem>
-    {room}
-    <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />
-  </ListItem>
-);
-RoomItem.propTypes = {
-  onRemove: PropTypes.func.isRequired,
-  room: PropTypes.string.isRequired,
-};
+import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 
 const Rooms = ({ value, onChange }) => {
   const [textValue, setTextValue] = useState('');
@@ -44,18 +28,7 @@ const Rooms = ({ value, onChange }) => {
           }}
         />
       </RowBetween>
-      <List>
-        {value.map((room, index) => (
-          <RoomItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={`${room}-${index}`}
-            room={room}
-            onRemove={() =>
-              onChange({ target: { value: value.filter((_, i) => i !== index) } })
-            }
-          />
-        ))}
-      </List>
+      <ListWithRemoveButton items={value} onChange={onChange} />
     </Box>
   );
 };
