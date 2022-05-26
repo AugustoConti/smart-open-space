@@ -15,6 +15,8 @@ import { RedirectToRoot, usePushToRoot } from '#helpers/routes';
 import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
 import TimeSelector from './TimeSelector';
+import Tracks from './Tracks';
+import tracks from './Tracks';
 
 // const TALK_SLOT = 'TalkSlot';
 const OTHER_SLOT = 'OtherSlot';
@@ -122,6 +124,7 @@ const initialValues = {
   date: new Date().toISOString(),
   rooms: [],
   slots: [],
+  tracks: [],
 };
 
 const EditOpenSpace = () => {
@@ -132,7 +135,7 @@ const EditOpenSpace = () => {
 
   if (!user) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { date, name, description, rooms, slots } }) =>
+  const onSubmit = ({ value: { date, name, description, rooms, slots, tracks } }) =>
     createOS({
       date: new Date(date),
       name,
@@ -142,6 +145,11 @@ const EditOpenSpace = () => {
         ...rest,
         endTime: splitTime(endTime),
         startTime: splitTime(startTime),
+      })),
+      tracks: tracks.map((track) => ({
+        name: track.name,
+        color: track.color,
+        description: track.description,
       })),
     }).then(pushToRoot);
 
@@ -156,7 +164,19 @@ const EditOpenSpace = () => {
           placeholder="Añade una descripcion."
           maxLength={1000}
         />
-
+        <MyForm.Field
+          component={Tracks}
+          icon={<HomeIcon />}
+          label="Tracks"
+          name="tracks"
+        />
+        <MyForm.Field
+          component={Rooms}
+          icon={<HomeIcon />}
+          label="Salas"
+          name="rooms"
+          validate={(rooms) => rooms.length < 1 && 'Ingresa al menos una sala'}
+        />
         <Box direction="row">
           <MyForm.Field
             component={MyCalendar}
@@ -177,13 +197,6 @@ const EditOpenSpace = () => {
             setShowInputSlot({ onSubmitSlot, start, type });
           }}
           validate={(times) => times.length < 1 && 'Ingresa al menos un slot'}
-        />
-        <MyForm.Field
-          component={Rooms}
-          icon={<HomeIcon />}
-          label="Salas"
-          name="rooms"
-          validate={(rooms) => rooms.length < 1 && 'Ingresa al menos una sala'}
         />
       </MyForm>
       {showInputSlot !== null && (
