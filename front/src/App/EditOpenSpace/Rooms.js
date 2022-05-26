@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Button, TextInput } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { AddIcon, TrashIcon } from '#shared/icons';
+import { AddIcon } from '#shared/icons';
 import RowBetween from '#shared/RowBetween';
 import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 

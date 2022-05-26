@@ -26,6 +26,7 @@ import {
   Workshop,
   Link,
   Unlock,
+  StatusGoodSmall,
 } from 'grommet-icons';
 
 export {
@@ -57,4 +58,5 @@ export {
   Link as LinkIcon,
   Lock as LockIcon,
   Unlock as UnlockIcon,
+  StatusGoodSmall as CircleIcon,
 };

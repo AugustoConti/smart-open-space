@@ -3,7 +3,6 @@ import { Box, Button } from 'grommet';
 import RowBetween from '#shared/RowBetween';
 import { TrashIcon } from '#shared/icons';
 import PropTypes from 'prop-types';
-import Rooms from '../App/EditOpenSpace/Rooms';
 
 const List = (props) => (
   <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
