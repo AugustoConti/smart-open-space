@@ -57,7 +57,9 @@ class OpenSpace(
 
   val urlImage: String = "",
   @Id @GeneratedValue
-  val id: Long = 0
+  val id: Long = 0,
+
+  val tracks: Set<Track> = setOf()
 ) {
 
   init {
