@@ -55,11 +55,13 @@ class OpenSpace(
   @field:Size(min=0, max=1000)
   val description: String = "",
 
+  @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "open_space_id")
+  val tracks: Set<Track> = setOf(),
+
   val urlImage: String = "",
   @Id @GeneratedValue
-  val id: Long = 0,
-
-  val tracks: Set<Track> = setOf()
+  val id: Long = 0
 ) {
 
   init {
