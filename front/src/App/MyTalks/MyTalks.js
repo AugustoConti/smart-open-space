@@ -164,24 +164,16 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
+  const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
+
   const hasTalks =
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
 
-  function shouldDisplayTalkForSpeakerButton() {
-    return currentUserIsOrganizer && canAddATalk();
-  }
+  const shouldDisplayTalkForSpeakerButton = currentUserIsOrganizer && canAddTalk;
 
-  function shouldDisplayEmptyTalkButton() {
-    return !hasTalks && canAddATalk();
-  }
+  const shouldDisplayEmptyTalkButton = !hasTalks && canAddTalk;
 
-  function shouldDisplayAddTalkButton() {
-    return hasTalks && canAddATalk();
-  }
-
-  function canAddATalk() {
-    return openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
-  }
+  const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
 
   return (
     <>
@@ -197,10 +189,10 @@ const MyTalks = () => {
           description={!openSpace ? <TinySpinner /> : openSpace.description}
         />
         <MainHeader.Buttons>
-          {shouldDisplayAddTalkButton() && (
+          {shouldDisplayAddTalkButton && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
-          {shouldDisplayTalkForSpeakerButton() && (
+          {shouldDisplayTalkForSpeakerButton && (
             <MainHeader.ButtonNew
               color="accent-1"
               label="Charla para Orador"
@@ -213,7 +205,7 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        shouldDisplayEmptyTalkButton() && <EmptyTalk onClick={pushToNewTalk} />
+        shouldDisplayEmptyTalkButton && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
