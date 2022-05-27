@@ -5,15 +5,18 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
 @Entity
 class Track(
+    @field:NotEmpty
     val name: String,
 
-    @Length(min=0, max=200)
+    @field:Size(max=500)
     val description: String = "",
 
+    @field:Size(min=7, max = 7)
     val color: String,
     @Id
     @GeneratedValue
