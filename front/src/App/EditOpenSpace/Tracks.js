@@ -7,9 +7,21 @@ import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCount
 import RowBetween from '#shared/RowBetween';
 
 const Tracks = ({ value, onChange }) => {
-  const [track, setTrack] = useState({ name: '', description: '', color: 'brand' });
+  const [track, setTrack] = useState({ name: '', description: '', color: '#ddaecc' });
   const [isOpen, setIsOpen] = useState(false);
-  const colors = ['brand', 'accent-1', 'accent-2'];
+  const colors = [
+    '#ddaecc',
+    '#88d2f2',
+    '#d0c9e1',
+    '#fab29e',
+    '#fbf7b8',
+    '#a2d0b7',
+    '#aea3c9',
+    '#93b7dc',
+    '#c1867b',
+    '#e2edd4',
+  ];
+  const hasNotTrackName = track.name.trim().length < 1;
 
   return (
     <Box>
@@ -48,10 +60,11 @@ const Tracks = ({ value, onChange }) => {
         <Button
           alignSelf="end"
           icon={<AddIcon />}
+          disabled={hasNotTrackName}
           onClick={() => {
-            if (track.name.trim().length < 1 && track.color.length < 1) return;
+            if (hasNotTrackName) return;
             onChange({ target: { value: [...value, track] } });
-            setTrack({ name: '', description: '', color: '' });
+            setTrack({ name: '', description: '', color: '#ddaecc' });
           }}
         />
       </Collapsible>
