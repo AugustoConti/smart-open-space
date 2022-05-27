@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Box, Text, Button, Paragraph } from 'grommet';
+import { Box, Text, Button, Paragraph, List } from 'grommet';
 
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
@@ -55,6 +55,26 @@ const Description = ({ children, description, ...props }) => (
     {children}
   </Paragraph>
 );
+// itemProps={{
+//   0: { background: ['#88d2f2', 'white'] },
+//   1: { background: ['#ddaecc', 'white'] },
+// }}
+const Tracks = ({ children, tracks, ...props }) => (
+  <List
+    primaryKey={(item) => (
+      <Box background={item.color} pad="10px" margin={{ right: '100px' }}>
+        {item.name}
+      </Box>
+    )}
+    secondaryKey="description"
+    data={tracks.map((track) => {
+      return { name: track.name, description: track.description, color: track.color };
+    })}
+    pad="medium"
+  >
+    {children}
+  </List>
+);
 Description.propTypes = {
   children: MyProps.children,
   description: PropTypes.string,
@@ -74,6 +94,7 @@ const MainHeader = ({ children, ...props }) => {
   const theChildren = React.Children.toArray(children);
   const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle);
   const description = getByType(theChildren, Description);
+  const tracks = getByType(theChildren, Tracks);
   const buttons = getByType(theChildren, Buttons);
   return (
     <>
@@ -91,6 +112,7 @@ const MainHeader = ({ children, ...props }) => {
         {buttons}
       </RowBetween>
       {description}
+      {tracks}
     </>
   );
 };
@@ -100,6 +122,7 @@ MainHeader.Title = MyTitle;
 MainHeader.TitleLink = MyTitleLink;
 MainHeader.SubTitle = MySubTitle;
 MainHeader.Description = Description;
+MainHeader.Tracks = Tracks;
 MainHeader.Button = MyButton;
 MainHeader.ButtonNew = ButtonNew;
 MainHeader.ButtonLoading = ButtonLoading;
