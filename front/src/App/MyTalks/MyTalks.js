@@ -164,21 +164,16 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
+  const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
+
   const hasTalks =
     talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
 
-  function shouldDisplayTalkForSpeakerButton() {
-    return (
-      openSpace &&
-      !openSpace.finishedQueue &&
-      currentUserIsOrganizer &&
-      isActiveCallForPapers
-    );
-  }
+  const shouldDisplayTalkForSpeakerButton = currentUserIsOrganizer && canAddTalk;
 
-  function shouldDisplayUploadTalkButton() {
-    return openSpace && isActiveCallForPapers;
-  }
+  const shouldDisplayEmptyTalkButton = !hasTalks && canAddTalk;
+
+  const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
 
   return (
     <>
@@ -194,10 +189,10 @@ const MyTalks = () => {
           description={!openSpace ? <TinySpinner /> : openSpace.description}
         />
         <MainHeader.Buttons>
-          {hasTalks && openSpace && !openSpace.finishedQueue && (
+          {shouldDisplayAddTalkButton && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
-          {shouldDisplayTalkForSpeakerButton() && (
+          {shouldDisplayTalkForSpeakerButton && (
             <MainHeader.ButtonNew
               color="accent-1"
               label="Charla para Orador"
@@ -210,11 +205,7 @@ const MyTalks = () => {
       {!queue || (!hasTalks && isPending) ? (
         <Spinner />
       ) : !hasTalks ? (
-        shouldDisplayUploadTalkButton() ? (
-          <EmptyTalk onClick={pushToNewTalk} />
-        ) : (
-          <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
-        )
+        shouldDisplayEmptyTalkButton && <EmptyTalk onClick={pushToNewTalk} />
       ) : (
         <>
           {queue.length > 0 && myEnqueuedTalk() && (
@@ -244,6 +235,9 @@ const MyTalks = () => {
             ))}
           </MyGrid>
         </>
+      )}
+      {!isActiveCallForPapers && (
+        <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
       )}
       {showQuerySpeaker && (
         <Layer onEsc={onCloseQuerySpeaker} onClickOutside={onCloseQuerySpeaker}>
