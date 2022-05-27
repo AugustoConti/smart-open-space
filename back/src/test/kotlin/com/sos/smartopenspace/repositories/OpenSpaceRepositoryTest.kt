@@ -68,4 +68,15 @@ class OpenSpaceRepositoryTest {
             entityManager.flush()
         }
     }
+
+    @Test
+    fun `a track cannot be saved with an invalid color`() {
+        val invalidTrack = Track(name = "aName", description = "W".repeat(500), color = "Rojizo")
+        val openSpace = objectFactory.anyOpenSpace(tracks = setOf(invalidTrack))
+
+        assertThrows<ConstraintViolationException> {
+            repoOpenSpace.save(openSpace)
+            entityManager.flush()
+        }
+    }
 }

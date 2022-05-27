@@ -1,7 +1,6 @@
 package com.sos.smartopenspace.domain
 
-import org.hibernate.validator.constraints.Length
-import javax.persistence.Column
+import com.sos.smartopenspace.Validators.HexColor
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
@@ -16,7 +15,7 @@ class Track(
     @field:Size(max=500)
     val description: String = "",
 
-    @field:Size(min=7, max = 7)
+    @field:HexColor
     val color: String,
     @Id
     @GeneratedValue
