@@ -44,9 +44,7 @@ class OpenSpaceControllerTest {
         val track_description = "W".repeat(500)
         val openSpaceBody = generateCreateBody(
             description = description,
-            track_description = track_description,
-            track_color = track_color,
-            track_name = track_name
+            track = Track(name = track_name, description = track_description, color = track_color)
         )
 
         val entityResponse = mockMvc.perform(
@@ -171,9 +169,7 @@ class OpenSpaceControllerTest {
 
     private fun generateCreateBody(
         description: String,
-        track_color: String = """#FFFFFF""",
-        track_description: String = """Nice description""",
-        track_name: String = """a track"""
+        track: Track = Track(name = "a track", color = "#FFFFFFF")
     ): String {
         return """
 {
@@ -196,9 +192,9 @@ class OpenSpaceControllerTest {
     ],
     "tracks": [
         {
-            "name": "$track_name",
-            "color": "$track_color",
-            "description": "$track_description"
+            "name": "${track.name}",
+            "color": "${track.color}",
+            "description": "${track.description}"
         }
     ]
 }
