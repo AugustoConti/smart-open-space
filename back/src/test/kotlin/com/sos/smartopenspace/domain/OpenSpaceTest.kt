@@ -111,4 +111,18 @@ class OpenSpaceTest {
 
         assertFalse(openSpace.isActiveCallForPapers)
     }
+
+    @Test
+    fun `an open space is created with a track`() {
+        val track = Track(name= "track", color= "#FFFFFF")
+        val openSpace = OpenSpace(
+            name = "os", date = LocalDate.now(), slots = setOf(),
+            rooms = setOf(), talks = mutableSetOf(), tracks = setOf(track)
+        )
+
+        assertEquals(openSpace.tracks.size, 1)
+        assertEquals(openSpace.tracks.first().color,track.color)
+        assertEquals(openSpace.tracks.first().name,track.name)
+        assertEquals(openSpace.tracks.first().description,track.description)
+    }
 }

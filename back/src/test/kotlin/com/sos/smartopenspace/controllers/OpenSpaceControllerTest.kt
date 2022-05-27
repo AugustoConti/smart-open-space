@@ -39,19 +39,32 @@ class OpenSpaceControllerTest {
     fun `creating a valid OpenSpace returns an ok status response`() {
         val user = repoUser.save(anyUser())
         val description = "W".repeat(1000)
-        val openSpaceBody = generateCreateBody(description)
+        val track_color = "#FFFFFF"
+        val track_name = "a track"
+        val track_description = "W".repeat(500)
+        val openSpaceBody = generateCreateBody(
+            description = description,
+            track_description = track_description,
+            track_color = track_color,
+            track_name = track_name
+        )
+
         val entityResponse = mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/${user.id}")
                 .contentType("application/json")
                 .content(openSpaceBody)
         ).andReturn().response
         val id = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+
         mockMvc.perform(
             MockMvcRequestBuilders.get("/openSpace/${id}")
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(description))
             .andExpect(MockMvcResultMatchers.jsonPath("$.isActiveCallForPapers").value(false))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].color").value(track_color))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].name").value(track_name))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].description").value(track_description))
     }
 
     @Test
@@ -109,11 +122,11 @@ class OpenSpaceControllerTest {
         val aMeetingLink = "https://aLink"
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
-                        .contentType("application/json")
-                        .content(generateTalkBody(aMeetingLink))
+            MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(aMeetingLink))
         )
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
+            .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
     }
 
     @Test
@@ -156,7 +169,12 @@ class OpenSpaceControllerTest {
         )
     }
 
-    private fun generateCreateBody(description: String): String {
+    private fun generateCreateBody(
+        description: String,
+        track_color: String = """#FFFFFF""",
+        track_description: String = """Nice description""",
+        track_name: String = """a track"""
+    ): String {
         return """
 {
     "date": "2022-05-11T03:00:00.000Z",
@@ -174,6 +192,13 @@ class OpenSpaceControllerTest {
                 0,
                 0
             ]
+        }
+    ],
+    "tracks": [
+        {
+            "name": "$track_name",
+            "color": "$track_color",
+            "description": "$track_description"
         }
     ]
 }
