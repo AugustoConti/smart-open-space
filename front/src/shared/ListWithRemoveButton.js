@@ -5,14 +5,14 @@ import { TrashIcon } from '#shared/icons';
 import PropTypes from 'prop-types';
 
 const List = (props) => (
-  <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
+  <Box as="ul" margin={{ top: 'small', bottom: 'small' }} {...props} />
 );
 
 const ListItem = (props) => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
 
-const Item = ({ itemName, onRemove }) => (
-  <ListItem>
-    {itemName}
+const Item = ({ color, itemName, onRemove }) => (
+  <ListItem background={color}>
+    <Box>{itemName}</Box>
     <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />
   </ListItem>
 );
@@ -24,12 +24,13 @@ Item.propTypes = {
 const ListWithRemoveButton = ({ items, onChange }) => {
   return (
     <List>
-      {items.map((item, index) => (
+      {items.map((item, itemId) => (
         <Item
-          key={`${item}-${index}`}
-          itemName={item}
+          color={item.color}
+          key={`${item.name}-${itemId}`}
+          itemName={item.name}
           onRemove={() =>
-            onChange({ target: { value: items.filter((_, i) => i !== index) } })
+            onChange({ target: { value: items.filter((_, index) => index !== itemId) } })
           }
         />
       ))}
@@ -37,7 +38,7 @@ const ListWithRemoveButton = ({ items, onChange }) => {
   );
 };
 ListWithRemoveButton.propTypes = {
-  items: PropTypes.string.isRequired,
+  items: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

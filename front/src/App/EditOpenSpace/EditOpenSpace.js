@@ -5,7 +5,13 @@ import { Box, Text, MaskedInput, Layer } from 'grommet';
 
 import { createOS } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
-import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
+import {
+  CalendarIcon,
+  ClockIcon,
+  HomeIcon,
+  OpenSpaceIcon,
+  TracksIcon,
+} from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
@@ -153,6 +159,16 @@ const EditOpenSpace = () => {
       })),
     }).then(pushToRoot);
 
+  function haveTracksWithNameRepeated(tracks) {
+    let hasNameRepeated = false;
+    tracks.forEach((eachTrack) => {
+      hasNameRepeated =
+        hasNameRepeated ||
+        tracks.filter((track) => track.name === eachTrack.name).length > 1;
+    });
+    return hasNameRepeated;
+  }
+
   return (
     <>
       <MainHeader>
@@ -166,9 +182,13 @@ const EditOpenSpace = () => {
         />
         <MyForm.Field
           component={Tracks}
-          icon={<HomeIcon />}
+          icon={<TracksIcon />}
           label="Tracks"
           name="tracks"
+          validate={(tracks) =>
+            haveTracksWithNameRepeated(tracks) &&
+            'Los Tracks no pueden tener nombres repetidos'
+          }
         />
         <MyForm.Field
           component={Rooms}

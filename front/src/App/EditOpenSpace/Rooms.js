@@ -28,7 +28,10 @@ const Rooms = ({ value, onChange }) => {
           }}
         />
       </RowBetween>
-      <ListWithRemoveButton items={value} onChange={onChange} />
+      <ListWithRemoveButton
+        items={value.map((room) => ({ name: room }))}
+        onChange={onChange}
+      />
     </Box>
   );
 };

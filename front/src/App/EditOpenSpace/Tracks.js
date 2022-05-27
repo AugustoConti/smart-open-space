@@ -42,7 +42,7 @@ const Tracks = ({ value, onChange }) => {
               options={colors.map((color) => (
                 <CircleIcon color={color} />
               ))}
-              value={<CircleIcon color={track.color} />}
+              value={<CircleIcon size="43px" color={track.color} />}
               onChange={({ option }) => setTrack({ ...track, color: option.props.color })}
             />
           </RowBetween>
@@ -69,7 +69,7 @@ const Tracks = ({ value, onChange }) => {
         />
       </Collapsible>
       <ListWithRemoveButton
-        items={value.map((track) => track.name)}
+        items={value.map((track) => ({ name: track.name, color: track.color }))}
         onChange={onChange}
       />
     </Box>
