@@ -42,7 +42,7 @@ class OpenSpaceControllerTest {
         val track_color = "#FFFFFF"
         val track_name = "a track"
         val track_description = "W".repeat(500)
-        val openSpaceBody = generateCreateBody(
+        val openSpaceBody = anOpenSpaceCreationBody(
             description = description,
             track = Track(name = track_name, description = track_description, color = track_color)
         )
@@ -68,7 +68,7 @@ class OpenSpaceControllerTest {
     @Test
     fun `creating an invalid OpenSpace returns a bad request response`() {
         val user = repoUser.save(anyUser())
-        val openSpaceBody = generateCreateBody("W".repeat(1001))
+        val openSpaceBody = anOpenSpaceCreationBody("W".repeat(1001))
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/${user.id}")
                 .contentType("application/json")
@@ -167,7 +167,7 @@ class OpenSpaceControllerTest {
         )
     }
 
-    private fun generateCreateBody(
+    private fun anOpenSpaceCreationBody(
         description: String,
         track: Track = Track(name = "a track", color = "#FFFFFFF")
     ): String {

@@ -58,7 +58,7 @@ class OpenSpace(
   @field:Valid
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  val tracks: Set<Track> = setOf(),
+  val tracks: Set<Track> = emptySet(),
 
   val urlImage: String = "",
   @Id @GeneratedValue

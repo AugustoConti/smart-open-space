@@ -7,7 +7,7 @@ import com.sos.smartopenspace.domain.Track
 import java.time.LocalDate
 import java.time.LocalTime
 
-class Factory {
+class TestingObjectFactory {
     private val defaultTalkSlots = setOf(
         TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
     )
@@ -16,11 +16,11 @@ class Factory {
 
     private val defaultRooms = setOf(Room("1"))
 
-    fun anyOpenSpace(
+    fun anOpenSpace(
         talkSlots: Set<TalkSlot> = defaultTalkSlots,
         name: String = defaultName,
         rooms: Set<Room> = defaultRooms,
-        tracks: Set<Track> = setOf(),
+        tracks: Set<Track> = emptySet(),
         description: String = ""
     ): OpenSpace {
         return OpenSpace(

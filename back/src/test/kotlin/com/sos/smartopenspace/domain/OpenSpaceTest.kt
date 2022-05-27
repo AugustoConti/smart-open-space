@@ -10,7 +10,7 @@ class OpenSpaceTest {
 
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
             OpenSpace(
-                    "os", LocalDate.now(), setOf(),
+                    "os", LocalDate.now(), emptySet(),
                     setOf(
                             TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
                             TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
@@ -32,8 +32,8 @@ class OpenSpaceTest {
         val nameOpenSpace = "os"
         val date = LocalDate.now()
         val openSpace = OpenSpace(
-                nameOpenSpace, date, setOf(),
-                setOf()
+                nameOpenSpace, date, emptySet(),
+                emptySet()
         )
 
         assertEquals(openSpace.name, nameOpenSpace)
@@ -46,8 +46,8 @@ class OpenSpaceTest {
         val date = LocalDate.now()
         val description = "A description"
         val openSpace = OpenSpace(
-            nameOpenSpace, date, setOf(),
-            setOf(), mutableSetOf(), description
+            nameOpenSpace, date, emptySet(),
+            emptySet(), mutableSetOf(), description
         )
 
         assertEquals(openSpace.description, description)
@@ -116,8 +116,8 @@ class OpenSpaceTest {
     fun `an open space is created with a track`() {
         val track = Track(name= "track", color= "#FFFFFF")
         val openSpace = OpenSpace(
-            name = "os", date = LocalDate.now(), slots = setOf(),
-            rooms = setOf(), talks = mutableSetOf(), tracks = setOf(track)
+            name = "os", date = LocalDate.now(), slots = emptySet(),
+            rooms = emptySet(), talks = mutableSetOf(), tracks = setOf(track)
         )
 
         assertEquals(openSpace.tracks.size, 1)
