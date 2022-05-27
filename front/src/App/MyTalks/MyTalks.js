@@ -162,17 +162,13 @@ const MyTalks = () => {
 
   const talks = currentUserIsOrganizer ? allTalks : currentUserTalks;
   const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
-
-  const hasTalks =
-    talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
+  const hasTalks = allTalks && currentUserTalks && talks.length > 0;
 
   const shouldDisplayTalkForSpeakerButton = currentUserIsOrganizer && canAddTalk;
 
   const shouldDisplayEmptyTalkButton = !hasTalks && canAddTalk;
 
   const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
-
-  const hasTalks = allTalks && currentUserTalks && talks.length > 0;
 
   if (queue)
     talks.forEach((talk) => {
