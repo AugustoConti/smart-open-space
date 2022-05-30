@@ -4,15 +4,15 @@ import RowBetween from '#shared/RowBetween';
 import { TrashIcon } from '#shared/icons';
 import PropTypes from 'prop-types';
 
-const List = (props) => (
-  <Box as="ul" margin={{ top: 'small', bottom: 'small' }} {...props} />
-);
+const List = (props) => <Box as="ul" margin={{ vertical: 'small' }} {...props} />;
 
 const ListItem = (props) => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
 
 const Item = ({ color, itemName, onRemove }) => (
-  <ListItem background={color}>
-    <Box>{itemName}</Box>
+  <ListItem>
+    <Box pad={{ horizontal: 'medium', vertical: 'small' }} background={color}>
+      {itemName}
+    </Box>
     <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />
   </ListItem>
 );
