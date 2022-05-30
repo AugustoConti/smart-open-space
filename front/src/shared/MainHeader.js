@@ -55,18 +55,21 @@ const Description = ({ children, description, ...props }) => (
     {children}
   </Paragraph>
 );
-// itemProps={{
-//   0: { background: ['#88d2f2', 'white'] },
-//   1: { background: ['#ddaecc', 'white'] },
-// }}
+
 const Tracks = ({ children, tracks, ...props }) => (
   <List
     primaryKey={(item) => (
-      <Box background={item.color} pad="10px" margin={{ right: '100px' }}>
-        {item.name}
+      <Box background={item.color} pad="10px" margin="10px">
+        <Text>{item.name}</Text>
       </Box>
     )}
-    secondaryKey="description"
+    secondaryKey={(item) => (
+      <Box width={{ max: '30vw' }}>
+        <Text color="#808080" size="small">
+          {item.description}
+        </Text>
+      </Box>
+    )}
     data={tracks.map((track) => {
       return { name: track.name, description: track.description, color: track.color };
     })}
