@@ -159,14 +159,10 @@ const EditOpenSpace = () => {
       })),
     }).then(pushToRoot);
 
-  function haveTracksWithNameRepeated(tracks) {
-    let hasNameRepeated = false;
-    tracks.forEach((eachTrack) => {
-      hasNameRepeated =
-        hasNameRepeated ||
-        tracks.filter((track) => track.name === eachTrack.name).length > 1;
+  function hasTracksWithRepeatedName(tracks) {
+    return tracks.some((eachTrack) => {
+      return tracks.filter((track) => track.name === eachTrack.name).length > 1;
     });
-    return hasNameRepeated;
   }
 
   return (
@@ -185,10 +181,10 @@ const EditOpenSpace = () => {
           icon={<TracksIcon />}
           label="Tracks"
           name="tracks"
-          validate={(tracks) =>
-            haveTracksWithNameRepeated(tracks) &&
-            'Los Tracks no pueden tener nombres repetidos'
-          }
+          validate={(tracks) => {
+            if (hasTracksWithRepeatedName(tracks))
+              return 'Los tracks no pueden tener nombres repetidos';
+          }}
         />
         <MyForm.Field
           component={Rooms}

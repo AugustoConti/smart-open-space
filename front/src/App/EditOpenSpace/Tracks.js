@@ -1,14 +1,13 @@
-import { Box, Button, Select, TextArea, TextInput } from 'grommet';
-import { AddIcon, CircleIcon, DownIcon, UpIcon } from '#shared/icons';
+import { Box, Button, Collapsible, TextInput } from 'grommet';
+import { DownIcon, UpIcon } from '#shared/icons';
 import React, { useState } from 'react';
-import { Collapsible } from 'grommet';
 import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 import RowBetween from '#shared/RowBetween';
+import { PlusButton } from '#shared/PlusButton';
+import { ColorPiker } from '#shared/ColorPiker';
 
 const Tracks = ({ value, onChange }) => {
-  const [track, setTrack] = useState({ name: '', description: '', color: '#ddaecc' });
-  const [isOpen, setIsOpen] = useState(false);
   const colors = [
     '#ddaecc',
     '#88d2f2',
@@ -21,7 +20,10 @@ const Tracks = ({ value, onChange }) => {
     '#c1867b',
     '#e2edd4',
   ];
-  const hasNotTrackName = track.name.trim().length < 1;
+  let initialTrack = { name: '', description: '', color: colors[0] };
+  const [track, setTrack] = useState(initialTrack);
+  const [isOpen, setIsOpen] = useState(false);
+  const hasNoTrackName = track.name.trim().length < 1;
 
   return (
     <Box>
@@ -38,12 +40,10 @@ const Tracks = ({ value, onChange }) => {
               placeholder="Nombre de track"
               value={track.name}
             />
-            <Select
-              options={colors.map((color) => (
-                <CircleIcon color={color} />
-              ))}
-              value={<CircleIcon size="43px" color={track.color} />}
-              onChange={({ option }) => setTrack({ ...track, color: option.props.color })}
+            <ColorPiker
+              colors={colors}
+              initialColor={track.color}
+              setColor={(color) => setTrack({ ...track, color: color })}
             />
           </RowBetween>
           <Box>
@@ -57,15 +57,14 @@ const Tracks = ({ value, onChange }) => {
             />
           </Box>
         </Box>
-        <Button
+        <PlusButton
+          conditionToAdd={hasNoTrackName}
+          onChange={onChange}
+          value={value}
+          item={track}
+          initialItem={initialTrack}
+          setItem={setTrack}
           alignSelf="end"
-          icon={<AddIcon />}
-          disabled={hasNotTrackName}
-          onClick={() => {
-            if (hasNotTrackName) return;
-            onChange({ target: { value: [...value, track] } });
-            setTrack({ name: '', description: '', color: '#ddaecc' });
-          }}
         />
       </Collapsible>
       <ListWithRemoveButton

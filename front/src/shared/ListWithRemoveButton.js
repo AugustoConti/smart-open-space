@@ -24,13 +24,15 @@ Item.propTypes = {
 const ListWithRemoveButton = ({ items, onChange }) => {
   return (
     <List>
-      {items.map((item, itemId) => (
+      {items.map((item, itemIndex) => (
         <Item
           color={item.color}
-          key={`${item.name}-${itemId}`}
+          key={`${item.name}-${itemIndex}`}
           itemName={item.name}
           onRemove={() =>
-            onChange({ target: { value: items.filter((_, index) => index !== itemId) } })
+            onChange({
+              target: { value: items.filter((_, index) => index !== itemIndex) },
+            })
           }
         />
       ))}
