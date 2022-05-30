@@ -9,7 +9,7 @@ class QueueTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf()) =
     OpenSpace(
-      "os", LocalDate.now(), setOf(),
+      "os", LocalDate.now(), emptySet(),
       setOf(
         TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
         TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
