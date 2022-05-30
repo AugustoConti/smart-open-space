@@ -3,7 +3,12 @@ import React, { useCallback, useState } from 'react';
 import { Box, Heading, Layer, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { createTalkFor, nextTalk, useGetMyTalks, useGetTalks } from '#api/os-client';
+import {
+  createTalkFor,
+  nextTalk,
+  useGetCurrentUserTalks,
+  useGetTalks,
+} from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
@@ -136,7 +141,7 @@ const MyTalks = () => {
     isPending,
     isRejected,
     reload: reloadMyTalks,
-  } = useGetMyTalks();
+  } = useGetCurrentUserTalks();
   const { data: allTalks, reload: reloadTalks } = useGetTalks();
 
   const reload = useCallback(() => {

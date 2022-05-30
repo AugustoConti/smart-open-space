@@ -7,6 +7,10 @@ export default class Talk {
     this.speaker = speaker;
   }
 
+  canBeQueued() {
+    return !this.isAssigned && !this.isToSchedule;
+  }
+
   checkIsAssigned(slots) {
     this.isAssigned = this.isIn(slots.map((slot) => slot.talk));
   }

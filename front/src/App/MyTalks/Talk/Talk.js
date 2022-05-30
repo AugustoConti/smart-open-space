@@ -87,8 +87,7 @@ const Talk = ({
       {talk.isInqueue ? (
         <Badge color={color} text="Esperando turno" />
       ) : (
-        !talk.isAssigned &&
-        !talk.isToSchedule &&
+        talk.canBeQueued() &&
         activeQueue && (
           <ButtonAction
             color={color}

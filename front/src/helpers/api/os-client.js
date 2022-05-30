@@ -15,8 +15,8 @@ const createTalkFor = (userId, osId, talkData) =>
 const createTalk = (osId, talkData) =>
   withUser(({ id }) => createTalkFor(id, osId, talkData));
 
-const getAllOpenSpace = () => withUser(({ id }) => get(`openSpace/user/${id}`));
-const useGetAllOpenSpace = () => useAsync({ promiseFn: getAllOpenSpace });
+const getAllOpenSpaces = () => withUser(({ id }) => get(`openSpace/user/${id}`));
+const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 
 const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
@@ -49,7 +49,7 @@ function talkToModel(talk) {
   return new Talk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker);
 }
 
-const getMyTalks = ({ osId: openSpaceId }) =>
+const getCurrentUserTalks = ({ osId: openSpaceId }) =>
   withUser(({ id }) => {
     const os = getOpenSpace({ osId: openSpaceId });
     const assignedSlots = get(`openSpace/assignedSlots/${openSpaceId}`);
@@ -58,7 +58,8 @@ const getMyTalks = ({ osId: openSpaceId }) =>
     );
     return Promise.all([os, assignedSlots, myTalks]);
   });
-const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });
+const useGetCurrentUserTalks = () =>
+  useAsync({ promiseFn: getCurrentUserTalks, osId: useParams().id });
 
 export {
   activateQueue,
@@ -68,10 +69,10 @@ export {
   enqueueTalk,
   finishQueue,
   nextTalk,
-  useGetAllOpenSpace,
+  useGetAllOpenSpaces,
   useGetOpenSpace,
   useGetTalks,
-  useGetMyTalks,
+  useGetCurrentUserTalks,
   scheduleTalk,
   exchangeTalk,
   startCallForPapers,
