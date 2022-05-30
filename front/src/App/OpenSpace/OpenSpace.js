@@ -10,6 +10,7 @@ import {
   usePushToProjector,
   usePushToMyTalks,
   RedirectToLoginFromOpenSpace,
+  usePushToSchedule,
 } from '#helpers/routes';
 import Detail from '#shared/Detail';
 import {
@@ -26,7 +27,6 @@ import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
 import Title from '#shared/Title';
 
-import Schedule from './Schedule';
 import TalksGrid from './TalksGrid';
 
 const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
@@ -117,7 +117,6 @@ const ButtonFinishMarketplace = (props) => (
 const OpenSpace = () => {
   const user = useUser();
   const [showQuery, setShowQuery] = useState(false);
-  const [showSchedule, setShowSchedule] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const {
     data: {
@@ -128,7 +127,6 @@ const OpenSpace = () => {
       description,
       organizer,
       pendingQueue,
-      slots,
       isActiveCallForPapers,
     } = {},
     isPending,
@@ -136,6 +134,7 @@ const OpenSpace = () => {
     setData,
   } = useGetOS();
   const queue = useQueue();
+  const pushToSchedule = usePushToSchedule(id);
 
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
@@ -164,21 +163,13 @@ const OpenSpace = () => {
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        {showSchedule ? (
-          <MainHeader.Button
-            color="accent-2"
-            icon={<ScheduleIcon />}
-            label="AGENDA"
-            onClick={() => {}}
-          />
-        ) : (
-          <MainHeader.Button
-            color="accent-1"
-            icon={<TalkIcon />}
-            label="CHARLAS"
-            onClick={() => {}}
-          />
-        )}
+        <MainHeader.Button
+          margin={{ top: 'medium' }}
+          color="accent-1"
+          icon={<ScheduleIcon />}
+          label="AGENDA"
+          onClick={pushToSchedule}
+        />
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
@@ -198,7 +189,7 @@ const OpenSpace = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        {showSchedule ? <Schedule slots={slots} /> : <TalksGrid />}
+        <TalksGrid />
       </Box>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (

@@ -12,6 +12,7 @@ const useToOS = (id) => `/os/${useID(id)}`;
 const useToMyTalks = (id) => `/os/${useID(id)}/myTalks`;
 const useToNewTalk = (id) => `/newTalk/${useID(id)}`;
 const useToProjector = (id) => `/os/${useID(id)}/projector`;
+const useToSchedule = (id) => `/os/${useID(id)}/schedule`;
 
 export const RedirectToRoot = () => <Redirect to={toRoot} />;
 export const RedirectToLogin = () => <Redirect to={toLogin} />;
@@ -32,5 +33,6 @@ export const usePushToNewOS = () => pushTo(useHistory(), toNewOS);
 export const usePushToOpenSpace = (id) => pushTo(useHistory(), useToOS(id));
 export const usePushToNewTalk = (id) => pushTo(useHistory(), useToNewTalk(id));
 export const usePushToProjector = (id) => pushTo(useHistory(), useToProjector(id));
+export const usePushToSchedule = (id) => pushTo(useHistory(), useToSchedule(id));
 
 export const useInRegister = () => useLocation().pathname === toRegister;
