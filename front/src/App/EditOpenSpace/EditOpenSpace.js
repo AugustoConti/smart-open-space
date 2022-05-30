@@ -143,13 +143,13 @@ const EditOpenSpace = () => {
       date: new Date(date),
       name,
       description,
-      rooms: rooms.map((r) => ({ name: r })),
+      rooms: rooms.map((room) => ({ name: room })),
       slots: slots.map(({ endTime, startTime, ...rest }) => ({
         ...rest,
         endTime: splitTime(endTime),
         startTime: splitTime(startTime),
       })),
-      tracks: tracks,
+      tracks,
     }).then(pushToRoot);
 
   function hasTracksWithRepeatedName(tracks) {
