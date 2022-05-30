@@ -22,9 +22,6 @@ import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
 import TimeSelector from './TimeSelector';
 import Tracks from './Tracks';
-import tracks from './Tracks';
-
-// const TALK_SLOT = 'TalkSlot';
 const OTHER_SLOT = 'OtherSlot';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
@@ -152,11 +149,7 @@ const EditOpenSpace = () => {
         endTime: splitTime(endTime),
         startTime: splitTime(startTime),
       })),
-      tracks: tracks.map((track) => ({
-        name: track.name,
-        color: track.color,
-        description: track.description,
-      })),
+      tracks: tracks,
     }).then(pushToRoot);
 
   function hasTracksWithRepeatedName(tracks) {
