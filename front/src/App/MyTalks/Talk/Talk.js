@@ -40,6 +40,7 @@ const Talk = ({
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
+  const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule;
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
     scheduleTalk(talk.id, room.id, time, user.id).then(pushToOpenSpace);
@@ -76,7 +77,7 @@ const Talk = ({
           )}
         </Box>
       ) : (
-        (currentUserIsOrganizer || talk.isToSchedule) && (
+        shouldDisplayScheduleTalkButton && (
           <ButtonAction
             color={color}
             label="Agendar"
