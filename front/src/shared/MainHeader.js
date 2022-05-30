@@ -72,7 +72,7 @@ Buttons.propTypes = { children: MyProps.children };
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const theChildren = React.Children.toArray(children);
-  const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle);
+  const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle, MyButton);
   const description = getByType(theChildren, Description);
   const buttons = getByType(theChildren, Buttons);
   return (

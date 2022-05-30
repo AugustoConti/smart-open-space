@@ -27,6 +27,7 @@ import Spinner from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import Schedule from './Schedule';
+import TalksGrid from './TalksGrid';
 
 const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
   <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -116,6 +117,7 @@ const ButtonFinishMarketplace = (props) => (
 const OpenSpace = () => {
   const user = useUser();
   const [showQuery, setShowQuery] = useState(false);
+  const [showSchedule, setShowSchedule] = useState(false);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const {
     data: {
@@ -162,7 +164,21 @@ const OpenSpace = () => {
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
+        {showSchedule ? (
+          <MainHeader.Button
+            color="accent-2"
+            icon={<ScheduleIcon />}
+            label="AGENDA"
+            onClick={() => {}}
+          />
+        ) : (
+          <MainHeader.Button
+            color="accent-1"
+            icon={<TalkIcon />}
+            label="CHARLAS"
+            onClick={() => {}}
+          />
+        )}
         <MainHeader.Description description={description} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
@@ -182,7 +198,7 @@ const OpenSpace = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        <Schedule slots={slots} />
+        {showSchedule ? <Schedule slots={slots} /> : <TalksGrid />}
       </Box>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (
