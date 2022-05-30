@@ -2,7 +2,7 @@ import { Select } from 'grommet';
 import { CircleIcon } from '#shared/icons';
 import React from 'react';
 
-export const ColorPiker = ({ colors, setColor, initialColor }) => {
+export const ColorPicker = ({ colors, setColor, initialColor }) => {
   return (
     <Select
       options={colors.map((color) => (
