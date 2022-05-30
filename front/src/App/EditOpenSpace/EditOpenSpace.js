@@ -183,7 +183,7 @@ const EditOpenSpace = () => {
           name="tracks"
           validate={(tracks) => {
             if (hasTracksWithRepeatedName(tracks))
-              return 'Los tracks no pueden tener nombres repetidos';
+              return 'No puede haber dos tracks con el mismo nombre';
           }}
         />
         <MyForm.Field
