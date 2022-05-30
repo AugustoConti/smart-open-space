@@ -164,6 +164,13 @@ const EditOpenSpace = () => {
       return tracks.filter((track) => track.name === eachTrack.name).length > 1;
     });
   }
+  function hasRooms(rooms) {
+    return rooms.length < 1;
+  }
+
+  function hasSlots(times) {
+    return times.length < 1;
+  }
 
   return (
     <>
@@ -191,7 +198,11 @@ const EditOpenSpace = () => {
           icon={<HomeIcon />}
           label="Salas"
           name="rooms"
-          validate={(rooms) => rooms.length < 1 && 'Ingresa al menos una sala'}
+          validate={(rooms) => {
+            if (hasRooms(rooms)) {
+              return 'Ingresa al menos una sala';
+            }
+          }}
         />
         <Box direction="row">
           <MyForm.Field
@@ -199,9 +210,11 @@ const EditOpenSpace = () => {
             icon={<CalendarIcon />}
             label="Fecha"
             name="date"
-            validate={(date) =>
-              beforeToday(date) && 'Ingresa una fecha mayor o igual a hoy'
-            }
+            validate={(date) => {
+              if (beforeToday(date)) {
+                return 'Ingresa una fecha mayor o igual a hoy';
+              }
+            }}
           />
         </Box>
         <MyForm.Field
@@ -212,7 +225,11 @@ const EditOpenSpace = () => {
           onNewSlot={(type, start, onSubmitSlot) => {
             setShowInputSlot({ onSubmitSlot, start, type });
           }}
-          validate={(times) => times.length < 1 && 'Ingresa al menos un slot'}
+          validate={(times) => {
+            if (hasSlots(times)) {
+              return 'Ingresa al menos un slot';
+            }
+          }}
         />
       </MyForm>
       {showInputSlot !== null && (
