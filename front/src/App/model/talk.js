@@ -8,14 +8,18 @@ export default class Talk {
   }
 
   checkIsAssigned(slots) {
-    this.isAssigned = slots.some((slot) => slot.talk.id === this.id);
+    this.isAssigned = this.isIn(slots.map((slot) => slot.talk));
   }
 
   checkIsInqueue(queue) {
-    this.isInqueue = queue.some((talk) => talk === this);
+    this.isInqueue = this.isIn(queue);
   }
 
   checkIsToSchedule(openSpace) {
-    this.isToSchedule = openSpace.toSchedule.some((talk) => talk.id === this.id);
+    this.isToSchedule = this.isIn(openSpace.toSchedule);
+  }
+
+  isIn(talks) {
+    return talks.some((talk) => talk.id === this.id);
   }
 }
