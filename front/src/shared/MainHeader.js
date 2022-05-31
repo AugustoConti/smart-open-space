@@ -65,7 +65,7 @@ const Tracks = ({ children, tracks, ...props }) => (
     )}
     secondaryKey={(item) => (
       <Box width={{ max: '30vw' }}>
-        <Text color="#808080" size="small">
+        <Text color="#808080" size="small" textAlign="end">
           {item.description}
         </Text>
       </Box>
