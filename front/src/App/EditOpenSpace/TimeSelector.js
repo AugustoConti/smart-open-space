@@ -79,8 +79,12 @@ const TimeSelector = ({ onChange, onNewSlot, value }) => {
         {value.length > 0 && <CloseSlot time={lastEnd} />}
       </Box>
       <Box direction="row" margin={{ vertical: 'medium' }} justify="evenly">
-        <ButtonNew label="Charla" onClick={() => addSlot(TALK_SLOT)} />
-        <ButtonNew label="Otro" color="accent-1" onClick={() => addSlot(OTHER_SLOT)} />
+        <ButtonNew label="Slot de Charla" onClick={() => addSlot(TALK_SLOT)} />
+        <ButtonNew
+          label="Slot Miscelaneo"
+          color="accent-1"
+          onClick={() => addSlot(OTHER_SLOT)}
+        />
       </Box>
     </Box>
   );

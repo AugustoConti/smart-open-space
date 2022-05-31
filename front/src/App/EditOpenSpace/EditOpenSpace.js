@@ -171,7 +171,7 @@ const EditOpenSpace = () => {
         <MyForm.Field
           component={TimeSelector}
           icon={<ClockIcon />}
-          label="Horarios"
+          label="Grilla Horaria"
           name="slots"
           onNewSlot={(type, start, onSubmitSlot) => {
             setShowInputSlot({ onSubmitSlot, start, type });
