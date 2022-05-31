@@ -1,5 +1,6 @@
 import { Text, TextArea } from 'grommet';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function CharacterCounter({ value, maxLength }) {
   return (
@@ -8,12 +9,20 @@ function CharacterCounter({ value, maxLength }) {
     </Text>
   );
 }
+CharacterCounter.prototype = {
+  value: PropTypes.number.isRequired,
+  maxLength: PropTypes.number.isRequired,
+};
 
-export const TextAreaWithCharacterCounter = ({ ...props }) => {
+export const TextAreaWithCharacterCounter = ({ value, maxLength, ...props }) => {
   return (
     <>
       <TextArea {...props} />
-      <CharacterCounter value={props.value} maxLength={props.maxLength} />
+      <CharacterCounter value={value} maxLength={maxLength} />
     </>
   );
+};
+TextAreaWithCharacterCounter.prototype = {
+  value: PropTypes.number.isRequired,
+  maxLength: PropTypes.number.isRequired,
 };

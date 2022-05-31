@@ -152,11 +152,14 @@ const EditOpenSpace = () => {
       tracks,
     }).then(pushToRoot);
 
-  function hasTracksWithRepeatedName(tracks) {
-    return tracks.some((eachTrack) => {
-      return tracks.filter((track) => track.name === eachTrack.name).length > 1;
-    });
+  function isRepeated(tracks, track) {
+    return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
   }
+
+  function hasTracksWithRepeatedName(tracks) {
+    return tracks.some((eachTrack) => isRepeated(tracks, eachTrack));
+  }
+
   function hasRooms(rooms) {
     return rooms.length < 1;
   }

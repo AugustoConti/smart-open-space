@@ -5,7 +5,7 @@ import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 import { TextAreaWithCharacterCounter } from '#shared/TextAreaWithCharacterCounter';
 import RowBetween from '#shared/RowBetween';
 import { PlusButton } from '#shared/PlusButton';
-import { ColorPiker } from '#shared/ColorPiker';
+import { ColorPicker } from '#shared/ColorPicker';
 
 const Tracks = ({ value, onChange }) => {
   const colors = [
@@ -40,7 +40,7 @@ const Tracks = ({ value, onChange }) => {
               placeholder="Nombre de track"
               value={track.name}
             />
-            <ColorPiker
+            <ColorPicker
               colors={colors}
               initialColor={track.color}
               setColor={(color) => setTrack({ ...track, color: color })}
