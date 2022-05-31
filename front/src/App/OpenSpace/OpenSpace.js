@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Layer } from 'grommet';
 
-import { activateQueue, finishQueue, startCallForPapers, useGetOS } from '#api/os-client';
+import {
+  activateQueue,
+  finishQueue,
+  startCallForPapers,
+  useGetOpenSpace,
+} from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import {
@@ -132,7 +137,7 @@ const OpenSpace = () => {
     isPending,
     isRejected,
     setData,
-  } = useGetOS();
+  } = useGetOpenSpace();
   const queue = useQueue();
 
   if (isPending) return <Spinner />;

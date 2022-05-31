@@ -12,6 +12,7 @@ import { TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
+import { usePushToOpenSpace } from '#helpers/routes';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -27,46 +28,43 @@ const ButtonAction = (props) => (
 );
 
 const Talk = ({
+  talk,
   activeQueue,
-  assigned,
   assignableSlots,
-  description,
-  enqueued,
   freeSlots,
   hasAnother,
-  id,
-  name,
   onEnqueue,
-  onSchedule,
-  speaker,
-  toSchedule,
   currentUserIsOrganizer,
 }) => {
+  const pushToOpenSpace = usePushToOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
+  const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(id, room.id, time, user.id).then(onSchedule);
+    scheduleTalk(talk.id, room.id, time, user.id).then(pushToOpenSpace);
 
   const onSubmitExchange = ({ value: { time, room } }) =>
-    exchangeTalk(id, room.id, time).then(onSchedule);
+    exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);
 
-  const color = assigned ? 'status-ok' : `accent-${toSchedule ? 3 : enqueued ? 2 : 4}`;
+  const color = talk.isAssigned()
+    ? 'status-ok'
+    : `accent-${talk.isToSchedule() ? 3 : talk.isInqueue() ? 2 : 4}`;
 
   return (
     <Card borderColor={color}>
       <Box>
-        <Title>{name}</Title>
-        <Detail size="small" text={description} truncate />
+        <Title>{talk.name}</Title>
+        <Detail size="small" text={talk.description} truncate />
         {currentUserIsOrganizer && (
           <>
-            <Detail icon={UserIcon} text={speaker.name} />
-            <Detail size="small" text={speaker.email} />
+            <Detail icon={UserIcon} text={talk.speaker.name} />
+            <Detail size="small" text={talk.speaker.email} />
           </>
         )}
       </Box>
-      {assigned ? (
+      {talk.isAssigned() ? (
         <Box direction="row" justify="evenly">
           <Badge color={color} text="Agendada" />
           {currentUserIsOrganizer && (
@@ -79,7 +77,7 @@ const Talk = ({
           )}
         </Box>
       ) : (
-        (currentUserIsOrganizer || toSchedule) && (
+        shouldDisplayScheduleTalkButton && (
           <ButtonAction
             color={color}
             label="Agendar"
@@ -87,24 +85,23 @@ const Talk = ({
           />
         )
       )}
-      {enqueued ? (
+      {talk.isInqueue() ? (
         <Badge color={color} text="Esperando turno" />
       ) : (
-        !assigned &&
-        !toSchedule &&
+        talk.canBeQueued() &&
         activeQueue && (
           <ButtonAction
             color={color}
             disabled={!currentUserIsOrganizer && hasAnother}
             label="Encolar"
-            onClick={() => enqueueTalk(id).then(onEnqueue)}
+            onClick={() => enqueueTalk(talk.id).then(onEnqueue)}
           />
         )
       )}
       {openSchedule && freeSlots && (
         <SelectSlot
           freeSlots={freeSlots}
-          name={name}
+          name={talk.name}
           onExit={() => setOpenSchedule(false)}
           onSubmit={onSubmitSchedule}
           title="Agendate!"
@@ -113,7 +110,7 @@ const Talk = ({
       {openExchange && (
         <SelectSlot
           freeSlots={assignableSlots}
-          name={name}
+          name={talk.name}
           onExit={() => setOpenExchange(false)}
           onSubmit={onSubmitExchange}
           title="Mover a:"
@@ -125,21 +122,9 @@ const Talk = ({
 Talk.propTypes = {
   activeQueue: PropTypes.bool.isRequired,
   assignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
-  assigned: PropTypes.bool.isRequired,
-  description: PropTypes.string.isRequired,
-  enqueued: PropTypes.bool.isRequired,
   freeSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
-  id: PropTypes.number.isRequired,
   hasAnother: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
   onEnqueue: PropTypes.func.isRequired,
-  onSchedule: PropTypes.func.isRequired,
-  speaker: PropTypes.shape({
-    email: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-  }).isRequired,
-  toSchedule: PropTypes.bool.isRequired,
 };
 
 export default Talk;

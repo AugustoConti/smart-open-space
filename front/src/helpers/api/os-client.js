@@ -14,13 +14,13 @@ const createTalkFor = (userId, osId, talkData) =>
 const createTalk = (osId, talkData) =>
   withUser(({ id }) => createTalkFor(id, osId, talkData));
 
-const getAllOS = () => withUser(({ id }) => get(`openSpace/user/${id}`));
-const useGetAllOS = () => useAsync({ promiseFn: getAllOS });
+const getAllOpenSpaces = () => withUser(({ id }) => get(`openSpace/user/${id}`));
+const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 
-const getOS = ({ osId }) => get(`openSpace/${osId}`);
-const useGetOS = () => useAsync({ promiseFn: getOS, osId: useParams().id });
+const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
+const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
-const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`);
+const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`).then((talks) => talks);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, hour, userID) =>
@@ -43,14 +43,17 @@ const enqueueTalk = (talkId) =>
 
 const nextTalk = (osId) => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`));
 
-const getMyTalks = ({ osId }) =>
+const getCurrentUserTalks = ({ osId: openSpaceId }) =>
   withUser(({ id }) => {
-    const os = getOS({ osId });
-    const assignedSlots = get(`openSpace/assignedSlots/${osId}`);
-    const myTalks = get(`openSpace/talks/${id}/${osId}`);
-    return Promise.all([os, assignedSlots, myTalks]);
+    const os = getOpenSpace({ osId: openSpaceId });
+    const assignedSlots = get(`openSpace/assignedSlots/${openSpaceId}`);
+    const currentUserTalks = get(`openSpace/talks/${id}/${openSpaceId}`).then(
+      (talks) => talks
+    );
+    return Promise.all([os, assignedSlots, currentUserTalks]);
   });
-const useGetMyTalks = () => useAsync({ promiseFn: getMyTalks, osId: useParams().id });
+const useGetCurrentUserTalks = () =>
+  useAsync({ promiseFn: getCurrentUserTalks, osId: useParams().id });
 
 export {
   activateQueue,
@@ -60,10 +63,10 @@ export {
   enqueueTalk,
   finishQueue,
   nextTalk,
-  useGetAllOS,
-  useGetOS,
+  useGetAllOpenSpaces,
+  useGetOpenSpace,
   useGetTalks,
-  useGetMyTalks,
+  useGetCurrentUserTalks,
   scheduleTalk,
   exchangeTalk,
   startCallForPapers,
