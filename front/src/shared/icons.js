@@ -7,6 +7,7 @@ import {
   Close,
   DocumentText,
   FormClose,
+  FormUp,
   FormDown,
   FormNext,
   FormPrevious,
@@ -25,6 +26,8 @@ import {
   Workshop,
   Link,
   Unlock,
+  StatusGoodSmall,
+  Projects,
 } from 'grommet-icons';
 
 export {
@@ -34,6 +37,7 @@ export {
   Clock as ClockIcon,
   Close as CloseIcon,
   FormDown as DownIcon,
+  FormUp as UpIcon,
   MailOption as EmailIcon,
   Run as ExitIcon,
   FormClose as FormCloseIcon,
@@ -55,4 +59,6 @@ export {
   Link as LinkIcon,
   Lock as LockIcon,
   Unlock as UnlockIcon,
+  StatusGoodSmall as CircleIcon,
+  Projects as TracksIcon,
 };
