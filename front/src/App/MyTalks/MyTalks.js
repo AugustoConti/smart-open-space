@@ -165,6 +165,7 @@ const MyTalks = () => {
 
   const queue = useQueue(reload);
 
+  if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
@@ -194,16 +195,12 @@ const MyTalks = () => {
   return (
     <>
       <MainHeader>
-        <MainHeader.TitleLink onClick={pushToOS}>
-          {!openSpace ? <TinySpinner /> : openSpace.name}
-        </MainHeader.TitleLink>
+        <MainHeader.TitleLink onClick={pushToOS}>{openSpace.name}</MainHeader.TitleLink>
         <MainHeader.SubTitle
           icon={TalkIcon}
           label={currentUserIsOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
         />
-        <MainHeader.Description
-          description={!openSpace ? <TinySpinner /> : openSpace.description}
-        />
+        <MainHeader.Description description={openSpace.description} />
         <MainHeader.Buttons>
           {shouldDisplayAddTalkButton && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />

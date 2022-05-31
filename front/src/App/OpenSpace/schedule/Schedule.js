@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useSlots } from '#api/sockets-client';
-import { useGetOS } from '#api/os-client';
+import { useGetOpenSpace } from '#api/os-client';
 import MainHeader from '#shared/MainHeader';
-import { PreviousIcon, PreviousLinkIcon, TalkIcon } from '#shared/icons';
+import { PreviousLinkIcon } from '#shared/icons';
 import {
   RedirectToLoginFromOpenSpace,
   RedirectToRoot,
@@ -17,7 +17,7 @@ import { Slots } from './Slots';
 const Schedule = () => {
   const user = useUser();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
-  const { data: { id, name, slots } = {}, isPending, isRejected } = useGetOS();
+  const { data: { id, name, slots } = {}, isPending, isRejected } = useGetOpenSpace();
   const slotsSchedule = useSlots();
   const pushToOpenSpace = usePushToOpenSpace(id);
 
