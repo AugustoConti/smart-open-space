@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 
 import { get, post, put } from './api-client';
 import { getUser } from '../useAuth';
-import Talk from '../../App/model/talk';
 
 const withUser = (fn) => fn(getUser());
 
@@ -21,8 +20,7 @@ const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
-const getTalks = ({ osId }) =>
-  get(`openSpace/talks/${osId}`).then((talks) => talks.map(talkToModel));
+const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`).then((talks) => talks);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, hour, userID) =>
@@ -45,18 +43,14 @@ const enqueueTalk = (talkId) =>
 
 const nextTalk = (osId) => withUser(({ id }) => put(`talk/nextTalk/${id}/${osId}`));
 
-function talkToModel(talk) {
-  return new Talk(talk.id, talk.name, talk.description, talk.meetingLink, talk.speaker);
-}
-
 const getCurrentUserTalks = ({ osId: openSpaceId }) =>
   withUser(({ id }) => {
     const os = getOpenSpace({ osId: openSpaceId });
     const assignedSlots = get(`openSpace/assignedSlots/${openSpaceId}`);
-    const myTalks = get(`openSpace/talks/${id}/${openSpaceId}`).then((talks) =>
-      talks.map(talkToModel)
+    const currentUserTalks = get(`openSpace/talks/${id}/${openSpaceId}`).then(
+      (talks) => talks
     );
-    return Promise.all([os, assignedSlots, myTalks]);
+    return Promise.all([os, assignedSlots, currentUserTalks]);
   });
 const useGetCurrentUserTalks = () =>
   useAsync({ promiseFn: getCurrentUserTalks, osId: useParams().id });

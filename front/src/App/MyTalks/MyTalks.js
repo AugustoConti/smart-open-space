@@ -26,6 +26,7 @@ import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
 import TalkView from './Talk';
+import Talk from '../model/talk';
 
 const slideDownAnimation = {
   type: 'slideDown',
@@ -33,6 +34,19 @@ const slideDownAnimation = {
   duration: 1000,
   size: 'large',
 };
+
+function talkToModel(talk, queue, slots, openSpace) {
+  return new Talk(
+    talk.id,
+    talk.name,
+    talk.description,
+    talk.meetingLink,
+    talk.speaker,
+    queue,
+    slots,
+    openSpace
+  );
+}
 
 const EnqueuedTalkCard = ({ bgColor, children }) => (
   <Row justify="center" margin={{ bottom: 'large' }}>
@@ -165,7 +179,9 @@ const MyTalks = () => {
     setSpeaker(null);
   };
 
-  const talks = currentUserIsOrganizer ? allTalks : currentUserTalks;
+  const talks = (currentUserIsOrganizer ? allTalks : currentUserTalks)?.map((talk) =>
+    talkToModel(talk, queue || [], assignedSlots, openSpace)
+  );
   const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
   const hasTalks = allTalks && currentUserTalks && talks.length > 0;
 
@@ -175,12 +191,6 @@ const MyTalks = () => {
 
   const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
 
-  if (queue)
-    talks.forEach((talk) => {
-      talk.checkIsInqueue(queue);
-      talk.checkIsAssigned(assignedSlots);
-      talk.checkIsToSchedule(openSpace);
-    });
   return (
     <>
       <MainHeader>

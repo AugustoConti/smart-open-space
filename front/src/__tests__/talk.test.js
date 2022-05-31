@@ -1,19 +1,31 @@
 import Talk from '../App/model/talk';
 
-function anyTalk() {
-  return new Talk(0, 'a talk', 'desc', undefined, {
-    email: 'email@email.com',
-    id: 1,
-    name: 'speaker',
-  });
+function anyTalk(queue = [], slots = [], openSpace = anyOpenSpaceWithNoTalksScheduled()) {
+  return new Talk(
+    0,
+    'a talk',
+    'desc',
+    undefined,
+    {
+      email: 'email@email.com',
+      id: 1,
+      name: 'speaker',
+    },
+    queue,
+    slots,
+    openSpace
+  );
 }
 
-function slotsWith(talk) {
+function slotsWithTalk() {
   return [
     {
       slot: { startTime: new Date(), endTime: new Date() },
       room: { name: 'a room', description: '', id: 0 },
-      talk: talk,
+      talk: {
+        id: 0,
+        name: 'a talk',
+      },
       id: 0,
     },
   ];
@@ -37,52 +49,42 @@ function anyOpenSpaceWithTalkScheduled(talk) {
 
 describe('talk', () => {
   it('a talk can be not assigned to a slot', () => {
-    const talk = anyTalk();
     const slots = [];
-    talk.checkIsAssigned(slots);
-    expect(talk.isAssigned).toBe(false);
+    const talk = anyTalk([], slots);
+    expect(talk.isAssigned()).toBe(false);
   });
 
   it('a talk can be assigned to a slot', () => {
-    const talk = anyTalk();
-    const slots = slotsWith(talk);
-    talk.checkIsAssigned(slots);
-    expect(talk.isAssigned).toBe(true);
+    const slots = slotsWithTalk();
+    const talk = anyTalk([], slots);
+    expect(talk.isAssigned()).toBe(true);
   });
 
   it('can be not in the queue', () => {
-    const talk = anyTalk();
     const queue = [];
+    const talk = anyTalk(queue);
 
-    talk.checkIsInqueue(queue);
-
-    expect(talk.isInqueue).toBe(false);
+    expect(talk.isInqueue()).toBe(false);
   });
 
   it('can be in queue', () => {
-    const talk = anyTalk();
-    const queue = queueWithTalk(talk);
+    const queue = queueWithTalk(anyTalk());
+    const talk = anyTalk(queue);
 
-    talk.checkIsInqueue(queue);
-
-    expect(talk.isInqueue).toBe(true);
+    expect(talk.isInqueue()).toBe(true);
   });
 
   it('can be not to schedule', () => {
-    const talk = anyTalk();
     const openSpace = anyOpenSpaceWithNoTalksScheduled();
+    const talk = anyTalk([], [], openSpace);
 
-    talk.checkIsToSchedule(openSpace);
-
-    expect(talk.isToSchedule).toBe(false);
+    expect(talk.isToSchedule()).toBe(false);
   });
 
   it('can be to schedule', () => {
-    const talk = anyTalk();
-    const openSpace = anyOpenSpaceWithTalkScheduled(talk);
+    const openSpace = anyOpenSpaceWithTalkScheduled(anyTalk());
+    const talk = anyTalk([], [], openSpace);
 
-    talk.checkIsToSchedule(openSpace);
-
-    expect(talk.isToSchedule).toBe(true);
+    expect(talk.isToSchedule()).toBe(true);
   });
 });

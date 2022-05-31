@@ -40,7 +40,7 @@ const Talk = ({
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
-  const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule;
+  const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
     scheduleTalk(talk.id, room.id, time, user.id).then(pushToOpenSpace);
@@ -48,9 +48,9 @@ const Talk = ({
   const onSubmitExchange = ({ value: { time, room } }) =>
     exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);
 
-  const color = talk.isAssigned
+  const color = talk.isAssigned()
     ? 'status-ok'
-    : `accent-${talk.isToSchedule ? 3 : talk.isInqueue ? 2 : 4}`;
+    : `accent-${talk.isToSchedule() ? 3 : talk.isInqueue() ? 2 : 4}`;
 
   return (
     <Card borderColor={color}>
@@ -64,7 +64,7 @@ const Talk = ({
           </>
         )}
       </Box>
-      {talk.isAssigned ? (
+      {talk.isAssigned() ? (
         <Box direction="row" justify="evenly">
           <Badge color={color} text="Agendada" />
           {currentUserIsOrganizer && (
@@ -85,7 +85,7 @@ const Talk = ({
           />
         )
       )}
-      {talk.isInqueue ? (
+      {talk.isInqueue() ? (
         <Badge color={color} text="Esperando turno" />
       ) : (
         talk.canBeQueued() &&

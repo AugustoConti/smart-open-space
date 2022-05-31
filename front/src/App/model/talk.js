@@ -1,26 +1,29 @@
 export default class Talk {
-  constructor(id, name, description, meetingLink, speaker) {
+  constructor(id, name, description, meetingLink, speaker, queue, slots, openSpace) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.meetingLink = meetingLink;
     this.speaker = speaker;
+    this.queue = queue;
+    this.slots = slots;
+    this.openSpace = openSpace;
   }
 
   canBeQueued() {
-    return !this.isAssigned && !this.isToSchedule;
+    return !this.isAssigned() && !this.isToSchedule();
   }
 
-  checkIsAssigned(slots) {
-    this.isAssigned = this.isIn(slots.map((slot) => slot.talk));
+  isAssigned() {
+    return this.isIn(this.slots.map((slot) => slot.talk));
   }
 
-  checkIsInqueue(queue) {
-    this.isInqueue = this.isIn(queue);
+  isInqueue() {
+    return this.isIn(this.queue);
   }
 
-  checkIsToSchedule(openSpace) {
-    this.isToSchedule = this.isIn(openSpace.toSchedule);
+  isToSchedule() {
+    return this.isIn(this.openSpace.toSchedule);
   }
 
   isIn(talks) {
