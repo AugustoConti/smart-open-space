@@ -27,14 +27,14 @@
 - [:cop: Licencia](#cop-licencia)
 
 ## :-1: Problema
-- Los asistentes de un Open Space no logran captar los datos de una charla, en la agenda se cambian de sala u horario, se superponen charlas del mismo tópico, y algunas salas suelen llenarse muy rápido.
+En una primera versión atacamos el siguiente problema: Los asistentes de un Open Space no logran captar los datos de una charla, en la agenda se cambian de sala u horario, se superponen charlas del mismo tópico, y algunas salas suelen llenarse muy rápido.
+En esta segunda, buscamos construir la mínima herramienta que permita gestionar un Open Space virtual con tracks/votaciones y que se desarrolle múltiples días.
 
 ## :trophy: Solución
-- **Smart Open Space** es una web app que permite ver los datos de una charla por un proyector mientras su orador está
-exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupando las charlas muy requeridas en espacios más grandes.
+- **Smart Open Space** es una web app que permite gestionar la organización de un open space. Soporta la creación de un open space con multiples tracks que se desarrolla en múltiples días. Los asistentes pueden votar las charlas más populares. Soporta la gestión del marketplace (oradores se encolan para pitchear su charla. El organizador puede proyectar la charla que se está pitcheando). Las charlas pueden ser agendadas por el organizador (en caso que no haya marketplace) o los oradores.
 
 ## :tada: Diferencial
-- A diferencia del método actual, Pizarrón + Google SpreadSheet, el nuestro no requiere carga manual, se encuentra siempre actualizado, y sugiere optimizaciones inteligentes.
+- Herramienta gratis y open-source que permite gestionar tanto el envio de charlas como la creación de la agenda.
 
 ## :wrench: Instalación
 ### Antes de empezar, vas a necesitar:
@@ -46,7 +46,7 @@ exponiendo, me ofrece una agenda actualizada y, optimizada por tópicos y agrupa
 
 ### Descargar el código fuente
 ```sh
-git clone git@github.com:AugustoConti/smart-open-space.git
+git clone git@github.com:10PinesLabs/smart-open-space.git
 cd smart-open-space
 ```
 
