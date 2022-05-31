@@ -25,6 +25,7 @@ import {
   Workshop,
   Link,
   Unlock,
+  FormPreviousLink,
 } from 'grommet-icons';
 
 export {
@@ -55,4 +56,5 @@ export {
   Link as LinkIcon,
   Lock as LockIcon,
   Unlock as UnlockIcon,
+  FormPreviousLink as PreviousLinkIcon,
 };

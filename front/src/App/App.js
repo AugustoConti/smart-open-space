@@ -15,7 +15,7 @@ import OpenSpace from './OpenSpace';
 import OSProjector from './OSProjector';
 import Header from './Header';
 import ErrorBoundary from './ErrorBoundary';
-import Schedule from './OpenSpace/Schedule';
+import Schedule from './OpenSpace/schedule/Schedule';
 
 const Routes = () => (
   <Switch>

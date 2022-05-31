@@ -72,7 +72,8 @@ Buttons.propTypes = { children: MyProps.children };
 const MainHeader = ({ children, ...props }) => {
   const isSmall = useSize() === 'small';
   const theChildren = React.Children.toArray(children);
-  const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle, MyButton);
+  const titles = getAllByTypes(theChildren, MyTitle, MyTitleLink, MySubTitle);
+  const button = getByType(theChildren, MyButton);
   const description = getByType(theChildren, Description);
   const buttons = getByType(theChildren, Buttons);
   return (
@@ -87,6 +88,7 @@ const MainHeader = ({ children, ...props }) => {
           {...props}
         >
           {titles}
+          <Box width="250px">{button}</Box>
         </Box>
         {buttons}
       </RowBetween>

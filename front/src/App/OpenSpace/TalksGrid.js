@@ -1,29 +1,20 @@
 import React from 'react';
 
 import { useGetTalks } from '#api/os-client';
-import onlineOrganizerImg from '#assets/online_organizer.svg';
-import { usePushToNewTalk } from '#helpers/routes';
+import { RedirectToRoot, usePushToNewTalk } from '#helpers/routes';
 import MyGrid from '#shared/MyGrid';
 import Spinner from '#shared/Spinner';
-import EmptyData from '#shared/EmptyData';
-
 import Talk from './Talk';
+import EmptyTalk from '../MyTalks/EmptyTalk';
 
-const EmptyOpenSpace = () => (
-  <EmptyData
-    buttonText="Cargar charla"
-    img={onlineOrganizerImg}
-    onClick={usePushToNewTalk()}
-    text="Cargá la primer charla de este Open Space!"
-  />
-);
-
-const TalksGrid = () => {
+const TalksGrid = ({ isActiveCallForPapers }) => {
   const { data: talks, isPending, isRejected } = useGetTalks();
+  const pushToNewTalk = usePushToNewTalk();
   if (isPending) return <Spinner />;
-  if (isRejected) return <></>;
-  return talks.length === 0 ? (
-    <EmptyOpenSpace />
+  if (isRejected) return <RedirectToRoot />;
+
+  return talks.length === 0 && isActiveCallForPapers ? (
+    <EmptyTalk onClick={pushToNewTalk} />
   ) : (
     <MyGrid>
       {talks.map((talk) => (
