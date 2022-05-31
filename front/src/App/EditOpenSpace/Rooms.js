@@ -2,29 +2,13 @@ import React, { useState } from 'react';
 
 import { Box, Button, TextInput } from 'grommet';
 import PropTypes from 'prop-types';
-
-import { AddIcon, TrashIcon } from '#shared/icons';
 import RowBetween from '#shared/RowBetween';
-
-const List = (props) => (
-  <Box as="ul" margin={{ top: 'small', bottom: 'none' }} {...props} />
-);
-
-const ListItem = (props) => <RowBetween as="li" border="top" pad="xxsmall" {...props} />;
-
-const RoomItem = ({ room, onRemove }) => (
-  <ListItem>
-    {room}
-    <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />
-  </ListItem>
-);
-RoomItem.propTypes = {
-  onRemove: PropTypes.func.isRequired,
-  room: PropTypes.string.isRequired,
-};
+import ListWithRemoveButton from '#shared/ListWithRemoveButton';
+import { PlusButton } from '#shared/PlusButton';
 
 const Rooms = ({ value, onChange }) => {
   const [textValue, setTextValue] = useState('');
+  const hasRoomName = textValue.trim().length < 1;
 
   return (
     <Box pad="small">
@@ -34,28 +18,19 @@ const Rooms = ({ value, onChange }) => {
           placeholder="Nombre de sala"
           value={textValue}
         />
-        <Button
-          disabled={textValue.trim().length < 1}
-          icon={<AddIcon />}
-          onClick={() => {
-            if (textValue.trim().length < 1) return;
-            onChange({ target: { value: [...value, textValue.trim()] } });
-            setTextValue('');
-          }}
+        <PlusButton
+          conditionToAdd={hasRoomName}
+          item={textValue.trim()}
+          setItem={setTextValue}
+          value={value}
+          initialItem={''}
+          onChange={onChange}
         />
       </RowBetween>
-      <List>
-        {value.map((room, index) => (
-          <RoomItem
-            // eslint-disable-next-line react/no-array-index-key
-            key={`${room}-${index}`}
-            room={room}
-            onRemove={() =>
-              onChange({ target: { value: value.filter((_, i) => i !== index) } })
-            }
-          />
-        ))}
-      </List>
+      <ListWithRemoveButton
+        items={value.map((room) => ({ name: room }))}
+        onChange={onChange}
+      />
     </Box>
   );
 };

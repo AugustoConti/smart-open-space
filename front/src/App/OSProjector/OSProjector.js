@@ -3,7 +3,7 @@ import { Box, Button, Text, Heading } from 'grommet';
 import PropTypes from 'prop-types';
 
 import ideasFlow from '#assets/ideas_flow.svg';
-import { nextTalk, useGetOS } from '#api/os-client';
+import { nextTalk, useGetOpenSpace } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
@@ -143,7 +143,7 @@ TalkDetails.propTypes = {
 const OSProjector = () => {
   const user = useUser();
   const [time, setTime] = useState();
-  const { data: { id, organizer } = {}, isPending, isRejected } = useGetOS();
+  const { data: { id, organizer } = {}, isPending, isRejected } = useGetOpenSpace();
   const queue = useQueue();
   // const pushToOS = usePushToOS();
 

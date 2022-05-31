@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useGetOS, createTalk } from '#api/os-client';
+import { useGetOpenSpace, createTalk } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
 import { TalkIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
@@ -13,7 +13,7 @@ const EditTalk = () => {
   const history = useHistory();
   const user = useUser();
   const pushToMyTalks = usePushToMyTalks();
-  const { data: os, isPending, isRejected } = useGetOS();
+  const { data: os, isPending, isRejected } = useGetOpenSpace();
 
   if (!user || isRejected) return <RedirectToRoot />;
   if (os && os.finishedQueue) return <RedirectToRoot />;

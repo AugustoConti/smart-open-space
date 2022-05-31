@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useGetAllOS } from '#api/os-client';
+import { useGetAllOpenSpaces } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
 import { OpenSpaceIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
@@ -13,7 +13,7 @@ import OpenSpace from './OpenSpace';
 
 const Home = () => {
   const pushToNewOS = usePushToNewOS();
-  const { data: openSpaces, isPending } = useGetAllOS();
+  const { data: openSpaces, isPending } = useGetAllOpenSpaces();
 
   return (
     <>

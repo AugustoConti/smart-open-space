@@ -3,12 +3,17 @@ import React, { useCallback, useState } from 'react';
 import { Box, Heading, Layer, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { createTalkFor, nextTalk, useGetTalks, useGetMyTalks } from '#api/os-client';
+import {
+  createTalkFor,
+  nextTalk,
+  useGetCurrentUserTalks,
+  useGetTalks,
+} from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToOpenSpace, usePushToNewTalk } from '#helpers/routes';
+import { RedirectToRoot, usePushToNewTalk, usePushToOpenSpace } from '#helpers/routes';
 import ButtonLoading from '#shared/ButtonLoading';
 import Detail from '#shared/Detail';
 import { TalkIcon, UserIcon } from '#shared/icons';
@@ -20,7 +25,8 @@ import Spinner, { TinySpinner } from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
-import Talk from './Talk';
+import TalkView from './Talk';
+import Talk from '../model/talk';
 
 const slideDownAnimation = {
   type: 'slideDown',
@@ -28,6 +34,19 @@ const slideDownAnimation = {
   duration: 1000,
   size: 'large',
 };
+
+function talkToModel(talk, queue, slots, openSpace) {
+  return new Talk(
+    talk.id,
+    talk.name,
+    talk.description,
+    talk.meetingLink,
+    talk.speaker,
+    queue,
+    slots,
+    openSpace
+  );
+}
 
 const EnqueuedTalkCard = ({ bgColor, children }) => (
   <Row justify="center" margin={{ bottom: 'large' }}>
@@ -132,12 +151,12 @@ const MyTalks = () => {
   const [showQuerySpeaker, setShowQuerySpeaker] = useState(false);
   const [speaker, setSpeaker] = useState();
   const {
-    data: [openSpace, assignedSlots, myTalks = []] = [],
+    data: [openSpace, assignedSlots, currentUserTalks = []] = [],
     isPending,
     isRejected,
     reload: reloadMyTalks,
-  } = useGetMyTalks();
-  const { data: talks, reload: reloadTalks } = useGetTalks();
+  } = useGetCurrentUserTalks();
+  const { data: allTalks, reload: reloadTalks } = useGetTalks();
 
   const reload = useCallback(() => {
     reloadMyTalks();
@@ -150,24 +169,21 @@ const MyTalks = () => {
 
   const currentUserIsOrganizer = openSpace && user && openSpace.organizer.id === user.id;
   const isActiveCallForPapers = openSpace && openSpace.isActiveCallForPapers;
-  const isAssigned = (idTalk) => assignedSlots.some((slot) => slot.talk.id === idTalk);
-  const isEnqueue = (idTalk) => queue.some((talk) => talk.id === idTalk);
-  const isMyTalk = (talk) => myTalks.some((eachTalk) => eachTalk.id === talk.id);
+  const isMyTalk = (talk) => currentUserTalks.some((eachTalk) => eachTalk.id === talk.id);
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
-  const isToSchedule = (idTalk) =>
-    openSpace.toSchedule.some((talk) => talk.id === idTalk);
 
   const onCloseQuerySpeaker = () => {
     setShowQuerySpeaker(false);
     setSpeaker(null);
   };
 
+  const talks = (currentUserIsOrganizer ? allTalks : currentUserTalks)?.map((talk) =>
+    talkToModel(talk, queue || [], assignedSlots, openSpace)
+  );
   const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
-
-  const hasTalks =
-    talks && myTalks && (currentUserIsOrganizer ? talks : myTalks).length > 0;
+  const hasTalks = allTalks && currentUserTalks && talks.length > 0;
 
   const shouldDisplayTalkForSpeakerButton = currentUserIsOrganizer && canAddTalk;
 
@@ -217,20 +233,16 @@ const MyTalks = () => {
             />
           )}
           <MyGrid>
-            {(currentUserIsOrganizer ? talks : myTalks).map((talk) => (
-              <Talk
+            {talks.map((talk) => (
+              <TalkView
+                talk={talk}
                 activeQueue={openSpace.activeQueue}
-                assigned={isAssigned(talk.id)}
-                enqueued={isEnqueue(talk.id)}
                 freeSlots={openSpace.freeSlots}
                 hasAnother={hasAnother(talk.id)}
-                key={talk.id}
                 onEnqueue={reload}
-                onSchedule={pushToOS}
-                toSchedule={isToSchedule(talk.id)}
                 assignableSlots={openSpace.assignableSlots}
                 currentUserIsOrganizer={currentUserIsOrganizer}
-                {...talk}
+                key={talk.id}
               />
             ))}
           </MyGrid>

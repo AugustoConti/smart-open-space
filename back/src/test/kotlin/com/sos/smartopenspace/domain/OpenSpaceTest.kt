@@ -9,14 +9,14 @@ import java.time.LocalTime
 class OpenSpaceTest {
 
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
-            OpenSpace(
-                    "os", LocalDate.now(), setOf(),
-                    setOf(
-                            TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
-                            TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
-                            TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
-                    ), talks
-            )
+        OpenSpace(
+            "os", LocalDate.now(), emptySet(),
+            setOf(
+                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
+                TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
+                TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
+            ), talks
+        )
 
     private fun anyOpenSpaceWith(organizer: User): OpenSpace {
         val openSpace = anyOpenSpace()
@@ -32,8 +32,8 @@ class OpenSpaceTest {
         val nameOpenSpace = "os"
         val date = LocalDate.now()
         val openSpace = OpenSpace(
-                nameOpenSpace, date, setOf(),
-                setOf()
+            nameOpenSpace, date, emptySet(),
+            emptySet()
         )
 
         assertEquals(openSpace.name, nameOpenSpace)
@@ -46,8 +46,8 @@ class OpenSpaceTest {
         val date = LocalDate.now()
         val description = "A description"
         val openSpace = OpenSpace(
-            nameOpenSpace, date, setOf(),
-            setOf(), mutableSetOf(), description
+            nameOpenSpace, date, emptySet(),
+            emptySet(), mutableSetOf(), description
         )
 
         assertEquals(openSpace.description, description)
@@ -70,6 +70,7 @@ class OpenSpaceTest {
 
         assertTrue(openSpace.isActiveCallForPapers)
     }
+
     @Test
     fun `a user thats not the organizer cant start call for papers`() {
         val anUser = anyUser()
@@ -101,6 +102,7 @@ class OpenSpaceTest {
 
         openSpace.containsTalk(talk)
     }
+
     @Test
     fun `an open space finishes a call for papers`() {
         val organizer = anyUser()
@@ -110,5 +112,19 @@ class OpenSpaceTest {
         openSpace.toggleCallForPapers(organizer)
 
         assertFalse(openSpace.isActiveCallForPapers)
+    }
+
+    @Test
+    fun `an open space is created with a track`() {
+        val track = Track(name = "track", color = "#FFFFFF")
+        val openSpace = OpenSpace(
+            name = "os", date = LocalDate.now(), slots = emptySet(),
+            rooms = emptySet(), talks = mutableSetOf(), tracks = setOf(track)
+        )
+
+        assertEquals(1, openSpace.tracks.size)
+        assertEquals(track.color, openSpace.tracks.first().color)
+        assertEquals(track.name, openSpace.tracks.first().name)
+        assertEquals(track.description, openSpace.tracks.first().description)
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from 'grommet';
 
-import { activateQueue, finishQueue, useGetOS } from '#api/os-client';
+import { activateQueue, finishQueue, useGetOpenSpace } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import {
@@ -39,7 +39,7 @@ const OpenSpace = () => {
     isPending,
     isRejected,
     setData,
-  } = useGetOS();
+  } = useGetOpenSpace();
   const queue = useQueue();
   const pushToSchedule = usePushToSchedule(id);
 

@@ -5,7 +5,13 @@ import { Box, Text, MaskedInput, Layer } from 'grommet';
 
 import { createOS } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
-import { CalendarIcon, ClockIcon, HomeIcon, OpenSpaceIcon } from '#shared/icons';
+import {
+  CalendarIcon,
+  ClockIcon,
+  HomeIcon,
+  OpenSpaceIcon,
+  TracksIcon,
+} from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
@@ -15,8 +21,7 @@ import { RedirectToRoot, usePushToRoot } from '#helpers/routes';
 import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
 import TimeSelector from './TimeSelector';
-
-// const TALK_SLOT = 'TalkSlot';
+import Tracks from './Tracks';
 const OTHER_SLOT = 'OtherSlot';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
@@ -122,6 +127,7 @@ const initialValues = {
   date: new Date().toISOString(),
   rooms: [],
   slots: [],
+  tracks: [],
 };
 
 const EditOpenSpace = () => {
@@ -132,18 +138,35 @@ const EditOpenSpace = () => {
 
   if (!user) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { date, name, description, rooms, slots } }) =>
+  const onSubmit = ({ value: { date, name, description, rooms, slots, tracks } }) =>
     createOS({
       date: new Date(date),
       name,
       description,
-      rooms: rooms.map((r) => ({ name: r })),
+      rooms: rooms.map((room) => ({ name: room })),
       slots: slots.map(({ endTime, startTime, ...rest }) => ({
         ...rest,
         endTime: splitTime(endTime),
         startTime: splitTime(startTime),
       })),
+      tracks,
     }).then(pushToRoot);
+
+  function isRepeated(tracks, track) {
+    return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
+  }
+
+  function hasTracksWithRepeatedName(tracks) {
+    return tracks.some((eachTrack) => isRepeated(tracks, eachTrack));
+  }
+
+  function hasRooms(rooms) {
+    return rooms.length < 1;
+  }
+
+  function hasSlots(times) {
+    return times.length < 1;
+  }
 
   return (
     <>
@@ -156,34 +179,53 @@ const EditOpenSpace = () => {
           placeholder="Añade una descripcion."
           maxLength={1000}
         />
-
-        <Box direction="row">
-          <MyForm.Field
-            component={MyCalendar}
-            icon={<CalendarIcon />}
-            label="Fecha"
-            name="date"
-            validate={(date) =>
-              beforeToday(date) && 'Ingresa una fecha mayor o igual a hoy'
-            }
-          />
-        </Box>
         <MyForm.Field
-          component={TimeSelector}
-          icon={<ClockIcon />}
-          label="Horarios"
-          name="slots"
-          onNewSlot={(type, start, onSubmitSlot) => {
-            setShowInputSlot({ onSubmitSlot, start, type });
+          component={Tracks}
+          icon={<TracksIcon />}
+          label="Tracks"
+          name="tracks"
+          validate={(tracks) => {
+            if (hasTracksWithRepeatedName(tracks))
+              return 'No puede haber dos tracks con el mismo nombre';
           }}
-          validate={(times) => times.length < 1 && 'Ingresa al menos un slot'}
         />
         <MyForm.Field
           component={Rooms}
           icon={<HomeIcon />}
           label="Salas"
           name="rooms"
-          validate={(rooms) => rooms.length < 1 && 'Ingresa al menos una sala'}
+          validate={(rooms) => {
+            if (hasRooms(rooms)) {
+              return 'Ingresa al menos una sala';
+            }
+          }}
+        />
+        <Box direction="row">
+          <MyForm.Field
+            component={MyCalendar}
+            icon={<CalendarIcon />}
+            label="Fecha"
+            name="date"
+            validate={(date) => {
+              if (beforeToday(date)) {
+                return 'Ingresa una fecha mayor o igual a hoy';
+              }
+            }}
+          />
+        </Box>
+        <MyForm.Field
+          component={TimeSelector}
+          icon={<ClockIcon />}
+          label="Grilla Horaria"
+          name="slots"
+          onNewSlot={(type, start, onSubmitSlot) => {
+            setShowInputSlot({ onSubmitSlot, start, type });
+          }}
+          validate={(times) => {
+            if (hasSlots(times)) {
+              return 'Ingresa al menos un slot';
+            }
+          }}
         />
       </MyForm>
       {showInputSlot !== null && (
