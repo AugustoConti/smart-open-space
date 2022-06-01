@@ -129,6 +129,7 @@ const OpenSpace = () => {
       finishedQueue,
       name,
       description,
+      tracks,
       organizer,
       pendingQueue,
       slots,
@@ -169,6 +170,7 @@ const OpenSpace = () => {
         <MainHeader.Title label={name} />
         <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
         <MainHeader.Description description={description} />
+        <MainHeader.Tracks tracks={tracks} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
           {amTheOrganizer && (
