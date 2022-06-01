@@ -64,6 +64,18 @@ class TalkControllerTest {
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
+    @Test
+    fun `a talk voted by user return an ok status response`() {
+        val anUser = anySavedUser()
+        val talk = anySavedTalk()
+        anUser.addTalk(talk)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.put("/talk/${talk.id}/user/${anUser.id}/vote")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(1))
+    }
+
     private fun anySavedRoom() = roomRepository.save(Room("Sala"))
 
     private fun anySavedTalk() = talkRepository.save(Talk("Charla"))

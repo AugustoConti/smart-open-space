@@ -1,9 +1,6 @@
 package com.sos.smartopenspace
 
-import com.sos.smartopenspace.domain.OpenSpace
-import com.sos.smartopenspace.domain.Room
-import com.sos.smartopenspace.domain.TalkSlot
-import com.sos.smartopenspace.domain.Track
+import com.sos.smartopenspace.domain.*
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -25,3 +22,6 @@ fun anOpenSpace(
         description = description
     )
 }
+
+fun anUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
+        User("apprentices@sos.sos", "apprentices", "apprentices", oss, talks)
