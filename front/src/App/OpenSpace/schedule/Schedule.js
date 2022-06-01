@@ -25,7 +25,7 @@ const Schedule = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const sortedSlots = sortTimes(slots);
-  const talksOf = (slotId) => slotsSchedule.filter((s) => s.slot.id === slotId);
+  const talksOf = (slotId) => slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
 
   return (
     <>
