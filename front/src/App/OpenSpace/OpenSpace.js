@@ -1,122 +1,25 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Box, Layer } from 'grommet';
+import { Box } from 'grommet';
 
-import {
-  activateQueue,
-  finishQueue,
-  startCallForPapers,
-  useGetOpenSpace,
-} from '#api/os-client';
+import { activateQueue, finishQueue, useGetOpenSpace } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
 import { useUser } from '#helpers/useAuth';
 import {
-  RedirectToRoot,
-  usePushToProjector,
-  usePushToMyTalks,
   RedirectToLoginFromOpenSpace,
+  RedirectToRoot,
+  usePushToSchedule,
 } from '#helpers/routes';
-import Detail from '#shared/Detail';
-import {
-  CartIcon,
-  ScheduleIcon,
-  TalkIcon,
-  UserAddIcon,
-  VideoIcon,
-  UnlockIcon,
-  LockIcon,
-} from '#shared/icons';
+import { ScheduleIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
-import MyForm from '#shared/MyForm';
 import Spinner from '#shared/Spinner';
-import Title from '#shared/Title';
-
-import Schedule from './Schedule';
-
-const QueryForm = ({ title, subTitle, onExit, onSubmit }) => (
-  <Layer onEsc={onExit} onClickOutside={onExit}>
-    <Box pad="medium">
-      <Box margin={{ vertical: 'medium' }}>
-        <Title level="2" label={title} />
-        <Detail size="large" text={subTitle} textAlign="center" />
-      </Box>
-      <MyForm
-        onSecondary={onExit}
-        onSubmit={(data) => {
-          onExit();
-          return onSubmit(data);
-        }}
-      />
-    </Box>
-  </Layer>
-);
-QueryForm.propTypes = {
-  title: PropTypes.string.isRequired,
-  subTitle: PropTypes.string.isRequired,
-  onExit: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
-
-const ButtonMyTalks = ({ amTheOrganizer }) => (
-  <MainHeader.Button
-    color="accent-1"
-    icon={<TalkIcon />}
-    label={amTheOrganizer ? 'Gestionar Charlas' : 'Mis charlas'}
-    onClick={usePushToMyTalks()}
-  />
-);
-ButtonMyTalks.propTypes = { amTheOrganizer: PropTypes.bool.isRequired };
-
-const ButtonToSwitchCallForPapers = ({
-  openSpaceID,
-  setData,
-  isActiveCallForPapers,
-  ...props
-}) => (
-  <MainHeader.Button
-    color="accent-3"
-    icon={isActiveCallForPapers ? <LockIcon /> : <UnlockIcon />}
-    label={isActiveCallForPapers ? 'Cerrar convocatoria' : 'Abrir convocatoria'}
-    onClick={() => startCallForPapers(openSpaceID).then(setData)}
-    {...props}
-  />
-);
-
-const ButtonSingIn = (props) => (
-  <MainHeader.Button
-    color="accent-3"
-    icon={<UserAddIcon />}
-    label="Ingresar"
-    {...props}
-  />
-);
-
-const ButtonStartMarketplace = (props) => (
-  <MainHeader.ButtonLoading
-    color="accent-4"
-    icon={<CartIcon />}
-    label="Iniciar Marketplace"
-    {...props}
-  />
-);
-
-const ButtonProjector = () => (
-  <MainHeader.Button
-    color="accent-2"
-    icon={<VideoIcon />}
-    label="Proyector"
-    onClick={usePushToProjector()}
-  />
-);
-
-const ButtonFinishMarketplace = (props) => (
-  <MainHeader.ButtonLoading
-    color="neutral-4"
-    icon={<CartIcon />}
-    label="Finalizar Marketplace"
-    {...props}
-  />
-);
+import TalksGrid from './TalksGrid';
+import { ButtonSingIn } from '#shared/ButtonSingIn';
+import { ButtonFinishMarketplace } from './buttons/ButtonFinishMarketplace';
+import { ButtonProjector } from './buttons/ButtonProjector';
+import { ButtonStartMarketplace } from './buttons/ButtonStartMarketplace';
+import { ButtonToSwitchCallForPapers } from './buttons/ButtonToSwitchCallForPapers';
+import { ButtonMyTalks } from './buttons/ButtonMyTalks';
+import { QueryForm } from './QueryForm';
 
 const OpenSpace = () => {
   const user = useUser();
@@ -132,7 +35,6 @@ const OpenSpace = () => {
       tracks,
       organizer,
       pendingQueue,
-      slots,
       isActiveCallForPapers,
     } = {},
     isPending,
@@ -140,6 +42,7 @@ const OpenSpace = () => {
     setData,
   } = useGetOpenSpace();
   const queue = useQueue();
+  const pushToSchedule = usePushToSchedule(id);
 
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
@@ -168,7 +71,13 @@ const OpenSpace = () => {
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.SubTitle icon={ScheduleIcon} label="AGENDA" />
+        <MainHeader.Button
+          margin={{ top: 'medium' }}
+          color="accent-1"
+          icon={<ScheduleIcon />}
+          label="Agenda"
+          onClick={pushToSchedule}
+        />
         <MainHeader.Description description={description} />
         <MainHeader.Tracks tracks={tracks} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
@@ -189,7 +98,7 @@ const OpenSpace = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        <Schedule slots={slots} />
+        <TalksGrid isActiveCallForPapers={isActiveCallForPapers} />
       </Box>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (

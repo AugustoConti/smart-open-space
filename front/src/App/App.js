@@ -15,6 +15,7 @@ import OpenSpace from './OpenSpace';
 import OSProjector from './OSProjector';
 import Header from './Header';
 import ErrorBoundary from './ErrorBoundary';
+import Schedule from './OpenSpace/schedule/Schedule';
 
 const Routes = () => (
   <Switch>
@@ -22,6 +23,7 @@ const Routes = () => (
     <Route path="/os/:id/myTalks" exact component={MyTalks} />
     <Route path={['/newTalk/:id', '/editTalk/:id/:talkId']} exact component={EditTalk} />
     <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
+    <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />
     <Route path={['/login', '/register']} exact component={Login} />
     <Route path="/" exact component={Home} />

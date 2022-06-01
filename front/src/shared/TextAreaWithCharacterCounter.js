@@ -14,11 +14,11 @@ CharacterCounter.prototype = {
   maxLength: PropTypes.number.isRequired,
 };
 
-export const TextAreaWithCharacterCounter = ({ value, maxLength, ...props }) => {
+export const TextAreaWithCharacterCounter = (props) => {
   return (
     <>
       <TextArea {...props} />
-      <CharacterCounter value={value} maxLength={maxLength} />
+      <CharacterCounter value={props.value} maxLength={props.maxLength} />
     </>
   );
 };

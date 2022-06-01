@@ -28,6 +28,7 @@ import {
   Unlock,
   StatusGoodSmall,
   Projects,
+  FormPreviousLink,
 } from 'grommet-icons';
 
 export {
@@ -61,4 +62,5 @@ export {
   Unlock as UnlockIcon,
   StatusGoodSmall as CircleIcon,
   Projects as TracksIcon,
+  FormPreviousLink as PreviousLinkIcon,
 };

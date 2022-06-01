@@ -12,7 +12,7 @@ import { TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
-import { usePushToOpenSpace } from '#helpers/routes';
+import { usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -36,6 +36,7 @@ const Talk = ({
   onEnqueue,
   currentUserIsOrganizer,
 }) => {
+  const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -43,7 +44,7 @@ const Talk = ({
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
 
   const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(talk.id, room.id, time, user.id).then(pushToOpenSpace);
+    scheduleTalk(talk.id, room.id, time, user.id).then(pushToSchedule);
 
   const onSubmitExchange = ({ value: { time, room } }) =>
     exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);
