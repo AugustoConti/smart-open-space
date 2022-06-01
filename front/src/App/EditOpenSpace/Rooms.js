@@ -7,30 +7,27 @@ import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 import { PlusButton } from '#shared/PlusButton';
 
 const Rooms = ({ value, onChange }) => {
-  const [textValue, setTextValue] = useState('');
-  const hasRoomName = textValue.trim().length < 1;
+  const [room, setRoom] = useState({ name: '' });
+  const hasRoomName = room.name.trim().length < 1;
 
   return (
     <Box pad="small">
       <RowBetween>
         <TextInput
-          onChange={(event) => setTextValue(event.target.value)}
+          onChange={(event) => setRoom({ name: event.target.value })}
           placeholder="Nombre de sala"
-          value={textValue}
+          value={room.name}
         />
         <PlusButton
           conditionToAdd={hasRoomName}
-          item={textValue.trim()}
-          setItem={setTextValue}
+          item={room}
+          setItem={setRoom}
           value={value}
-          initialItem={''}
+          initialItem={{ name: '' }}
           onChange={onChange}
         />
       </RowBetween>
-      <ListWithRemoveButton
-        items={value.map((room) => ({ name: room }))}
-        onChange={onChange}
-      />
+      <ListWithRemoveButton items={value} onChange={onChange} />
     </Box>
   );
 };
