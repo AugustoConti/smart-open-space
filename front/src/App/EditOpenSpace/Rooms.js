@@ -9,7 +9,7 @@ import { PlusButton } from '#shared/PlusButton';
 const Rooms = ({ value, onChange }) => {
   const initialValue = { name: '' };
   const [room, setRoom] = useState(initialValue);
-  const hasRoomName = room.name.trim().length < 1;
+  const hasNoRoomName = room.name.trim().length < 1;
 
   return (
     <Box pad="small">
@@ -20,7 +20,7 @@ const Rooms = ({ value, onChange }) => {
           value={room.name}
         />
         <PlusButton
-          conditionToAdd={hasRoomName}
+          conditionToAdd={hasNoRoomName}
           item={room}
           setItem={setRoom}
           value={value}
