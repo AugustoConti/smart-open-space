@@ -143,7 +143,7 @@ const EditOpenSpace = () => {
       date: new Date(date),
       name,
       description,
-      rooms: rooms.map((room) => ({ name: room })),
+      rooms,
       slots: slots.map(({ endTime, startTime, ...rest }) => ({
         ...rest,
         endTime: splitTime(endTime),

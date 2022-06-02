@@ -67,10 +67,7 @@ const Tracks = ({ value, onChange }) => {
           alignSelf="end"
         />
       </Collapsible>
-      <ListWithRemoveButton
-        items={value.map((track) => ({ name: track.name, color: track.color }))}
-        onChange={onChange}
-      />
+      <ListWithRemoveButton items={value} onChange={onChange} />
     </Box>
   );
 };
