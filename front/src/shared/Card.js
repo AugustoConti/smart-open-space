@@ -10,7 +10,6 @@ const Card = ({ borderColor, borderSide = 'top', children, ...props }) => (
     background="light-1"
     border={{ color: borderColor, size: 'medium', side: borderSide, style: 'outset' }}
     elevation="small"
-    justify="between"
     pad="medium"
     round
     {...props}

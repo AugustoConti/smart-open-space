@@ -14,6 +14,12 @@ const createTalkFor = (userId, osId, talkData) =>
 const createTalk = (osId, talkData) =>
   withUser(({ id }) => createTalkFor(id, osId, talkData));
 
+function voteTalkFor(userID, talkID) {
+  put(`talk/${talkID}/user/${userID}/vote`);
+}
+
+const voteTalk = (talkID) => withUser(({ id: userID }) => voteTalkFor(userID, talkID));
+
 const getAllOpenSpaces = () => withUser(({ id }) => get(`openSpace/user/${id}`));
 const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 
@@ -70,4 +76,5 @@ export {
   scheduleTalk,
   exchangeTalk,
   startCallForPapers,
+  voteTalk,
 };
