@@ -214,7 +214,13 @@ class OpenSpace(
     checkIsOrganizer(user)
     isActiveCallForPapers = !isActiveCallForPapers
   }
+
+  @JsonProperty
+  fun amountOfTalks(): Int {
+    return talks.size
+  }
 }
+
 
 enum class QueueState {
   PENDING,
