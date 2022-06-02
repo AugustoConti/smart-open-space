@@ -40,4 +40,12 @@ export default class Talk {
   isIn(talks) {
     return talks.some((talk) => talk.id === this.id);
   }
+
+  colorForTalkManagement() {
+    return this.track
+      ? this.track.color
+      : this.isAssigned()
+      ? 'status-ok'
+      : `accent-${this.isToSchedule() ? 3 : this.isInqueue() ? 2 : 4}`;
+  }
 }
