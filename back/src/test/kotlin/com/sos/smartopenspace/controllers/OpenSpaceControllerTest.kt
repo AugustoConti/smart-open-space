@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
+import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.UserRepository
@@ -80,14 +81,15 @@ class OpenSpaceControllerTest {
     @Test
     fun `can create a valid talk and get it correctly`() {
         val user = repoUser.save(anyUser())
-        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        val track = Track("a track", color = "#FFFFFF")
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user, setOf(track)))
         anOpenSpace.toggleCallForPapers(user)
         val aMeetingLink = "https://aLink"
 
         val entityResponse = mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
-                .content(generateTalkBody(aMeetingLink))
+                .content(generateTalkWithTrackBody(aMeetingLink, track))
         ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
 
         val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
@@ -97,6 +99,7 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
             .andExpect(MockMvcResultMatchers.jsonPath("$[0].meetingLink").value(aMeetingLink))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].track.name").value(track.name))
     }
 
     @Test
@@ -152,8 +155,12 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
-    private fun anyOpenSpaceWith(organizer: User): OpenSpace {
-        val openSpace = anyOpenSpace()
+    private fun anyOpenSpaceWith(organizer: User, tracks: Set<Track>? = null): OpenSpace {
+        val openSpace: OpenSpace = if (tracks == null) {
+            anOpenSpace()
+        } else {
+            anOpenSpace(tracks = tracks)
+        }
         organizer.addOpenSpace(openSpace)
         return openSpace
     }
@@ -205,7 +212,17 @@ class OpenSpaceControllerTest {
         return """
             {
                 "name": "asdf",
-                "meetingLink": "$aMeeting"
+                "meetingLink": "${aMeeting}"
+            }
+        """.trimIndent()
+    }
+
+    private fun generateTalkWithTrackBody(aMeeting: String, track: Track): String {
+        return """
+            {
+                "name": "a talk",
+                "meetingLink": "$aMeeting",
+                "trackId": ${track.id}
             }
         """.trimIndent()
     }

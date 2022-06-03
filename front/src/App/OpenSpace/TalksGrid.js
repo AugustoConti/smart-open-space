@@ -1,23 +1,21 @@
 import React from 'react';
 
 import { useGetTalks } from '#api/os-client';
-import { RedirectToRoot, usePushToNewTalk } from '#helpers/routes';
+import { RedirectToRoot } from '#helpers/routes';
 import MyGrid from '#shared/MyGrid';
 import Spinner from '#shared/Spinner';
 import Talk from './Talk';
-import EmptyTalk from '../MyTalks/EmptyTalk';
 
-const TalksGrid = ({ isActiveCallForPapers }) => {
+const noCriteria = () => true;
+
+const TalksGrid = ({ filterBy = noCriteria }) => {
   const { data: talks, isPending, isRejected } = useGetTalks();
-  const pushToNewTalk = usePushToNewTalk();
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
-  return talks.length === 0 && isActiveCallForPapers ? (
-    <EmptyTalk onClick={pushToNewTalk} />
-  ) : (
+  return (
     <MyGrid>
-      {talks.map((talk) => (
+      {talks.filter(filterBy).map((talk) => (
         <Talk key={talk.id} talk={talk} />
       ))}
     </MyGrid>

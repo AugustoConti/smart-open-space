@@ -25,6 +25,7 @@ class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open S
 class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
 class CallForPapersClosedException : RuntimeException("La convocatoria se encuentra cerrada")
+class NotValidTrackForOpenSpaceException : RuntimeException("El track de la charla no pertenece a este open space")
 
 @Entity
 class OpenSpace(
@@ -108,10 +109,20 @@ class OpenSpace(
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
     checkIsActiveCallForPapers()
+    if (isTrackValid(talk.track))
+      throw NotValidTrackForOpenSpaceException()
     talk.openSpace = this
     talks.add(talk)
     return this
   }
+
+  private fun isTrackValid(track: Track?) =
+    areTracksUsed(track) && !trackIsFromThisOpenSpace(track)
+
+  private fun trackIsFromThisOpenSpace(track: Track?) = tracks.any { it == track }
+
+  private fun areTracksUsed(track: Track?) =
+    !(tracks.isEmpty() && track == null)
 
   fun containsTalk(talk: Talk) = talks.contains(talk)
 
@@ -203,7 +214,13 @@ class OpenSpace(
     checkIsOrganizer(user)
     isActiveCallForPapers = !isActiveCallForPapers
   }
+
+  @JsonProperty
+  fun amountOfTalks(): Int {
+    return talks.size
+  }
 }
+
 
 enum class QueueState {
   PENDING,

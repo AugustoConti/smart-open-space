@@ -12,7 +12,6 @@ import {
 import { ScheduleIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import Spinner from '#shared/Spinner';
-import TalksGrid from './TalksGrid';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
 import { ButtonFinishMarketplace } from './buttons/ButtonFinishMarketplace';
 import { ButtonProjector } from './buttons/ButtonProjector';
@@ -20,6 +19,7 @@ import { ButtonStartMarketplace } from './buttons/ButtonStartMarketplace';
 import { ButtonToSwitchCallForPapers } from './buttons/ButtonToSwitchCallForPapers';
 import { ButtonMyTalks } from './buttons/ButtonMyTalks';
 import { QueryForm } from './QueryForm';
+import { DisplayTalks } from './DisplayTalks';
 
 const OpenSpace = () => {
   const user = useUser();
@@ -36,6 +36,7 @@ const OpenSpace = () => {
       organizer,
       pendingQueue,
       isActiveCallForPapers,
+      amountOfTalks,
     } = {},
     isPending,
     isRejected,
@@ -49,7 +50,6 @@ const OpenSpace = () => {
 
   const amTheOrganizer = user && organizer.id === user.id;
   const doFinishQueue = () => finishQueue(id).then(setData);
-
   const marketPlaceButtons = () =>
     (pendingQueue && (
       <ButtonStartMarketplace onClick={() => activateQueue(id).then(setData)} />
@@ -98,7 +98,11 @@ const OpenSpace = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Box margin={{ bottom: 'medium' }}>
-        <TalksGrid isActiveCallForPapers={isActiveCallForPapers} />
+        <DisplayTalks
+          amountOfTalks={amountOfTalks}
+          activeCallForPapers={isActiveCallForPapers}
+          tracks={tracks}
+        />
       </Box>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
       {showQuery && (

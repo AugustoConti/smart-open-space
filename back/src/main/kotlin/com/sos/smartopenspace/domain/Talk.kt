@@ -3,11 +3,8 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.net.URL
 import java.time.LocalTime
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.ManyToOne
+import javax.persistence.*
+import javax.validation.Valid
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
@@ -24,7 +21,11 @@ class Talk(
   @GeneratedValue
   val id: Long = 0,
 
-  val meetingLink: URL? = null
+  val meetingLink: URL? = null,
+
+  @field:Valid
+  @ManyToOne(cascade = [CascadeType.ALL])
+  val track: Track? = null
 ) {
   @ManyToOne
   lateinit var speaker: User

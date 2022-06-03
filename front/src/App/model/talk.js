@@ -1,10 +1,21 @@
 export default class Talk {
-  constructor(id, name, description, meetingLink, speaker, queue, slots, openSpace) {
+  constructor(
+    id,
+    name,
+    description,
+    meetingLink,
+    speaker,
+    track,
+    queue,
+    slots,
+    openSpace
+  ) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.meetingLink = meetingLink;
     this.speaker = speaker;
+    this.track = track;
     this.queue = queue;
     this.slots = slots;
     this.openSpace = openSpace;
@@ -28,5 +39,19 @@ export default class Talk {
 
   isIn(talks) {
     return talks.some((talk) => talk.id === this.id);
+  }
+
+  colorForTalkManagement() {
+    return this.hasTrack() ? this.track.color : this.colorByState();
+  }
+
+  colorByState() {
+    return this.isAssigned()
+      ? 'status-ok'
+      : `accent-${this.isToSchedule() ? 3 : this.isInqueue() ? 2 : 4}`;
+  }
+
+  hasTrack() {
+    return this.track;
   }
 }

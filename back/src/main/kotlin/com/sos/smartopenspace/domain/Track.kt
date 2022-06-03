@@ -1,14 +1,13 @@
 package com.sos.smartopenspace.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.sos.smartopenspace.Validators.HexColor
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
 @Entity
-class Track(
+data class Track(
     @field:NotEmpty
     val name: String,
 
@@ -21,4 +20,7 @@ class Track(
     @GeneratedValue
     var id: Long = 0
 ) {
+    @JsonIgnore
+    @OneToMany(mappedBy = "track", cascade = [CascadeType.ALL])
+    val talks: MutableSet<Talk> = mutableSetOf()
 }
