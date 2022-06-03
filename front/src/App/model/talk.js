@@ -42,10 +42,16 @@ export default class Talk {
   }
 
   colorForTalkManagement() {
-    return this.track
-      ? this.track.color
-      : this.isAssigned()
+    return this.hasTrack() ? this.track.color : this.colorByState();
+  }
+
+  colorByState() {
+    return this.isAssigned()
       ? 'status-ok'
       : `accent-${this.isToSchedule() ? 3 : this.isInqueue() ? 2 : 4}`;
+  }
+
+  hasTrack() {
+    return this.track;
   }
 }
