@@ -17,6 +17,7 @@ const EditTalk = () => {
 
   if (!user || isRejected) return <RedirectToRoot />;
   if (openSpace && openSpace.finishedQueue) return <RedirectToRoot />;
+  const openSpaceHasTracks = openSpace && openSpace.tracks.length > 0;
 
   const onSubmit = ({ value: { name, description, meetingLink, trackId } }) =>
     createTalk(openSpace.id, {
@@ -37,7 +38,7 @@ const EditTalk = () => {
         <MyForm.Text label="Título" placeholder="¿De que trata tu charla?" />
         <MyForm.TextArea placeholder="Describí tu charla con mas detalle..." />
         <MyForm.Link label="Link" placeholder="Link a la reunion" />
-        {openSpace && openSpace.tracks.length > 0 && (
+        {openSpaceHasTracks && (
           <MyForm.Select
             label="Track"
             name="trackId"
