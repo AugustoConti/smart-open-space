@@ -109,13 +109,15 @@ class OpenSpace(
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
     checkIsActiveCallForPapers()
-    if (tracksDefined(talk) && !tracks.any { it == talk.track }) throw NotValidTrackForOpenSpaceException()
+    if (areTracksUsed(talk) && !trackIsFromThisOpenSpace(talk.track)) throw NotValidTrackForOpenSpaceException()
     talk.openSpace = this
     talks.add(talk)
     return this
   }
 
-  private fun tracksDefined(talk: Talk) =
+  private fun trackIsFromThisOpenSpace(track: Track?) = tracks.any { it == track }
+
+  private fun areTracksUsed(talk: Talk) =
     !(tracks.isEmpty() && talk.track == null)
 
   fun containsTalk(talk: Talk) = talks.contains(talk)
