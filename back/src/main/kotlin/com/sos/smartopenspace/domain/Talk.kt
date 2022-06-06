@@ -46,11 +46,10 @@ class Talk(
 
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 
-  fun changeDescription(changedDescription: String) {
-    description = changedDescription
-  }
 
-  fun changeName(changedName: String) {
-    name = changedName
+
+  fun update(name: String, description: String) {
+    this.name = name
+    this.description = description
   }
 }

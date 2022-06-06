@@ -7,7 +7,6 @@ import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -109,7 +108,6 @@ class OpenSpaceControllerTest {
     }
 
     @Test
-    @Disabled
     fun `can update a talk correctly`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))

@@ -50,8 +50,7 @@ class TalkRepositoryTest {
         val changedDescription = "second description"
         val changedName = "second name"
 
-        aTalk.changeDescription(changedDescription)
-        aTalk.changeName(changedName)
+        aTalk.update(name = changedName, description = changedDescription)
         repoTalk.save(aTalk)
         val sameTalk = repoTalk.findById(aTalk.id).get()
 
@@ -65,7 +64,7 @@ class TalkRepositoryTest {
         repoTalk.save(aTalk)
         val emptyName = ""
 
-        aTalk.changeName(emptyName)
+        aTalk.update(name = emptyName, description = aTalk.description)
 
         assertThrows<ConstraintViolationException> {
             repoTalk.save(aTalk)

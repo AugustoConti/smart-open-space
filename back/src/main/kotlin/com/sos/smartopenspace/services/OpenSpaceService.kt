@@ -50,7 +50,10 @@ class OpenSpaceService(
   }
 
   fun updateTalk(userID: Long, osID: Long, talkId: Long, createTalkDTO: CreateTalkDTO): Talk {
-    return findTalk(talkId)
+    val talk = findTalk(talkId)
+    talk.update(name = createTalkDTO.name, description = createTalkDTO.description)
+
+    return talk
   }
 
   @Transactional(readOnly = true)
