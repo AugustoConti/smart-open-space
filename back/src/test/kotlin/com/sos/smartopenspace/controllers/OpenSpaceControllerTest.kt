@@ -135,6 +135,24 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    fun `updating a talk with an invalid name returns a bad request status`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        anOpenSpace.toggleCallForPapers(user)
+        val aTalk = aTalk()
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        repoTalk.save(aTalk)
+
+        val emptyName = ""
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${aTalk.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(name = emptyName))
+        ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+
+    @Test
     fun `creating an invalid talk return an bad request status`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
