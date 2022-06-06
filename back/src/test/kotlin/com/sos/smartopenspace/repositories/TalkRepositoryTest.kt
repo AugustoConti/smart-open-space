@@ -38,9 +38,22 @@ class TalkRepositoryTest {
         val aTalk = Talk("a name")
 
         repoTalk.save(aTalk)
-
         val sameTalk = repoTalk.findById(aTalk.id).get()
 
         assertEquals(aTalk.name, sameTalk.name)
     }
+
+    @Test
+    fun `a talk can be modified and its updated successfully`() {
+        val aTalk = Talk("a name", description = "first description")
+        repoTalk.save(aTalk)
+        val changedDescription = "second description"
+
+        aTalk.changeDescription(changedDescription)
+        repoTalk.save(aTalk)
+        val sameTalk = repoTalk.findById(aTalk.id).get()
+
+        assertEquals(changedDescription, sameTalk.description)
+    }
+
 }

@@ -15,7 +15,7 @@ class Talk(
   val name: String,
 
   @Column(columnDefinition = "VarChar")
-  val description: String = "",
+  var description: String = "",
 
   @Id
   @GeneratedValue
@@ -45,4 +45,8 @@ class Talk(
   }
 
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
+
+  fun changeDescription(changedDescription: String) {
+    description = changedDescription
+  }
 }
