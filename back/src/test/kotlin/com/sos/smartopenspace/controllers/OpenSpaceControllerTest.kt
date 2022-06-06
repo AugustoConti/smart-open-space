@@ -135,20 +135,16 @@ class OpenSpaceControllerTest {
     }
 
     @Test
-    fun `updating a talk with an invalid name returns a bad request status`() {
+    fun `updating an inexistent talk returns a bad request status`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
         anOpenSpace.toggleCallForPapers(user)
-        val aTalk = aTalk()
-        anOpenSpace.addTalk(aTalk)
-        user.addTalk(aTalk)
-        repoTalk.save(aTalk)
+        val inexistentTalkId = 789
 
-        val emptyName = ""
         mockMvc.perform(
-            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${aTalk.id}")
+            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${inexistentTalkId}")
                 .contentType("application/json")
-                .content(generateTalkBody(name = emptyName))
+                .content(generateTalkBody())
         ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
 

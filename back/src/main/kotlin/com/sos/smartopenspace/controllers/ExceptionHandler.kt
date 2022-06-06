@@ -3,6 +3,7 @@ package com.sos.smartopenspace.controllers
 import com.sos.smartopenspace.domain.CallForPapersClosedException
 import com.sos.smartopenspace.domain.NotTheOrganizerException
 import com.sos.smartopenspace.domain.TalkIsNotForScheduledException
+import com.sos.smartopenspace.services.TalkNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ControllerAdvice
 class ExceptionHandler {
 
-    @ExceptionHandler(TalkIsNotForScheduledException::class, NotTheOrganizerException::class)
+    @ExceptionHandler(TalkIsNotForScheduledException::class, NotTheOrganizerException::class, TalkNotFoundException::class)
     fun badRequestHandler(exception: Exception) : ResponseEntity<BadRequestException> {
         return ResponseEntity(BadRequestException(exception.message), HttpStatus.BAD_REQUEST)
     }
