@@ -8,7 +8,6 @@ import Detail from '#shared/Detail';
 import { FormCloseIcon, HomeIcon, LinkIcon, UserIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
-import { useUser } from '#helpers/useAuth';
 
 const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
@@ -50,26 +49,14 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({
-  talk: { id, description, name, speaker, track, meetingLink, votingUsers, votes },
-  room,
-  children,
-}) => {
+const Talk = ({ talk: { description, name, speaker, meetingLink, track }, room, children }) => {
   const [open, setOpen] = useState(false);
-  const currentUser = useUser();
-  const isCurrentUser = (user) => user.id === currentUser.id;
-  const alreadyVotedByTheCurrentUser = votingUsers.some((user) => isCurrentUser(user));
 
   const color = track ? track.color : 'accent-3';
   let shouldDisplayMoreInfo = description || meetingLink;
   return (
     <>
-      <Card
-        borderColor={color}
-        height={room ? '230px' : undefined}
-        margin="xsmall"
-        gap="small"
-      >
+      <Card borderColor={color} height="250px" margin="xsmall" gap="small">
         {children}
         <Box gap="medium">
           <Box overflow="hidden">

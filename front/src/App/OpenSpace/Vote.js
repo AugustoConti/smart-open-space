@@ -1,10 +1,11 @@
 import RowBetween from '#shared/RowBetween';
 import { Button } from 'grommet';
-import { VoteIcon } from '#shared/icons';
 import { voteTalk } from '#api/os-client';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useUser } from '#helpers/useAuth';
+import { PlusHeartIcon } from '#shared/PlusHeartIcon';
+import Detail from '#shared/Detail';
 
 export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
   const currentUser = useUser();
@@ -13,13 +14,13 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
 
   return (
     <RowBetween alignSelf="end">
-      {votes}
       {!alreadyVotedByTheCurrentUser && (
         <Button
-          icon={<VoteIcon color="#d22809" />}
+          icon={<PlusHeartIcon />}
           onClick={() => voteTalk(id).then(() => reloadTalks())}
         />
       )}
+      <Detail>{votes} votos</Detail>
     </RowBetween>
   );
 };

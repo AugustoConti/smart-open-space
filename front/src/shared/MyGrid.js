@@ -4,7 +4,7 @@ import { Grid } from 'grommet';
 import MyProps from '#helpers/MyProps';
 
 const MyGrid = ({ children }) => (
-  <Grid columns="small" gap="medium" margin={{ bottom: 'medium' }}>
+  <Grid columns="250px" gap="medium" margin={{ vertical: 'medium' }}>
     {children}
   </Grid>
 );
