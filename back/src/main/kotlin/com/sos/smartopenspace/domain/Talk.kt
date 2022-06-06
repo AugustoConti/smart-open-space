@@ -21,11 +21,11 @@ class Talk(
   @GeneratedValue
   val id: Long = 0,
 
-  val meetingLink: URL? = null,
+  var meetingLink: URL? = null,
 
   @field:Valid
   @ManyToOne(cascade = [CascadeType.ALL])
-  val track: Track? = null
+  var track: Track? = null
 ) {
   @ManyToOne
   lateinit var speaker: User
@@ -46,10 +46,10 @@ class Talk(
 
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 
-
-
-  fun update(name: String, description: String) {
+  fun update(name: String, description: String, meetingLink: URL? = null, track: Track? = null) {
     this.name = name
     this.description = description
+    this.meetingLink = meetingLink
+    this.track = track
   }
 }
