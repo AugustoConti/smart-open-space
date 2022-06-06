@@ -1,10 +1,13 @@
 package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
+import com.sos.smartopenspace.aTalk
 import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
+import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -35,6 +38,9 @@ class OpenSpaceControllerTest {
 
     @Autowired
     lateinit var repoOpenSpace: OpenSpaceRepository
+
+    @Autowired
+    lateinit var repoTalk: TalkRepository
 
     @Test
     fun `creating a valid OpenSpace returns an ok status response`() {
@@ -103,6 +109,34 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    @Disabled
+    fun `can update a talk correctly`() {
+        val user = repoUser.save(anyUser())
+        val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
+        anOpenSpace.toggleCallForPapers(user)
+        val aTalk = aTalk()
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        repoTalk.save(aTalk)
+
+        val changedDescription = "a different description"
+        val entityResponse = mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${aTalk.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(description = changedDescription))
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+
+        val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value(changedDescription))
+    }
+
+    @Test
     fun `creating an invalid talk return an bad request status`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
@@ -111,7 +145,7 @@ class OpenSpaceControllerTest {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
-                .content(generateTalkBody(anInvalidLink))
+                .content(generateTalkBody(aMeeting = anInvalidLink))
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
@@ -125,7 +159,7 @@ class OpenSpaceControllerTest {
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
-                .content(generateTalkBody(aMeetingLink))
+                .content(generateTalkBody(aMeeting = aMeetingLink))
         )
             .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
     }
@@ -208,10 +242,11 @@ class OpenSpaceControllerTest {
         """.trimIndent()
     }
 
-    private fun generateTalkBody(aMeeting: String): String {
+    private fun generateTalkBody(name: String = "asdf", description: String = "a generic description", aMeeting: String = "http://aGenericLink.com"): String {
         return """
             {
-                "name": "asdf",
+                "name": "${name}",
+                "description": "${description}",
                 "meetingLink": "${aMeeting}"
             }
         """.trimIndent()

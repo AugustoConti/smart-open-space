@@ -49,6 +49,10 @@ class OpenSpaceService(
     return talk
   }
 
+  fun updateTalk(userID: Long, osID: Long, talkId: Long, createTalkDTO: CreateTalkDTO): Talk {
+    return findTalk(talkId)
+  }
+
   @Transactional(readOnly = true)
   fun findTalksByUser(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
 
