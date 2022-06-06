@@ -48,12 +48,29 @@ class TalkRepositoryTest {
         val aTalk = Talk("a name", description = "first description")
         repoTalk.save(aTalk)
         val changedDescription = "second description"
+        val changedName = "second name"
 
         aTalk.changeDescription(changedDescription)
+        aTalk.changeName(changedName)
         repoTalk.save(aTalk)
         val sameTalk = repoTalk.findById(aTalk.id).get()
 
         assertEquals(changedDescription, sameTalk.description)
+        assertEquals(changedName, sameTalk.name)
     }
 
+    @Test
+    fun `a talk cant be modified with an empty name`() {
+        val aTalk = Talk("a name", description = "first description")
+        repoTalk.save(aTalk)
+        val emptyName = ""
+
+        aTalk.changeName(emptyName)
+
+        assertThrows<ConstraintViolationException> {
+            repoTalk.save(aTalk)
+            entityManager.flush()
+        }
+
+    }
 }

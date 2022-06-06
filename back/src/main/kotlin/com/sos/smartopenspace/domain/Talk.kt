@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty
 class Talk(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
-  val name: String,
+  var name: String,
 
   @Column(columnDefinition = "VarChar")
   var description: String = "",
@@ -48,5 +48,9 @@ class Talk(
 
   fun changeDescription(changedDescription: String) {
     description = changedDescription
+  }
+
+  fun changeName(changedName: String) {
+    name = changedName
   }
 }
