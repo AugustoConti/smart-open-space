@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Text } from 'grommet';
+import { Box, Button, Grid, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { enqueueTalk, exchangeTalk, scheduleTalk } from '#api/os-client';
@@ -8,11 +8,11 @@ import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { TransactionIcon, UserIcon } from '#shared/icons';
+import { EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
-import { usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
+import { usePushToNewTalk, usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -27,6 +27,23 @@ const ButtonAction = (props) => (
   <ButtonLoading alignSelf="center" margin={{ top: 'medium' }} {...props} />
 );
 
+function EditButton(props) {
+  return (
+    <Button
+      icon={<EditIcon />}
+      alignSelf="center"
+      color={props.color}
+      label="Editar"
+      onClick={props.onClick}
+      primary
+    />
+  );
+}
+
+EditButton.propTypes = {
+  color: PropTypes.any,
+  onClick: PropTypes.func,
+};
 const Talk = ({
   talk,
   activeQueue,
@@ -38,6 +55,7 @@ const Talk = ({
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
+  const pushToEditTalk = usePushToNewTalk();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
@@ -51,6 +69,8 @@ const Talk = ({
 
   const color = talk.colorForTalkManagement();
 
+  const shouldDisplayEditTalkButton = talk.speaker.id === user.id;
+
   return (
     <Card borderColor={color}>
       <Box>
@@ -63,40 +83,45 @@ const Talk = ({
           </>
         )}
       </Box>
-      {talk.isAssigned() ? (
-        <Box direction="row" justify="evenly">
-          <Badge color={color} text="Agendada" />
-          {currentUserIsOrganizer && (
-            <Button
-              hoverIndicator
-              icon={<TransactionIcon />}
-              onClick={() => setOpenExchange(true)}
-              plain
+      <Grid gap={'xsmall'}>
+        {talk.isAssigned() ? (
+          <Box direction="row" justify="evenly">
+            <Badge color={color} text="Agendada" />
+            {currentUserIsOrganizer && (
+              <Button
+                hoverIndicator
+                icon={<TransactionIcon />}
+                onClick={() => setOpenExchange(true)}
+                plain
+              />
+            )}
+          </Box>
+        ) : (
+          shouldDisplayScheduleTalkButton && (
+            <ButtonAction
+              color={color}
+              label="Agendar"
+              onClick={() => setOpenSchedule(true)}
             />
-          )}
-        </Box>
-      ) : (
-        shouldDisplayScheduleTalkButton && (
-          <ButtonAction
-            color={color}
-            label="Agendar"
-            onClick={() => setOpenSchedule(true)}
-          />
-        )
-      )}
-      {talk.isInqueue() ? (
-        <Badge color={color} text="Esperando turno" />
-      ) : (
-        talk.canBeQueued() &&
-        activeQueue && (
-          <ButtonAction
-            color={color}
-            disabled={!currentUserIsOrganizer && hasAnother}
-            label="Encolar"
-            onClick={() => enqueueTalk(talk.id).then(onEnqueue)}
-          />
-        )
-      )}
+          )
+        )}
+        {talk.isInqueue() ? (
+          <Badge color={color} text="Esperando turno" />
+        ) : (
+          talk.canBeQueued() &&
+          activeQueue && (
+            <ButtonAction
+              color={color}
+              disabled={!currentUserIsOrganizer && hasAnother}
+              label="Encolar"
+              onClick={() => enqueueTalk(talk.id).then(onEnqueue)}
+            />
+          )
+        )}
+        {shouldDisplayEditTalkButton && (
+          <EditButton color={color} onClick={pushToEditTalk} />
+        )}
+      </Grid>
       {openSchedule && freeSlots && (
         <SelectSlot
           freeSlots={freeSlots}
