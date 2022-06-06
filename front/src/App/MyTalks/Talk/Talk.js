@@ -12,7 +12,12 @@ import { EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
-import { usePushToNewTalk, usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
+import {
+  usePushToEditTalk,
+  usePushToNewTalk,
+  usePushToOpenSpace,
+  usePushToSchedule,
+} from '#helpers/routes';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -55,7 +60,7 @@ const Talk = ({
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
-  const pushToEditTalk = usePushToNewTalk();
+  const pushToEditTalk = usePushToEditTalk(talk.id);
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
