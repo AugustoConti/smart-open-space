@@ -17,7 +17,7 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
       {!alreadyVotedByTheCurrentUser && (
         <Button
           icon={<VoteIcon color="#d22809" />}
-          onClick={() => voteTalk(id).then(reloadTalks)}
+          onClick={() => voteTalk(id).then(() => reloadTalks())}
         />
       )}
     </RowBetween>
