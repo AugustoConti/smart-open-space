@@ -56,7 +56,7 @@ class OpenSpaceService(
   fun findAssignedSlotsById(id: Long) = findById(id).assignedSlots.toList()
 
   @Transactional(readOnly = true)
-  fun findTalks(id: Long) = findById(id).talks.toList()
+  fun findTalks(id: Long) = findById(id).talks.toList().sortedByDescending { it.votes() }
 
   fun activateQueue(userID: Long, osID: Long) =
     findById(osID).activeQueue(findUser(userID))
