@@ -119,7 +119,7 @@ class OpenSpaceControllerTest {
 
         val changedDescription = "a different description"
         val entityResponse = mockMvc.perform(
-            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${aTalk.id}")
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${user.id}/talk/${aTalk.id}")
                 .contentType("application/json")
                 .content(generateTalkBody(description = changedDescription))
         ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
@@ -142,7 +142,7 @@ class OpenSpaceControllerTest {
         val inexistentTalkId = 789
 
         mockMvc.perform(
-            MockMvcRequestBuilders.put("/openSpace/talk/${user.id}/${anOpenSpace.id}/${inexistentTalkId}")
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${user.id}/talk/${inexistentTalkId}")
                 .contentType("application/json")
                 .content(generateTalkBody())
         ).andExpect(MockMvcResultMatchers.status().is4xxClientError)

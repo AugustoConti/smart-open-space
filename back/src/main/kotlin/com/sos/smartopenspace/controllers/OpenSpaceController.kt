@@ -22,7 +22,7 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   fun createTalk(@PathVariable userID: Long, @PathVariable osID: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =
     openSpaceService.createTalk(userID, osID, createTalkDTO)
 
-  @PutMapping("/talk/{userID}/{osID}/{talkId}")
+  @PutMapping("/{osID}/user/{userID}/talk/{talkId}")
   fun updateTalk(@PathVariable userID: Long, @PathVariable osID: Long, @PathVariable talkId: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =
     openSpaceService.updateTalk(userID, osID, talkId, createTalkDTO)
 
