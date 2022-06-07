@@ -7,7 +7,6 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
-import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.validation.Valid
 import javax.validation.constraints.Email
@@ -43,10 +42,6 @@ class User(
   @Id @GeneratedValue
   var id: Long = 0
 ) {
-
-  @JsonIgnore
-  @ManyToMany(mappedBy = "votingUsers", cascade = [CascadeType.ALL])
-  lateinit var votedTalks: MutableSet<Talk>
 
   init {
     openSpaces.forEach { it.organizer = this }
