@@ -16,13 +16,14 @@ import OSProjector from './OSProjector';
 import Header from './Header';
 import ErrorBoundary from './ErrorBoundary';
 import Schedule from './OpenSpace/schedule/Schedule';
+import EditTalk from './EditTalk/EditTalk';
 
 const Routes = () => (
   <Switch>
     <Route path="/os/:id/projector" exact component={OSProjector} />
     <Route path="/os/:id/myTalks" exact component={MyTalks} />
     <Route path="/newTalk/:id" exact component={NewTalk} />
-    <Route path="/os/:id/editTalk/:talkId" exact component={NewTalk} />
+    <Route path="/os/:id/editTalk/:talkId" exact component={EditTalk} />
     <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
     <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />

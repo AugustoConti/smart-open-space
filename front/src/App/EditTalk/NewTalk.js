@@ -22,7 +22,14 @@ const NewTalk = () => {
       meetingLink,
       trackId,
     }).then(pushToMyTalks);
-  return <TalkForm onSubmit={onSubmit} openSpace={openSpace} subtitle={subtitle} />;
+  return (
+    <TalkForm
+      onSubmit={onSubmit}
+      openSpace={openSpace}
+      subtitle={subtitle}
+      title={'Nueva charla'}
+    />
+  );
 };
 
 export default NewTalk;

@@ -23,6 +23,9 @@ const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
+const getTalk = ({ talkId }) => get(`talk/${talkId}`);
+const useGetTalk = () => useAsync({ promiseFn: getTalk, talkId: useParams().talkId });
+
 const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`).then((talks) => talks);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
@@ -74,4 +77,5 @@ export {
   exchangeTalk,
   startCallForPapers,
   voteTalk,
+  useGetTalk,
 };

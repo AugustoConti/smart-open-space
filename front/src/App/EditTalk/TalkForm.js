@@ -4,20 +4,38 @@ import { TalkIcon } from '#shared/icons';
 import MyForm from '#shared/MyForm';
 import React from 'react';
 
-export const TalkForm = ({ onSubmit, openSpace, subtitle }) => {
+const emptyTalk = { name: '', description: '', meetingLink: '' };
+
+export const TalkForm = ({
+  onSubmit,
+  openSpace,
+  subtitle,
+  title,
+  initialValues = emptyTalk,
+}) => {
   const history = useHistory();
   const openSpaceHasTracks = openSpace && openSpace.tracks.length > 0;
-
   return (
     <>
       <MainHeader>
-        <MainHeader.Title icon={TalkIcon} label="Nueva Charla" />
+        <MainHeader.Title icon={TalkIcon} label={title} />
         <MainHeader.SubTitle>{subtitle}</MainHeader.SubTitle>
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
-        <MyForm.Text label="Título" placeholder="¿De que trata tu charla?" />
-        <MyForm.TextArea placeholder="Describí tu charla con mas detalle..." />
-        <MyForm.Link label="Link" placeholder="Link a la reunion" />
+        <MyForm.Text
+          label="Título"
+          placeholder="¿De que trata tu charla?"
+          value={initialValues.name}
+        />
+        <MyForm.TextArea
+          placeholder="Describí tu charla con mas detalle..."
+          value={initialValues.description ? initialValues.description : ''}
+        />
+        <MyForm.Link
+          label="Link"
+          placeholder="Link a la reunion"
+          value={initialValues.meetingLink ? initialValues.meetingLink : ''}
+        />
         {openSpaceHasTracks && (
           <MyForm.Select
             label="Track"
@@ -25,6 +43,7 @@ export const TalkForm = ({ onSubmit, openSpace, subtitle }) => {
             options={openSpace.tracks}
             labelKey="name"
             valueKey="id"
+            value={initialValues.track ? initialValues.track.id : ''}
           />
         )}
       </MyForm>
