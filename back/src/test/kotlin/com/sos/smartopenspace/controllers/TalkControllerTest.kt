@@ -1,7 +1,7 @@
 package com.sos.smartopenspace.controllers
 
 import com.sos.smartopenspace.anOpenSpaceWith
-import com.sos.smartopenspace.anUser
+import com.sos.smartopenspace.aUser
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.time.LocalTime
 
 @SpringBootTest
@@ -56,7 +55,7 @@ class TalkControllerTest {
     fun `when a talk cannot be scheduled it should return a bad request response`() {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
-        val speaker = anSavedUserWithTalk(talk)
+        val speaker = aSavedUserWithTalk(talk)
         val room = anySavedRoom()
         val time = LocalTime.parse("09:00")
         openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
@@ -69,12 +68,12 @@ class TalkControllerTest {
 
     @Test
     fun `a talk voted by user return an ok status response`() {
-        val anUser = anySavedUser()
+        val aUser = anySavedUser()
         val talk = anySavedTalk()
-        anUser.addTalk(talk)
+        aUser.addTalk(talk)
 
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/talk/${talk.id}/user/${anUser.id}/vote")
+                MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/vote")
         ).andExpect(MockMvcResultMatchers.status().isOk)
                 .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(1))
     }
@@ -83,9 +82,9 @@ class TalkControllerTest {
 
     private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
 
-    private fun anySavedUser() = userRepository.save(anUser())
+    private fun anySavedUser() = userRepository.save(aUser())
 
-    private fun anSavedUserWithTalk(talk: Talk) =
-            userRepository.save(anUser(mutableSetOf(), mutableSetOf(talk)))
+    private fun aSavedUserWithTalk(talk: Talk) =
+            userRepository.save(aUser(mutableSetOf(), mutableSetOf(talk)))
 
 }

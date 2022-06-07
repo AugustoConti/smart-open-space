@@ -47,8 +47,8 @@ class TalkService(
 
     fun voteTalk(talkID: Long, userID: Long): Talk {
       val aTalk = findTalk(talkID)
-      val anUser = findUser(userID)
-      anUser.vote(aTalk)
+      val aUser = findUser(userID)
+      aUser.vote(aTalk)
       return aTalk
     }
 }

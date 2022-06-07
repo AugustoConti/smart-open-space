@@ -31,5 +31,5 @@ fun anOpenSpaceWith(talk: Talk, organizer: User, room: Room): OpenSpace {
     return openSpace
 }
 
-fun anUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
+fun aUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
         User("apprentices@sos.sos", "apprentices", "apprentices", openSpaces, talks)
