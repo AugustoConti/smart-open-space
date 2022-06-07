@@ -26,7 +26,6 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
 };
 
 Vote.propTypes = {
-  votes: PropTypes.any,
-  alreadyVotedByTheCurrentUser: PropTypes.any,
-  onClick: PropTypes.func,
+  talk: PropTypes.object.isRequired,
+  reloadTalks: PropTypes.func.isRequired,
 };
