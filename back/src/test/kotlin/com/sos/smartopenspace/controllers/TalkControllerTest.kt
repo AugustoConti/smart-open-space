@@ -70,6 +70,22 @@ class TalkControllerTest {
     }
 
     @Test
+    fun `Asking for an specific talk returns an ok status`() {
+        val organizer = anySavedUser()
+        val talk = anySavedTalk()
+        userRepository.save(anyUser(talk))
+        val room = anySavedRoom()
+        openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/talk/${talk.id}")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(talk.id))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(talk.name))
+    }
+
+
+    @Test
     fun `can update a talk correctly`() {
         val user = userRepository.save(aUser())
         val anOpenSpace = anOpenSpace()
