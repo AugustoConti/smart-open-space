@@ -6,7 +6,7 @@ import { grommet, Grommet } from 'grommet';
 import { AuthProvider } from '#helpers/useAuth';
 
 import EditOpenSpace from './EditOpenSpace';
-import EditTalk from './EditTalk';
+import NewTalk from './EditTalk';
 import Home from './Home';
 import Login from './Login';
 import MainLayout from './MainLayout';
@@ -21,8 +21,8 @@ const Routes = () => (
   <Switch>
     <Route path="/os/:id/projector" exact component={OSProjector} />
     <Route path="/os/:id/myTalks" exact component={MyTalks} />
-    <Route path="/newTalk/:id" exact component={EditTalk} />
-    <Route path="/os/:id/editTalk/:talkId" exact component={EditTalk} />
+    <Route path="/newTalk/:id" exact component={NewTalk} />
+    <Route path="/os/:id/editTalk/:talkId" exact component={NewTalk} />
     <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
     <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />

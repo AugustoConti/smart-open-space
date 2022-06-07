@@ -6,7 +6,7 @@ import { TinySpinner } from '#shared/Spinner';
 import { RedirectToRoot, usePushToMyTalks } from '#helpers/routes';
 import { TalkForm } from './TalkForm';
 
-const EditTalk = () => {
+const NewTalk = () => {
   const user = useUser();
   const { data: openSpace, isPending, isRejected } = useGetOpenSpace();
   const subtitle = isPending ? <TinySpinner /> : openSpace.name;
@@ -25,4 +25,4 @@ const EditTalk = () => {
   return <TalkForm onSubmit={onSubmit} openSpace={openSpace} subtitle={subtitle} />;
 };
 
-export default EditTalk;
+export default NewTalk;

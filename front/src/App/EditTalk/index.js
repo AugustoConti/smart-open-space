@@ -1,3 +1,3 @@
-import EditTalk from './EditTalk';
+import NewTalk from './NewTalk';
 
-export default EditTalk;
+export default NewTalk;
