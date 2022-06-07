@@ -1,5 +1,5 @@
 import { useUser } from '#helpers/useAuth';
-import { useGetOpenSpace, useGetTalk } from '#api/os-client';
+import { editTalk, useGetOpenSpace, useGetTalk } from '#api/os-client';
 import Spinner, { TinySpinner } from '#shared/Spinner';
 import { RedirectToRoot, usePushToMyTalks } from '#helpers/routes';
 import { TalkForm } from './TalkForm';
@@ -13,7 +13,7 @@ const EditTalk = () => {
     isRejected: isTalkRejected,
   } = useGetTalk();
   const { data: openSpace, isPending, isRejected } = useGetOpenSpace();
-  //const pushToMyTalks = usePushToMyTalks();
+  const pushToMyTalks = usePushToMyTalks();
 
   if (isTalkPending) return <Spinner />;
   if (!user || isRejected || isTalkRejected) return <RedirectToRoot />;
@@ -21,10 +21,12 @@ const EditTalk = () => {
 
   const subtitle = isPending ? <TinySpinner /> : openSpace.name;
   const onSubmit = ({ value: { name, description, meetingLink, trackId } }) => {
-    alert(name);
-    alert(description);
-    alert(meetingLink);
-    alert(trackId);
+    editTalk(openSpace.id, talk.id, {
+      name,
+      description,
+      meetingLink,
+      trackId,
+    }).then(pushToMyTalks);
   };
   return (
     <TalkForm

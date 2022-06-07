@@ -8,11 +8,17 @@ const withUser = (fn) => fn(getUser());
 
 const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData));
 
-const createTalkFor = (userId, osId, talkData) =>
-  post(`openSpace/talk/${userId}/${osId}`, talkData);
+const createTalkFor = (userId, openSpaceId, talkData) =>
+  post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
 
-const createTalk = (osId, talkData) =>
-  withUser(({ id }) => createTalkFor(id, osId, talkData));
+const editTalkOf = (userId, openSpaceId, talkId, talkData) =>
+  put(`openSpace/${openSpaceId}/user/${userId}/talk/${talkId}`, talkData);
+
+const createTalk = (openSpaceId, talkData) =>
+  withUser(({ id }) => createTalkFor(id, openSpaceId, talkData));
+
+const editTalk = (openSpaceId, talkId, talkData) =>
+  withUser(({ id }) => editTalkOf(id, openSpaceId, talkId, talkData));
 
 const voteTalk = (talkID) =>
   withUser(({ id: userID }) => put(`talk/${talkID}/user/${userID}/vote`));
@@ -78,4 +84,5 @@ export {
   startCallForPapers,
   voteTalk,
   useGetTalk,
+  editTalk,
 };
