@@ -21,7 +21,7 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
           onClick={() => voteTalk(id).then(() => reloadTalks())}
         />
       )}
-      <Detail margin="small">{votes} votos</Detail>
+      <Detail margin={{ vertical: 'small' }}>{votes} votos</Detail>
     </RowBetween>
   );
 };
