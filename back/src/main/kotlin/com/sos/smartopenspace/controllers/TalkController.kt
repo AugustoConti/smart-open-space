@@ -46,4 +46,8 @@ class TalkController(private val talkService: TalkService) {
   @PutMapping("/{talkID}/user/{userID}/vote")
   fun voteTalk( @PathVariable talkID: Long, @PathVariable userID: Long) =
     talkService.voteTalk(talkID, userID)
+
+  @PutMapping("/{talkID}/user/{userID}/unvote")
+  fun unvoteTalk( @PathVariable talkID: Long, @PathVariable userID: Long) =
+    talkService.unvoteTalk(talkID, userID)
 }
