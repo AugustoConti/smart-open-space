@@ -1,5 +1,7 @@
 package com.sos.smartopenspace.controllers
 
+import com.sos.smartopenspace.anOpenSpaceWith
+import com.sos.smartopenspace.anUser
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
@@ -41,8 +43,8 @@ class TalkControllerTest {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
         val room = anySavedRoom()
-        openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
-        val time = LocalTime.parse("09:30")
+        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
+        val time = LocalTime.parse("09:00")
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${room.id}/${time}")
@@ -54,10 +56,11 @@ class TalkControllerTest {
     fun `when a talk cannot be scheduled it should return a bad request response`() {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
-        val speaker = userRepository.save(anyUser(talk))
+        val speaker = anSavedUserWithTalk(talk)
         val room = anySavedRoom()
-        openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
-        val time = LocalTime.parse("09:30")
+        val time = LocalTime.parse("09:00")
+        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
+
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${room.id}/${time}")
@@ -80,22 +83,9 @@ class TalkControllerTest {
 
     private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
 
-    private fun anySavedUser() = userRepository.save(User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf()))
+    private fun anySavedUser() = userRepository.save(anUser())
 
-    private fun anyOpenSpaceWith(talk: Talk, organizer: User, room: Room): OpenSpace {
-        val openSpace = anyOpenSpace(mutableSetOf(talk), room)
-        organizer.addOpenSpace(openSpace)
-        return openSpace
-    }
+    private fun anSavedUserWithTalk(talk: Talk) =
+            userRepository.save(anUser(mutableSetOf(), mutableSetOf(talk)))
 
-    private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf(Talk("charla")), room: Room) = OpenSpace(
-            "os", LocalDate.now(), setOf(room),
-            setOf(
-                    TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
-                    TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45")),
-                    TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("12:00"))
-            ), talks
-    )
-
-    private fun anyUser(talk: Talk) = User("ximena@sos.sos", "Ximena", "ximena", mutableSetOf(), mutableSetOf(talk))
 }
