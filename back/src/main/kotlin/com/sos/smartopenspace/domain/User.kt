@@ -65,7 +65,4 @@ class User(
     return this
   }
 
-  fun vote(aTalk: Talk) {
-    aTalk.beingVoted(this)
-  }
 }

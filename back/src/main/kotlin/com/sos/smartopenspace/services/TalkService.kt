@@ -45,10 +45,10 @@ class TalkService(
     return openSpace
   }
 
-    fun voteTalk(talkID: Long, userID: Long): Talk {
-      val aTalk = findTalk(talkID)
-      val aUser = findUser(userID)
-      aUser.vote(aTalk)
-      return aTalk
-    }
+  fun voteTalk(talkID: Long, userID: Long): Talk {
+    val aTalk = findTalk(talkID)
+    val aUser = findUser(userID)
+    aTalk.addVoteBy(aUser)
+    return aTalk
+  }
 }
