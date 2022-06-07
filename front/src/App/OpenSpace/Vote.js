@@ -9,18 +9,19 @@ import Detail from '#shared/Detail';
 
 export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
   const currentUser = useUser();
-  const isCurrentUser = (user) => user.id === currentUser.id;
+  const isCurrentUser = (user) => currentUser && user && user.id === currentUser.id;
   const alreadyVotedByTheCurrentUser = votingUsers.some((user) => isCurrentUser(user));
+  const canVote = currentUser && !alreadyVotedByTheCurrentUser;
 
   return (
     <RowBetween alignSelf="end">
-      {!alreadyVotedByTheCurrentUser && (
+      {canVote && (
         <Button
           icon={<PlusHeartIcon />}
           onClick={() => voteTalk(id).then(() => reloadTalks())}
         />
       )}
-      <Detail>{votes} votos</Detail>
+      <Detail margin="small">{votes} votos</Detail>
     </RowBetween>
   );
 };
