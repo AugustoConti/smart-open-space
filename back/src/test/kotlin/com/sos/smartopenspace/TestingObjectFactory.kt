@@ -1,7 +1,6 @@
 package com.sos.smartopenspace
 
 import com.sos.smartopenspace.domain.*
-import java.net.URL
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -24,11 +23,3 @@ fun anOpenSpace(
     )
 }
 
-fun aTalk(
-    name: String = "a talk",
-    description: String = "A description",
-    link: URL? = null,
-    track: Track? = null
-): Talk {
-    return Talk(name, description, meetingLink = link, track = track)
-}

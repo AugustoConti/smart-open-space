@@ -1,7 +1,6 @@
 package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
-import com.sos.smartopenspace.aTalk
 import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
@@ -16,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
+import java.net.URL
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -111,11 +111,7 @@ class OpenSpaceControllerTest {
     fun `can update a talk correctly`() {
         val user = repoUser.save(anyUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
-        anOpenSpace.toggleCallForPapers(user)
-        val aTalk = aTalk()
-        anOpenSpace.addTalk(aTalk)
-        user.addTalk(aTalk)
-        repoTalk.save(aTalk)
+        val aTalk = anyTalk(anOpenSpace, user)
 
         val changedDescription = "a different description"
         val entityResponse = mockMvc.perform(
@@ -218,6 +214,23 @@ class OpenSpaceControllerTest {
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
             )
         )
+    }
+
+    private fun anyTalk(
+        anOpenSpace: OpenSpace,
+        user: User,
+        name: String = "a talk",
+        description: String = "A description",
+        meetingLink: URL? = null,
+        track: Track? = null
+    ): Talk {
+        anOpenSpace.toggleCallForPapers(user)
+        val aTalk = Talk(name, description, meetingLink = meetingLink, track = track)
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        repoTalk.save(aTalk)
+        anOpenSpace.toggleCallForPapers(user)
+        return aTalk
     }
 
     private fun anOpenSpaceCreationBody(
