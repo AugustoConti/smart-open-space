@@ -15,3 +15,4 @@ class TalkDoesntBelongException : RuntimeException("Charla no pertence al Open S
 class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
 class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
 class CallForPapersClosedException : RuntimeException("La convocatoria se encuentra cerrada")
+class NotValidTrackForOpenSpaceException : RuntimeException("El track de la charla no pertenece a este open space")

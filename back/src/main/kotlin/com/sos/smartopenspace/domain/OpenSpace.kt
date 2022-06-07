@@ -10,8 +10,6 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
-class NotValidTrackForOpenSpaceException : RuntimeException("El track de la charla no pertenece a este open space")
-
 @Entity
 class OpenSpace(
   @field:NotEmpty(message = "Ingrese un nombre")
