@@ -49,7 +49,11 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({ talk: { description, name, speaker, meetingLink, track }, room, children }) => {
+const Talk = ({
+  talk: { description, name, speaker, meetingLink, track },
+  room,
+  children,
+}) => {
   const [open, setOpen] = useState(false);
 
   const color = track ? track.color : 'accent-3';
