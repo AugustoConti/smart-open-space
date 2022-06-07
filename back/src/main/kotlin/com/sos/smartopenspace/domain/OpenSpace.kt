@@ -116,13 +116,13 @@ class OpenSpace(
     return this
   }
 
-  private fun checkTrackIsValid(trac: Track?) {
-    if (isTrackValid(trac))
+  private fun checkTrackIsValid(track: Track?) {
+    if (!isTrackValid(track))
       throw NotValidTrackForOpenSpaceException()
   }
 
   private fun isTrackValid(track: Track?) =
-    areTracksUsed(track) && !trackIsFromThisOpenSpace(track)
+    !(areTracksUsed(track) && !trackIsFromThisOpenSpace(track))
 
   private fun trackIsFromThisOpenSpace(track: Track?) = tracks.any { it == track }
 
