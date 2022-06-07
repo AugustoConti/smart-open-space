@@ -22,6 +22,7 @@ class ExceptionHandler {
     fun unprocessableEntityHandler(exception: Exception) : ResponseEntity<UnprocessableEntityException> {
         return ResponseEntity(UnprocessableEntityException(exception.message), HttpStatus.UNPROCESSABLE_ENTITY)
     }
+
 }
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)

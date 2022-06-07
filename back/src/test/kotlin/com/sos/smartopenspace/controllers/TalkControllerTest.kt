@@ -84,6 +84,13 @@ class TalkControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(talk.name))
     }
 
+    @Test
+    fun `Asking for a talk that not exist returns a bad request`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/talk/-1")
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
 
     @Test
     fun `can update a talk correctly`() {

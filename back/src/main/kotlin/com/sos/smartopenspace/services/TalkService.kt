@@ -85,6 +85,6 @@ class TalkService(
 
 
     fun getTalk(talkID: Long): Talk? {
-      return talkRepository.findByIdOrNull(talkID)
+      return talkRepository.findByIdOrNull(talkID) ?: throw TalkNotFoundException()
     }
 }
