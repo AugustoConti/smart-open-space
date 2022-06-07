@@ -8,15 +8,15 @@ class VoteTest {
 
     @Test
     fun `a talk has not votes when is created`() {
-        var aTalk = Talk("charla sin votos")
+        val aTalk = Talk("charla sin votos")
 
         assertEquals(aTalk.votes(), 0)
     }
 
     @Test
     fun `a user votes a talk`() {
-        var aTalk = Talk("charla sin votos")
-        var aUser = aUser()
+        val aTalk = Talk("charla sin votos")
+        val aUser = aUser()
 
         aUser.vote(aTalk)
 
@@ -25,8 +25,8 @@ class VoteTest {
 
     @Test
     fun `a user cannot voted a talk twice`() {
-        var aTalk = Talk("charla sin votos")
-        var aUser = aUser()
+        val aTalk = Talk("charla sin votos")
+        val aUser = aUser()
 
         aUser.vote(aTalk)
         aUser.vote(aTalk)
