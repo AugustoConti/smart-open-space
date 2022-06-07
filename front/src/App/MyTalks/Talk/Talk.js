@@ -14,7 +14,6 @@ import Title from '#shared/Title';
 import SelectSlot from './SelectSlot';
 import {
   usePushToEditTalk,
-  usePushToNewTalk,
   usePushToOpenSpace,
   usePushToSchedule,
 } from '#helpers/routes';

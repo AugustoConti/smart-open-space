@@ -21,7 +21,8 @@ const Routes = () => (
   <Switch>
     <Route path="/os/:id/projector" exact component={OSProjector} />
     <Route path="/os/:id/myTalks" exact component={MyTalks} />
-    <Route path={['/newTalk/:id', '/editTalk/:id/:talkId']} exact component={EditTalk} />
+    <Route path="/newTalk/:id" exact component={EditTalk} />
+    <Route path="/os/:id/editTalk/:talkId" exact component={EditTalk} />
     <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
     <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />
