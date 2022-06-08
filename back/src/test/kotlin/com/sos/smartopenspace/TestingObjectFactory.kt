@@ -1,6 +1,9 @@
 package com.sos.smartopenspace
 
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.persistence.OpenSpaceRepository
+import com.sos.smartopenspace.persistence.TalkRepository
+import com.sos.smartopenspace.persistence.UserRepository
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -23,3 +26,29 @@ fun anOpenSpace(
     )
 }
 
+fun aUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
+    User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
+
+fun aSavedTalk(talkRepository: TalkRepository, repoOpenSpace: OpenSpaceRepository, repoUser: UserRepository): Talk {
+    val openSpace = anOpenSpace()
+    repoOpenSpace.save(openSpace)
+    val user = aUser()
+    repoUser.save(user)
+    user.addOpenSpace(openSpace)
+    openSpace.toggleCallForPapers(user)
+    val aTalk = Talk("a name", description = "first description")
+    openSpace.addTalk(aTalk)
+    user.addTalk(aTalk)
+    talkRepository.save(aTalk)
+    return aTalk
+}
+
+fun generateTalkBody(name: String = "asdf", description: String = "a generic description", aMeeting: String = "http://aGenericLink.com"): String {
+    return """
+            {
+                "name": "${name}",
+                "description": "${description}",
+                "meetingLink": "${aMeeting}"
+            }
+        """.trimIndent()
+}

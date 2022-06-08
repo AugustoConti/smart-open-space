@@ -1,9 +1,13 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Talk
+import com.sos.smartopenspace.domain.Track
+import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
+import com.sos.smartopenspace.persistence.TrackRepository
 import com.sos.smartopenspace.websockets.QueueSocket
 import com.sos.smartopenspace.websockets.ScheduleSocket
 import org.springframework.data.repository.findByIdOrNull
@@ -17,6 +21,7 @@ class TalkService(
   private val openSpaceRepository: OpenSpaceRepository,
   private val talkRepository: TalkRepository,
   private val roomRepository: RoomRepository,
+  private val trackRepository: TrackRepository,
   private val userService: UserService,
   private val scheduleSocket: ScheduleSocket,
   private val queueSocket: QueueSocket
@@ -43,4 +48,31 @@ class TalkService(
     queueSocket.sendFor(os)
     return os
   }
+
+  fun updateTalk(talkId: Long, userId: Long, createTalkDTO: CreateTalkDTO): Talk {
+    val talk = findTalk(talkId)
+    val track: Track? = findTrack(createTalkDTO.trackId)
+    val user = findUser(userId)
+
+    user.checkOwnershipOf(talk)
+    talk.update(
+      name = createTalkDTO.name,
+      description = createTalkDTO.description,
+      meetingLink = createTalkDTO.meetingLink,
+      track = track
+    )
+
+    return talk
+  }
+
+  private fun findTrack(trackId: Long?): Track? {
+    val track: Track? = trackId?.let {
+      findTrackById(it)
+    }
+    return track
+  }
+
+  @Transactional(readOnly = true)
+  fun findTrackById(id: Long) = trackRepository.findByIdOrNull(id) ?: throw TrackNotFoundException()
+
 }

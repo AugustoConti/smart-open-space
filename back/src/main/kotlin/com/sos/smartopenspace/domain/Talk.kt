@@ -47,6 +47,7 @@ class Talk(
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 
   fun update(name: String, description: String, meetingLink: URL? = null, track: Track? = null) {
+    openSpace.checkTrackIsValid(track)
     this.name = name
     this.description = description
     this.meetingLink = meetingLink

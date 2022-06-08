@@ -68,7 +68,7 @@ class User(
     talk.update(name = talkName, description = talkDescription, meetingLink = talkMeetingLink, track = talkTrack)
   }
 
-  private fun checkOwnershipOf(talk: Talk) {
+  fun checkOwnershipOf(talk: Talk) {
       if (this != talk.speaker)
         throw UserNotOwnerOfTalkException()
   }

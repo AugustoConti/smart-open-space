@@ -1,12 +1,11 @@
 package com.sos.smartopenspace.controllers
 
+import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.services.TalkService
 import org.springframework.format.annotation.DateTimeFormat
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalTime
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("talk")
@@ -31,4 +30,8 @@ class TalkController(private val talkService: TalkService) {
   @PutMapping("/nextTalk/{userID}/{osID}")
   fun nextTalk(@PathVariable userID: Long, @PathVariable osID: Long) =
     talkService.nextTalk(userID, osID)
+
+  @PutMapping("/{talkId}/user/{userId}")
+  fun updateTalk(@PathVariable talkId: Long, @PathVariable userId: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =
+    talkService.updateTalk(talkId, userId, createTalkDTO)
 }

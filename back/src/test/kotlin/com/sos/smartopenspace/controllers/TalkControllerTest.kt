@@ -1,6 +1,10 @@
 package com.sos.smartopenspace.controllers
 
+import com.jayway.jsonpath.JsonPath
+import com.sos.smartopenspace.aUser
+import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.generateTalkBody
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
@@ -62,6 +66,52 @@ class TalkControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${room.id}/${time}")
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `can update a talk correctly`() {
+        val user = userRepository.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        openSpaceRepository.save(anOpenSpace)
+
+        val aTalk = Talk("a talk")
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        talkRepository.save(aTalk)
+
+        val changedDescription = "a different description"
+        val entityResponse = mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/${aTalk.id}/user/${user.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(description = changedDescription))
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+
+        val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value(changedDescription))
+    }
+
+    @Test
+    fun `updating an inexistent talk returns a bad request status`() {
+        val user = userRepository.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        openSpaceRepository.save(anOpenSpace)
+        val inexistentTalkId = 789
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/${inexistentTalkId}/user/${user.id}")
+                .contentType("application/json")
+                .content(generateTalkBody())
+        ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
 
     private fun anySavedRoom() = roomRepository.save(Room("Sala"))
