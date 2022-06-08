@@ -2,7 +2,6 @@ package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Talk
-import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.domain.Track
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
@@ -84,8 +83,6 @@ class TalkService(
   fun findTrackById(id: Long) = trackRepository.findByIdOrNull(id) ?: throw TrackNotFoundException()
 
 
-    fun getTalk(talkID: Long): Talk? {
-      return talkRepository.findByIdOrNull(talkID) ?: throw TalkNotFoundException()
     fun getTalk(talkID: Long): Talk {
       return findTalk(talkID)
     }
