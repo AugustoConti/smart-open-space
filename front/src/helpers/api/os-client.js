@@ -12,7 +12,7 @@ const createTalkFor = (userId, openSpaceId, talkData) =>
   post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
 
 const editTalkOf = (userId, openSpaceId, talkId, talkData) =>
-  put(`openSpace/${openSpaceId}/user/${userId}/talk/${talkId}`, talkData);
+  put(`talk/${talkId}/user/${userId}`, talkData);
 
 const createTalk = (openSpaceId, talkData) =>
   withUser(({ id }) => createTalkFor(id, openSpaceId, talkData));
