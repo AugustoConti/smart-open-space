@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
@@ -33,14 +34,21 @@ class TalkService(
   }
 
   fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime): OpenSpace {
-    val os = findTalk(talkID).exchange(time, findRoom(roomID))
-    scheduleSocket.sendFor(os)
-    return os
+    val openSpace = findTalk(talkID).exchange(time, findRoom(roomID))
+    scheduleSocket.sendFor(openSpace)
+    return openSpace
   }
 
   fun nextTalk(userID: Long, osID: Long): OpenSpace {
-    val os = findOpenSpace(osID).nextTalk(findUser(userID))
-    queueSocket.sendFor(os)
-    return os
+    val openSpace = findOpenSpace(osID).nextTalk(findUser(userID))
+    queueSocket.sendFor(openSpace)
+    return openSpace
+  }
+
+  fun voteTalk(talkID: Long, userID: Long): Talk {
+    val aTalk = findTalk(talkID)
+    val aUser = findUser(userID)
+    aTalk.addVoteBy(aUser)
+    return aTalk
   }
 }

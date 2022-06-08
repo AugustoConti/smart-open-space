@@ -29,6 +29,7 @@ import {
   StatusGoodSmall,
   Projects,
   FormPreviousLink,
+  Favorite,
 } from 'grommet-icons';
 
 export {
@@ -63,4 +64,5 @@ export {
   StatusGoodSmall as CircleIcon,
   Projects as TracksIcon,
   FormPreviousLink as PreviousLinkIcon,
+  Favorite as VoteIcon,
 };

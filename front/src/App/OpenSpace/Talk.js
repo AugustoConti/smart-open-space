@@ -49,27 +49,27 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
-const Talk = ({ talk: { description, name, speaker, track, meetingLink }, room }) => {
+const Talk = ({
+  talk: { description, name, speaker, meetingLink, track },
+  room,
+  children,
+}) => {
   const [open, setOpen] = useState(false);
 
   const color = track ? track.color : 'accent-3';
   let shouldDisplayMoreInfo = description || meetingLink;
   return (
     <>
-      <Card
-        borderColor={color}
-        height={room ? '230px' : undefined}
-        margin="xsmall"
-        gap="small"
-      >
-        <Box>
+      <Card borderColor={color} height="250px" margin="xsmall" gap="small">
+        {children}
+        <Box gap="medium">
           <Box overflow="hidden">
             <Title>{name}</Title>
           </Box>
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
+          {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
         </Box>
-        {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
       </Card>
       {open && (
         <DescriptionInfo

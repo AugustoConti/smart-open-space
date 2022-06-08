@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URL
 import java.time.LocalTime
 import javax.persistence.*
@@ -27,6 +28,13 @@ class Talk(
   @ManyToOne(cascade = [CascadeType.ALL])
   val track: Track? = null
 ) {
+
+  @ManyToMany(cascade = [CascadeType.ALL])
+  @JoinTable(name = "vote",
+          joinColumns = [JoinColumn(name = "talk_id", referencedColumnName = "id")],
+          inverseJoinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")])
+  var votingUsers: MutableSet<User> = mutableSetOf()
+
   @ManyToOne
   lateinit var speaker: User
 
@@ -45,4 +53,13 @@ class Talk(
   }
 
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
+
+  @JsonProperty
+  fun votes(): Int {
+    return votingUsers.size
+  }
+
+  fun addVoteBy(user: User) {
+    votingUsers.add(user)
+  }
 }

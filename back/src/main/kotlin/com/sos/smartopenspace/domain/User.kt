@@ -42,6 +42,7 @@ class User(
   @Id @GeneratedValue
   var id: Long = 0
 ) {
+
   init {
     openSpaces.forEach { it.organizer = this }
     talks.forEach { it.speaker = this }
@@ -58,4 +59,5 @@ class User(
     openSpaces.add(openSpace)
     return this
   }
+
 }
