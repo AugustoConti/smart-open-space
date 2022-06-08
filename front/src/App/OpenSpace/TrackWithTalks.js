@@ -3,11 +3,16 @@ import TalksGrid from './TalksGrid';
 import React from 'react';
 import * as PropTypes from 'prop-types';
 
-export function TrackWithTalks({ track }) {
+export function TrackWithTalks({ talks, reloadTalks, track }) {
+  const filteredTalks = talks.filter((talk) => talk.track.id === track.id);
   return (
     <>
-      <Heading color={track.color}> {track.name} </Heading>
-      <TalksGrid filterBy={(talk) => talk.track.id === track.id} />
+      {filteredTalks.length > 0 && (
+        <>
+          <Heading color={track.color}> {track.name} </Heading>
+          <TalksGrid talks={filteredTalks} reloadTalks={reloadTalks} />
+        </>
+      )}
     </>
   );
 }
