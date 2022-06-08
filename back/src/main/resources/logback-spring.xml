@@ -13,24 +13,8 @@
         </layout>
     </appender>
 
-    <appender name="Email" class="ch.qos.logback.classic.net.SMTPAppender">
-        <smtpHost>smtp.gmail.com</smtpHost>
-        <smtpPort>587</smtpPort>
-        <STARTTLS>true</STARTTLS>
-        <asynchronousSending>false</asynchronousSending>
-        <username>${email_username}</username>
-        <password>${email_password}</password>
-        <to>${email_to}</to>
-        <from>${email_username}</from>
-        <subject>SOS: %logger{20} - %m</subject>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%date %-5level %logger{35} - %message%n</pattern>
-        </layout>
-    </appender>
-
     <root level="info">
         <appender-ref ref="Console"/>
-        <appender-ref ref="Email" />
     </root>
 
 </configuration>
