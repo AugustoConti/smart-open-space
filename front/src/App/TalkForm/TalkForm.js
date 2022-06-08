@@ -24,7 +24,7 @@ export const TalkForm = ({
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text
           label="Título"
-          placeholder="¿De que trata tu charla?"
+          placeholder="¿Como querés nombrar tu charla?"
           value={initialValues.name}
         />
         <MyForm.TextArea
@@ -33,7 +33,7 @@ export const TalkForm = ({
         />
         <MyForm.Link
           label="Link"
-          placeholder="Link a la reunion"
+          placeholder="Link a la reunión virtual (meet/zoom)"
           value={initialValues.meetingLink ? initialValues.meetingLink : ''}
         />
         {openSpaceHasTracks && (

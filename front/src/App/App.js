@@ -6,7 +6,6 @@ import { grommet, Grommet } from 'grommet';
 import { AuthProvider } from '#helpers/useAuth';
 
 import EditOpenSpace from './EditOpenSpace';
-import NewTalk from './TalkForm';
 import Home from './Home';
 import Login from './Login';
 import MainLayout from './MainLayout';
@@ -16,7 +15,8 @@ import OSProjector from './OSProjector';
 import Header from './Header';
 import ErrorBoundary from './ErrorBoundary';
 import Schedule from './OpenSpace/schedule/Schedule';
-import EditTalk from './TalkForm/EditTalk';
+
+import { EditTalk, NewTalk } from './TalkForm';
 
 const Routes = () => (
   <Switch>
