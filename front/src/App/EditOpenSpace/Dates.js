@@ -1,28 +1,28 @@
 import React, { useState } from 'react';
 
-import { Box, TextInput } from 'grommet';
+import { Box } from 'grommet';
 import PropTypes from 'prop-types';
 import RowBetween from '#shared/RowBetween';
-import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 import { PlusButton } from '#shared/PlusButton';
+import MyCalendar from './MyCalendar';
+import ListWithRemoveButton from './ourList';
 
-const Rooms = ({ value, onChange }) => {
-  const initialValue = { name: '' };
-  const [room, setRoom] = useState(initialValue);
-  const hasNoRoomName = room.name.trim().length < 1;
-
+const Dates = ({ value, onChange }) => {
+  const initialValue = { date: '' };
+  const [date, setDate] = useState(initialValue);
+  const isDateEmpty = date.date.trim().length < 1;
   return (
     <Box pad="small">
       <RowBetween>
-        <TextInput
-          onChange={(event) => setRoom({ name: event.target.value })}
+        <MyCalendar
+          onChange={(event) => setDate({ date: event.target.value })}
           placeholder="Nombre de sala"
-          value={room.name}
+          value={date.date}
         />
         <PlusButton
-          conditionToDisable={hasNoRoomName}
-          item={room}
-          setItem={setRoom}
+          conditionToDisable={isDateEmpty}
+          item={date}
+          setItem={setDate}
           value={value}
           initialItem={initialValue}
           onChange={onChange}
@@ -32,9 +32,9 @@ const Rooms = ({ value, onChange }) => {
     </Box>
   );
 };
-Rooms.propTypes = {
+Dates.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default Rooms;
+export default Dates;

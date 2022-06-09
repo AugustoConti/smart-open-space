@@ -18,10 +18,10 @@ import Title from '#shared/Title';
 import Detail from '#shared/Detail';
 import { RedirectToRoot, usePushToRoot } from '#helpers/routes';
 
-import MyCalendar from './MyCalendar';
 import Rooms from './Rooms';
 import TimeSelector from './TimeSelector';
 import Tracks from './Tracks';
+import Dates from './Dates';
 const OTHER_SLOT = 'OtherSlot';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
@@ -32,7 +32,6 @@ const splitTime = (time) =>
 const InputTime = ({ onChange, start, title, value }) => {
   const [startHour, startMinutes] = splitTime(start);
   const [currentHour] = splitTime(value);
-
   return (
     <Box direction="row">
       <Text alignSelf="center">{title}</Text>
@@ -124,7 +123,7 @@ const beforeToday = (date) =>
   new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
 
 const initialValues = {
-  date: new Date().toISOString(),
+  dates: [],
   rooms: [],
   slots: [],
   tracks: [],
@@ -202,10 +201,10 @@ const EditOpenSpace = () => {
         />
         <Box direction="row">
           <MyForm.Field
-            component={MyCalendar}
+            component={Dates}
             icon={<CalendarIcon />}
             label="Fecha"
-            name="date"
+            name="dates"
             validate={(date) => {
               if (beforeToday(date)) {
                 return 'Ingresa una fecha mayor o igual a hoy';

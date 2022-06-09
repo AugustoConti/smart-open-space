@@ -3,7 +3,7 @@ import { AddIcon } from '#shared/icons';
 import React from 'react';
 
 export const PlusButton = ({
-  conditionToAdd,
+  conditionToDisable,
   onChange,
   value,
   item,
@@ -14,9 +14,9 @@ export const PlusButton = ({
   return (
     <Button
       icon={<AddIcon />}
-      disabled={conditionToAdd}
+      disabled={conditionToDisable}
       onClick={() => {
-        if (conditionToAdd) return;
+        if (conditionToDisable) return;
         onChange({ target: { value: [...value, item] } });
         setItem(initialItem);
       }}
