@@ -49,24 +49,6 @@ class OpenSpaceService(
     return talk
   }
 
-  fun updateTalk(userID: Long, osID: Long, talkId: Long, createTalkDTO: CreateTalkDTO): Talk {
-    val talk = findTalk(talkId)
-    val track: Track? = findTrack(createTalkDTO.trackId)
-    val openSpace = findById(osID)
-    val user = findUser(userID)
-
-    openSpace.updateTalk(
-      talk = talk,
-      user = user,
-      talkName = createTalkDTO.name,
-      talkDescription = createTalkDTO.description,
-      talkMeetingLink = createTalkDTO.meetingLink,
-      talkTrack = track
-    )
-
-    return talk
-  }
-
   @Transactional(readOnly = true)
   fun findTalksByUser(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
 

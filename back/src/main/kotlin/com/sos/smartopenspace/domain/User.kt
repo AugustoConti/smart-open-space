@@ -2,7 +2,6 @@ package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.net.URL
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -61,11 +60,6 @@ class User(
     openSpace.organizer = this
     openSpaces.add(openSpace)
     return this
-  }
-
-  fun updateTalk(talk: Talk, talkName: String, talkDescription: String, talkMeetingLink: URL?, talkTrack: Track?) {
-    checkOwnershipOf(talk)
-    talk.update(name = talkName, description = talkDescription, meetingLink = talkMeetingLink, track = talkTrack)
   }
 
   fun checkOwnershipOf(talk: Talk) {

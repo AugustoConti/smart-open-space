@@ -2,7 +2,6 @@ package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.net.URL
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.persistence.*
@@ -207,24 +206,6 @@ class OpenSpace(
   @JsonProperty
   fun amountOfTalks(): Int {
     return talks.size
-  }
-
-  fun updateTalk(
-    talk: Talk,
-    user: User,
-    talkName: String,
-    talkDescription: String,
-    talkMeetingLink: URL?,
-    talkTrack: Track?
-  ) {
-    checkTrackIsValid(talkTrack)
-    user.updateTalk(
-      talk = talk,
-      talkName = talkName,
-      talkDescription = talkDescription,
-      talkMeetingLink = talkMeetingLink,
-      talkTrack = talkTrack
-    )
   }
 }
 
