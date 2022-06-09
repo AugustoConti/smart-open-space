@@ -1,0 +1,18 @@
+package com.sos.smartopenspace.domain
+
+class AlreadyActivedQueuingException : RuntimeException("Encolamiento ya se encuentra activo")
+class AnotherTalkIsEnqueuedException : RuntimeException("Existe otra charla encolada")
+class BusySlotException : RuntimeException("Slot ocupado")
+class CantFinishTalkException : RuntimeException("No podes terminar la charla actual")
+class EmptyQueueException : RuntimeException("La cola de charlas está vacía")
+class FinishedQueuingException : RuntimeException("Encolamiento finalizado")
+class InactiveQueueException : RuntimeException("No está activo el encolamiento")
+class NotTheOrganizerException : RuntimeException("No sos el organizador")
+class SlotNotFoundException : RuntimeException("No existe un slot en ese horario")
+class TalkAlreadyAssignedException : RuntimeException("Charla ya está agendada")
+class TalkAlreadyEnqueuedException : RuntimeException("Charla ya está encolada")
+class TalkDoesntBelongException : RuntimeException("Charla no pertenece al Open Space")
+class TalkIsNotForScheduledException : RuntimeException("Charla no está para agendar")
+class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
+class CallForPapersClosedException : RuntimeException("La convocatoria se encuentra cerrada")
+class NotValidTrackForOpenSpaceException : RuntimeException("El track de la charla no pertenece a este open space")

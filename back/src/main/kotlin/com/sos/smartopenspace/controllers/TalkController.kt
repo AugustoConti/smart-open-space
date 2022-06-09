@@ -34,4 +34,8 @@ class TalkController(private val talkService: TalkService) {
   @PutMapping("/{talkId}/user/{userId}")
   fun updateTalk(@PathVariable talkId: Long, @PathVariable userId: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =
     talkService.updateTalk(talkId, userId, createTalkDTO)
+    
+  @PutMapping("/{talkID}/user/{userID}/vote")
+  fun voteTalk( @PathVariable talkID: Long, @PathVariable userID: Long) =
+    talkService.voteTalk(talkID, userID)
 }
