@@ -27,7 +27,7 @@ const ListWithRemoveButton = ({ items, onChange }) => {
       {items.map((item, itemIndex) => (
         <Item
           key={`${item.date}-${itemIndex}`}
-          itemName={new Date(item.date).toLocaleDateString()}
+          itemName={new Date(item.date).toLocaleDateString('es')}
           onRemove={() =>
             onChange({
               target: { value: items.filter((_, index) => index !== itemIndex) },

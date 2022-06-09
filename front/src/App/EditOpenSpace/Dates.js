@@ -5,12 +5,13 @@ import PropTypes from 'prop-types';
 import RowBetween from '#shared/RowBetween';
 import { PlusButton } from '#shared/PlusButton';
 import MyCalendar from './MyCalendar';
-import ListWithRemoveButton from './ourList';
+import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 
 const Dates = ({ value, onChange }) => {
   const initialValue = { date: '' };
   const [date, setDate] = useState(initialValue);
   const isDateEmpty = date.date.trim().length < 1;
+  const isDateIncluded = value.some((eachDate) => eachDate.date === date.date);
   return (
     <Box pad="small">
       <RowBetween>
@@ -20,7 +21,7 @@ const Dates = ({ value, onChange }) => {
           value={date.date}
         />
         <PlusButton
-          conditionToDisable={isDateEmpty}
+          conditionToDisable={isDateEmpty || isDateIncluded}
           item={date}
           setItem={setDate}
           value={value}
@@ -28,7 +29,11 @@ const Dates = ({ value, onChange }) => {
           onChange={onChange}
         />
       </RowBetween>
-      <ListWithRemoveButton items={value} onChange={onChange} />
+      <ListWithRemoveButton
+        items={value}
+        onChange={onChange}
+        displayName={(item) => new Date(item.date).toLocaleDateString('es')}
+      />
     </Box>
   );
 };
