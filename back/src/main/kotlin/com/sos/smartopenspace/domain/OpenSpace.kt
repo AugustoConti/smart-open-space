@@ -35,8 +35,8 @@ class OpenSpace(
   @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
-  @field:Column(length=1000)
-  @field:Size(min=0, max=1000)
+  @field:Column(length = 1000)
+  @field:Size(min = 0, max = 1000)
   val description: String = "",
 
   @field:Valid
@@ -92,15 +92,19 @@ class OpenSpace(
   fun addTalk(talk: Talk): OpenSpace {
     checkIsFinishedQueue()
     checkIsActiveCallForPapers()
-    if (isTrackValid(talk.track))
-      throw NotValidTrackForOpenSpaceException()
+    checkTrackIsValid(talk.track)
     talk.openSpace = this
     talks.add(talk)
     return this
   }
 
+  fun checkTrackIsValid(track: Track?) {
+    if (!isTrackValid(track))
+      throw NotValidTrackForOpenSpaceException()
+  }
+
   private fun isTrackValid(track: Track?) =
-    areTracksUsed(track) && !trackIsFromThisOpenSpace(track)
+    !(areTracksUsed(track) && !trackIsFromThisOpenSpace(track))
 
   private fun trackIsFromThisOpenSpace(track: Track?) = tracks.any { it == track }
 
@@ -110,7 +114,7 @@ class OpenSpace(
   fun containsTalk(talk: Talk) = talks.contains(talk)
 
   private fun checkIsActiveCallForPapers() {
-    if (!isActiveCallForPapers )
+    if (!isActiveCallForPapers)
       throw CallForPapersClosedException()
   }
 
@@ -128,7 +132,8 @@ class OpenSpace(
     isBusySlot(room, time) && throw BusySlotException()
   }
 
-  private fun findTalkSlot(time: LocalTime) = slots.find { it.startTime == time && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
+  private fun findTalkSlot(time: LocalTime) =
+    slots.find { it.startTime == time && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
 
   fun scheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User): AssignedSlot {
     val slot = findTalkSlot(time)

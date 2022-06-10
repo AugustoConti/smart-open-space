@@ -82,14 +82,19 @@ class OpenSpaceService(
   }
 
   private fun createTalkFrom(createTalkDTO: CreateTalkDTO): Talk {
-    val track: Track? = createTalkDTO.trackId?.let {
-      findTrackById(it)
-    }
+    val track: Track? = findTrack(createTalkDTO.trackId)
     return Talk(
       name = createTalkDTO.name,
       description = createTalkDTO.description,
       meetingLink = createTalkDTO.meetingLink,
       track = track
     )
+  }
+
+  private fun findTrack(trackId: Long?): Track? {
+    val track: Track? = trackId?.let {
+      findTrackById(it)
+    }
+    return track
   }
 }

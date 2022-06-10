@@ -13,20 +13,20 @@ import javax.validation.constraints.NotEmpty
 class Talk(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
-  val name: String,
+  var name: String,
 
   @Column(columnDefinition = "VarChar")
-  val description: String = "",
+  var description: String = "",
 
   @Id
   @GeneratedValue
   val id: Long = 0,
 
-  val meetingLink: URL? = null,
+  var meetingLink: URL? = null,
 
   @field:Valid
   @ManyToOne(cascade = [CascadeType.ALL])
-  val track: Track? = null
+  var track: Track? = null
 ) {
 
   @ManyToMany(cascade = [CascadeType.ALL])
@@ -54,6 +54,14 @@ class Talk(
 
   fun enqueue(): OpenSpace = openSpace.enqueueTalk(this)
 
+  fun update(name: String, description: String, meetingLink: URL? = null, track: Track? = null) {
+    openSpace.checkTrackIsValid(track)
+    this.name = name
+    this.description = description
+    this.meetingLink = meetingLink
+    this.track = track
+  }
+  
   @JsonProperty
   fun votes(): Int {
     return votingUsers.size

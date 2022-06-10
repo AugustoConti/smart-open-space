@@ -2,8 +2,11 @@ package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.anOpenSpace
+import com.sos.smartopenspace.aUser
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.generateTalkBody
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
+import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
+import java.net.URL
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -23,8 +27,6 @@ import java.time.LocalTime
 @ActiveProfiles("test")
 @Transactional
 class OpenSpaceControllerTest {
-    private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
-        User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -36,9 +38,12 @@ class OpenSpaceControllerTest {
     @Autowired
     lateinit var repoOpenSpace: OpenSpaceRepository
 
+    @Autowired
+    lateinit var repoTalk: TalkRepository
+
     @Test
     fun `creating a valid OpenSpace returns an ok status response`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val description = "W".repeat(1000)
         val track_color = "#FFFFFF"
         val track_name = "a track"
@@ -68,7 +73,7 @@ class OpenSpaceControllerTest {
 
     @Test
     fun `creating an invalid OpenSpace returns a bad request response`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val openSpaceBody = anOpenSpaceCreationBody("W".repeat(1001))
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/${user.id}")
@@ -80,7 +85,7 @@ class OpenSpaceControllerTest {
 
     @Test
     fun `can create a valid talk and get it correctly`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val track = Track("a track", color = "#FFFFFF")
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user, setOf(track)))
         anOpenSpace.toggleCallForPapers(user)
@@ -104,35 +109,35 @@ class OpenSpaceControllerTest {
 
     @Test
     fun `creating an invalid talk return an bad request status`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
         val anInvalidLink = "invalid link"
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
-                .content(generateTalkBody(anInvalidLink))
+                .content(generateTalkBody(aMeeting = anInvalidLink))
         )
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
     @Test
     fun `creating a talk when call for papers is closed return an unprocessable entity status`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpace())
         val aMeetingLink = "https://aLink"
 
         mockMvc.perform(
             MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
                 .contentType("application/json")
-                .content(generateTalkBody(aMeetingLink))
+                .content(generateTalkBody(aMeeting = aMeetingLink))
         )
             .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity)
     }
 
     @Test
     fun `start a call for papers returns an ok status response and the modified Open Space`() {
-        val user = repoUser.save(anyUser())
+        val user = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
 
         mockMvc.perform(
@@ -145,8 +150,8 @@ class OpenSpaceControllerTest {
 
     @Test
     fun `starting a call for papers with a non organizer user return a bad request status`() {
-        val organizer = repoUser.save(anyUser())
-        val aUser = repoUser.save(anyUser())
+        val organizer = repoUser.save(aUser())
+        val aUser = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(organizer))
 
         mockMvc.perform(
@@ -208,15 +213,6 @@ class OpenSpaceControllerTest {
         """.trimIndent()
     }
 
-    private fun generateTalkBody(aMeeting: String): String {
-        return """
-            {
-                "name": "asdf",
-                "meetingLink": "${aMeeting}"
-            }
-        """.trimIndent()
-    }
-
     private fun generateTalkWithTrackBody(aMeeting: String, track: Track): String {
         return """
             {
@@ -226,4 +222,5 @@ class OpenSpaceControllerTest {
             }
         """.trimIndent()
     }
+
 }

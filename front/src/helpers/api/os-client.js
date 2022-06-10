@@ -8,11 +8,17 @@ const withUser = (fn) => fn(getUser());
 
 const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData));
 
-const createTalkFor = (userId, osId, talkData) =>
-  post(`openSpace/talk/${userId}/${osId}`, talkData);
+const createTalkFor = (userId, openSpaceId, talkData) =>
+  post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
 
-const createTalk = (osId, talkData) =>
-  withUser(({ id }) => createTalkFor(id, osId, talkData));
+const editTalkOf = (userId, openSpaceId, talkId, talkData) =>
+  put(`talk/${talkId}/user/${userId}`, talkData);
+
+const createTalk = (openSpaceId, talkData) =>
+  withUser(({ id }) => createTalkFor(id, openSpaceId, talkData));
+
+const editTalk = (openSpaceId, talkId, talkData) =>
+  withUser(({ id }) => editTalkOf(id, openSpaceId, talkId, talkData));
 
 const voteTalk = (talkID) =>
   withUser(({ id: userID }) => put(`talk/${talkID}/user/${userID}/vote`));
@@ -22,6 +28,9 @@ const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 
 const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
+
+const getTalk = ({ talkId }) => get(`talk/${talkId}`);
+const useGetTalk = () => useAsync({ promiseFn: getTalk, talkId: useParams().talkId });
 
 const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`).then((talks) => talks);
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
@@ -74,4 +83,6 @@ export {
   exchangeTalk,
   startCallForPapers,
   voteTalk,
+  useGetTalk,
+  editTalk,
 };

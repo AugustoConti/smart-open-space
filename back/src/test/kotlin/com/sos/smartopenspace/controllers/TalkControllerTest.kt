@@ -1,8 +1,11 @@
 package com.sos.smartopenspace.controllers
 
-import com.sos.smartopenspace.anOpenSpaceWith
+import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.aUser
+import com.sos.smartopenspace.anOpenSpace
+import com.sos.smartopenspace.anOpenSpaceWith
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.generateTalkBody
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
@@ -67,6 +70,74 @@ class TalkControllerTest {
     }
 
     @Test
+    fun `Asking for an specific talk returns an ok status`() {
+        val organizer = anySavedUser()
+        val talk = anySavedTalk()
+        userRepository.save(anyUser(talk))
+        val room = anySavedRoom()
+        openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/talk/${talk.id}")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(talk.id))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(talk.name))
+    }
+
+    @Test
+    fun `Asking for a talk that not exist returns a bad request`() {
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/talk/77777")
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+
+    @Test
+    fun `can update a talk correctly`() {
+        val user = userRepository.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        openSpaceRepository.save(anOpenSpace)
+
+        val aTalk = Talk("a talk")
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        talkRepository.save(aTalk)
+
+        val changedDescription = "a different description"
+        val entityResponse = mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/${aTalk.id}/user/${user.id}")
+                .contentType("application/json")
+                .content(generateTalkBody(description = changedDescription))
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+
+        val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
+            .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value(changedDescription))
+    }
+
+    @Test
+    fun `updating an inexistent talk returns a bad request status`() {
+        val user = userRepository.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        openSpaceRepository.save(anOpenSpace)
+        val inexistentTalkId = 789
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/${inexistentTalkId}/user/${user.id}")
+                .contentType("application/json")
+                .content(generateTalkBody())
+        ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    }
+    
     fun `a talk voted by user return an ok status response`() {
         val aUser = anySavedUser()
         val talk = anySavedTalk()
