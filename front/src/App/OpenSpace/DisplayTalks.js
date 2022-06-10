@@ -2,15 +2,12 @@ import { RedirectToRoot, usePushToNewTalk } from '#helpers/routes';
 import EmptyTalk from '../MyTalks/EmptyTalk';
 import { TrackWithTalks } from './TrackWithTalks';
 import TalksGrid from './TalksGrid';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useGetTalks } from '#api/os-client';
 import Spinner from '#shared/Spinner';
 
 export function DisplayTalks({ amountOfTalks, activeCallForPapers, tracks }) {
   const { data: talks, isPending, isRejected, reload: reloadTalks } = useGetTalks();
-  const reload = useCallback(() => {
-    reloadTalks();
-  }, [reloadTalks]);
   const pushToNewTalk = usePushToNewTalk();
   const shouldDisplayEmptyTalk = amountOfTalks === 0 && activeCallForPapers;
   const shouldDisplayTrackWithTalks = tracks.length > 0 && amountOfTalks > 0;
@@ -22,9 +19,9 @@ export function DisplayTalks({ amountOfTalks, activeCallForPapers, tracks }) {
 
   if (shouldDisplayTrackWithTalks) {
     return tracks.map((track) => (
-      <TrackWithTalks talks={talks} reloadTalks={reload} track={track} />
+      <TrackWithTalks talks={talks} reloadTalks={reloadTalks} track={track} />
     ));
   }
 
-  return <TalksGrid talks={talks} reloadTalks={reload} />;
+  return <TalksGrid talks={talks} reloadTalks={reloadTalks} />;
 }
