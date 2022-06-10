@@ -1,7 +1,7 @@
 package com.sos.smartopenspace.controllers
 
-import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.helpers.CreateTalkDTO
+import com.sos.smartopenspace.helpers.OpenSpaceDTO
 import com.sos.smartopenspace.services.OpenSpaceService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,7 +16,7 @@ import javax.validation.Valid
 @RequestMapping("openSpace")
 class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   @PostMapping("/{userID}")
-  fun create(@PathVariable userID: Long, @Valid @RequestBody openSpace: OpenSpace) = openSpaceService.create(userID, openSpace)
+  fun create(@PathVariable userID: Long, @Valid @RequestBody openSpace: OpenSpaceDTO) = openSpaceService.create(userID, openSpace)
 
   @PostMapping("/talk/{userID}/{osID}")
   fun createTalk(@PathVariable userID: Long, @PathVariable osID: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =

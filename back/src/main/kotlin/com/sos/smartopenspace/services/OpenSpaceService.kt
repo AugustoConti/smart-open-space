@@ -1,9 +1,11 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.Slot
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.domain.Track
 import com.sos.smartopenspace.helpers.CreateTalkDTO
+import com.sos.smartopenspace.helpers.OpenSpaceDTO
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.TrackRepository
@@ -28,7 +30,25 @@ class OpenSpaceService(
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
 
-  fun create(userID: Long, openSpace: OpenSpace): OpenSpace {
+  fun create(userID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace {
+    val slots = ArrayList<Slot>()
+    openSpaceDTO.dates.forEach { date ->
+      openSpaceDTO.slots.forEach { slot ->
+        slots.add(slot.sarasa(date))
+      }
+    }
+    assert(slots.all { it.date != null })
+    // TODO: Eliminar date de OpenSpace
+    val openSpace = OpenSpace(
+      name = openSpaceDTO.name,
+      description = openSpaceDTO.description,
+      slots = slots.toSet(),
+      tracks = openSpaceDTO.tracks,
+      rooms = openSpaceDTO.rooms,
+      date = openSpaceDTO.dates.first()
+    )
+
+
     findUser(userID).addOpenSpace(openSpace)
     return openSpaceRepository.save(openSpace)
   }

@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
-import java.net.URL
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -185,7 +184,7 @@ class OpenSpaceControllerTest {
     ): String {
         return """
 {
-    "date": "2022-05-11T03:00:00.000Z",
+    "dates": ["2022-05-11T03:00:00.000Z"],
     "name": "asd",
     "description": "${description}",
     "rooms": [{"name": "a"}],

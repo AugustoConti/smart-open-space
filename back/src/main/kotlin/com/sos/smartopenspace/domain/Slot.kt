@@ -3,6 +3,7 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import java.time.LocalDate
 import java.time.LocalTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -19,21 +20,30 @@ import javax.persistence.OneToOne
 abstract class Slot(
   val startTime: LocalTime,
   val endTime: LocalTime,
+  @javax.persistence.Transient
+  val date: LocalDate? = null,
   @Id
   @GeneratedValue
   val id: Long = 0
 ) {
   abstract fun isAssignable(): Boolean
+  abstract fun sarasa(date: LocalDate): Slot
 }
 
 @Entity
-class TalkSlot(startTime: LocalTime, endTime: LocalTime) : Slot(startTime, endTime) {
+class TalkSlot(startTime: LocalTime, endTime: LocalTime, date: LocalDate? = null) : Slot(startTime, endTime, date) {
   override fun isAssignable() = true
+  override fun sarasa(date: LocalDate): Slot {
+    return TalkSlot(startTime, endTime, date)
+  }
 }
 
 @Entity
-class OtherSlot(startTime: LocalTime, endTime: LocalTime, val description: String) : Slot(startTime, endTime) {
+class OtherSlot(startTime: LocalTime, endTime: LocalTime, val description: String, date: LocalDate? = null) : Slot(startTime, endTime, date) {
   override fun isAssignable() = false
+  override fun sarasa(date: LocalDate): Slot {
+    return OtherSlot(startTime, endTime, description, date)
+  }
 }
 
 @Entity
