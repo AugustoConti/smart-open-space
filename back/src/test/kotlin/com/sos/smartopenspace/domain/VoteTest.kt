@@ -3,6 +3,7 @@ package com.sos.smartopenspace.domain
 import com.sos.smartopenspace.aUser
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class VoteTest {
 
@@ -50,8 +51,8 @@ class VoteTest {
         val aTalk = Talk("charla sin votos")
         val aUser = aUser()
 
-        aTalk.removeVoteBy(aUser)
-
-        assertEquals(aTalk.votes(), 0)
+        assertThrows<UserDidntVoteThisTalkException> {
+            aTalk.removeVoteBy(aUser)
+        }
     }
 }

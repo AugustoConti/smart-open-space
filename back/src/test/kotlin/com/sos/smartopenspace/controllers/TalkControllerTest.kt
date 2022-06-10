@@ -163,6 +163,18 @@ class TalkControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(0))
     }
 
+    @Test
+    fun `a talk cannot be unvoted by a user that didnt vote it returns a bad request`() {
+        val aUser = anySavedUser()
+        val talk = anySavedTalk()
+        aUser.addTalk(talk)
+        talkRepository.save(talk)
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/unvote")
+        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
     private fun anySavedRoom() = roomRepository.save(Room("Sala"))
 
     private fun anySavedTalk() = talkRepository.save(Talk("Charla"))

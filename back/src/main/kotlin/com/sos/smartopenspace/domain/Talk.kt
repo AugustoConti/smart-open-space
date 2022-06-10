@@ -72,6 +72,9 @@ class Talk(
   }
 
   fun removeVoteBy(user: User) {
+    if (!votingUsers.contains(user))
+      throw UserDidntVoteThisTalkException()
+
     votingUsers.remove(user)
   }
 }
