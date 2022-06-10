@@ -29,7 +29,7 @@ class Talk(
   var track: Track? = null
 ) {
 
-  @ManyToMany(cascade = [CascadeType.ALL])
+  @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
   @JoinTable(name = "vote",
           joinColumns = [JoinColumn(name = "talk_id", referencedColumnName = "id")],
           inverseJoinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")])
