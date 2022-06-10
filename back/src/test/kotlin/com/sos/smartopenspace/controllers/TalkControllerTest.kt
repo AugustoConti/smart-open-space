@@ -73,9 +73,9 @@ class TalkControllerTest {
     fun `Asking for an specific talk returns an ok status`() {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
-        userRepository.save(anyUser(talk))
-        val room = anySavedRoom()
-        openSpaceRepository.save(anyOpenSpaceWith(talk, organizer, room))
+        val openSpace = anySavedOpenSpace()
+        organizer.addOpenSpace(openSpace)
+        aSavedUserWithTalk(talk)
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/talk/${talk.id}")
@@ -137,7 +137,8 @@ class TalkControllerTest {
                 .content(generateTalkBody())
         ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
     }
-    
+
+    @Test
     fun `a talk voted by user return an ok status response`() {
         val aUser = anySavedUser()
         val talk = anySavedTalk()
@@ -180,6 +181,8 @@ class TalkControllerTest {
     private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
 
     private fun anySavedUser() = userRepository.save(aUser())
+
+    private fun anySavedOpenSpace() = openSpaceRepository.save(anOpenSpace())
 
     private fun aSavedUserWithTalk(talk: Talk) =
             userRepository.save(aUser(mutableSetOf(), mutableSetOf(talk)))
