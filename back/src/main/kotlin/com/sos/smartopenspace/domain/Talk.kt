@@ -70,4 +70,11 @@ class Talk(
   fun addVoteBy(user: User) {
     votingUsers.add(user)
   }
+
+  fun removeVoteBy(user: User) {
+    if (!votingUsers.contains(user))
+      throw UserDidntVoteThisTalkException()
+
+    votingUsers.remove(user)
+  }
 }

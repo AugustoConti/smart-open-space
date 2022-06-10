@@ -4,6 +4,7 @@ import com.sos.smartopenspace.domain.CallForPapersClosedException
 import com.sos.smartopenspace.domain.NotTheOrganizerException
 import com.sos.smartopenspace.domain.TalkIsNotForScheduledException
 import com.sos.smartopenspace.services.TalkNotFoundException
+import com.sos.smartopenspace.domain.UserDidntVoteThisTalkException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ControllerAdvice
 class ExceptionHandler {
 
-    @ExceptionHandler(TalkIsNotForScheduledException::class, NotTheOrganizerException::class, TalkNotFoundException::class)
+
+    @ExceptionHandler(TalkIsNotForScheduledException::class, NotTheOrganizerException::class, TalkNotFoundException::class, UserDidntVoteThisTalkException::class)
     fun badRequestHandler(exception: Exception) : ResponseEntity<BadRequestException> {
         return ResponseEntity(BadRequestException(exception.message), HttpStatus.BAD_REQUEST)
     }

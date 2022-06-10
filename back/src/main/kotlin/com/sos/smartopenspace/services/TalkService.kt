@@ -71,6 +71,15 @@ class TalkService(
 
     return talk
   }
+  
+  fun unvoteTalk(talkID: Long, userID: Long): Talk {
+    val talk = findTalk(talkID)
+    val user = findUser(userID)
+
+    talk.removeVoteBy(user)
+
+    return talk
+  }
 
   private fun findTrack(trackId: Long?): Track? {
     val track: Track? = trackId?.let {

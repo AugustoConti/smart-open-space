@@ -16,3 +16,4 @@ class TalkIsNotForScheduledException : RuntimeException("Charla no está para ag
 class TalkIsNotScheduledException : RuntimeException("Charla no está agendada")
 class CallForPapersClosedException : RuntimeException("La convocatoria se encuentra cerrada")
 class NotValidTrackForOpenSpaceException : RuntimeException("El track de la charla no pertenece a este open space")
+class UserDidntVoteThisTalkException : RuntimeException("Este usuario no voto esta charla")
