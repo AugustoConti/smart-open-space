@@ -137,9 +137,9 @@ const EditOpenSpace = () => {
 
   if (!user) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { date, name, description, rooms, slots, tracks } }) =>
+  const onSubmit = ({ value: { dates, name, description, rooms, slots, tracks } }) => {
     createOS({
-      date: new Date(date),
+      dates: dates.map((date) => new Date(date.date)),
       name,
       description,
       rooms,
@@ -150,6 +150,7 @@ const EditOpenSpace = () => {
       })),
       tracks,
     }).then(pushToRoot);
+  };
 
   function isRepeated(tracks, track) {
     return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
