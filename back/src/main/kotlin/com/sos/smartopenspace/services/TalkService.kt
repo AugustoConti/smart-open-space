@@ -82,4 +82,8 @@ class TalkService(
   @Transactional(readOnly = true)
   fun findTrackById(id: Long) = trackRepository.findByIdOrNull(id) ?: throw TrackNotFoundException()
 
+
+    fun getTalk(talkID: Long): Talk {
+      return findTalk(talkID)
+    }
 }
