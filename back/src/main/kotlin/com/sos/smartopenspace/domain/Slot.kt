@@ -20,7 +20,7 @@ import javax.persistence.OneToOne
 abstract class Slot(
   val startTime: LocalTime,
   val endTime: LocalTime,
-  @javax.persistence.Transient
+
   val date: LocalDate? = null,
   @Id
   @GeneratedValue

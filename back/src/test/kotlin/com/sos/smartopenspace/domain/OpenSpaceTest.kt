@@ -221,6 +221,6 @@ class OpenSpaceTest {
             talks = mutableSetOf()
         )
 
-        assertEquals(listOf(startingDate, endDate), openSpace.dates())
+        assertEquals(setOf(startingDate, endDate), openSpace.dates())
     }
 }

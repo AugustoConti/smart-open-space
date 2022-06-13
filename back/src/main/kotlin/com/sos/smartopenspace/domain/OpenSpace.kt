@@ -229,8 +229,8 @@ class OpenSpace(
   }
 
   @JsonProperty
-  fun dates(): List<LocalDate?> {
-    return slots.map { it.date }
+  fun dates(): Set<LocalDate?> {
+    return slots.map { it.date }.toSet()
   }
 }
 
