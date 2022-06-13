@@ -208,6 +208,7 @@ class OpenSpace(
     return talks.size
   }
 
+  @JsonProperty
   fun startingDate(): LocalDate? {
     return slots.map { it.date }.reduce {
       aDate,otherDate ->
@@ -217,6 +218,7 @@ class OpenSpace(
     }
   }
 
+  @JsonProperty
   fun endDate(): LocalDate? {
     return slots.map { it.date }.reduce {
         aDate,otherDate ->
@@ -226,6 +228,7 @@ class OpenSpace(
     }
   }
 
+  @JsonProperty
   fun dates(): List<LocalDate?> {
     return slots.map { it.date }
   }
