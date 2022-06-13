@@ -2,9 +2,8 @@ alter table open_space
     add column if not exists date date;
 
 update open_space
-set date=subquery.date
-from (select * from slot) as subquery
-where open_space.id = subquery.open_space_id;
+set date=(select slot.date from slot where open_space.id = slot.open_space_id)
+where open_space.date is null;
 
 alter table slot
     drop column if exists date;

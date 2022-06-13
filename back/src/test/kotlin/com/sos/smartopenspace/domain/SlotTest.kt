@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.domain
 
+import com.sos.smartopenspace.anOpenSpace
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalTime
@@ -9,14 +10,8 @@ class SlotTest {
   private val talk1 = Talk("talk1")
   private val talk2 = Talk("talk2")
 
-  private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) = OpenSpace(
-    "os", setOf(room1), setOf(
-      TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
-      TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45")),
-      TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("12:00"))
-    ),
-    talks
-  )
+  private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) =
+    anOpenSpace(talks = talks, rooms = setOf(room1))
 
   private fun anyUser(talk: Talk) = User("augusto@sos.sos", "Augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
 
