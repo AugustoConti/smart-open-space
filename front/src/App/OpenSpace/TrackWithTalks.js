@@ -4,13 +4,14 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 
 export function TrackWithTalks({ talks, reloadTalks, track }) {
-  const filteredTalks = talks.filter((talk) => talk.track.id === track.id);
+  let byTrack = (talk) => talk.track.id === track.id;
+  const talksFromTrack = talks.filter(byTrack);
   return (
     <>
-      {filteredTalks.length > 0 && (
+      {talksFromTrack.length > 0 && (
         <>
           <Heading color={track.color}> {track.name} </Heading>
-          <TalksGrid talks={filteredTalks} reloadTalks={reloadTalks} />
+          <TalksGrid talks={talksFromTrack} reloadTalks={reloadTalks} />
         </>
       )}
     </>
