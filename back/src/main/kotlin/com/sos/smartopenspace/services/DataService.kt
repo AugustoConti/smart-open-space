@@ -11,7 +11,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.time.LocalTime
 
 @Service
@@ -56,7 +55,6 @@ class DataService(private val userRepository: UserRepository) {
     val room37b = Room("Aula 37b")
     val cpi = OpenSpace(
       "CPI-Conf",
-      LocalDate.now().plusDays(2),
       setOf(room213, room60, room37b),
       setOf(
         OtherSlot(LocalTime.parse("14:00"), LocalTime.parse("14:30"), "Marketplace"),
@@ -92,7 +90,6 @@ class DataService(private val userRepository: UserRepository) {
 
     val practicas = OpenSpace(
       "Prácticas Técnicas - 4° edición",
-      LocalDate.now().plusDays(5),
       setOf(roja, amarilla, verde, naranja),
       (19..21).map {
         TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
@@ -104,7 +101,6 @@ class DataService(private val userRepository: UserRepository) {
     val charla1 = Talk("Charla 1")
     val os1 = OpenSpace(
       "OS 1",
-      LocalDate.now().plusDays(5),
       setOf(Room("Sala 1")),
       (19..21).map {
         TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))

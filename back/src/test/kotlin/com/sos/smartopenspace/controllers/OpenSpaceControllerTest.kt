@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.time.LocalTime
 
 
@@ -171,8 +170,7 @@ class OpenSpaceControllerTest {
 
     private fun anyOpenSpace(): OpenSpace {
         return OpenSpace(
-            "os", LocalDate.now(), setOf(Room("1")),
-            setOf(
+            "os", setOf(Room("1")), setOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
             )
         )

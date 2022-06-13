@@ -4,7 +4,6 @@ import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
-import java.time.LocalDate
 import java.time.LocalTime
 
 fun anOpenSpace(
@@ -18,13 +17,12 @@ fun anOpenSpace(
         talks: MutableSet<Talk> = mutableSetOf()
 ): OpenSpace {
     return OpenSpace(
-        name = name,
-        date = LocalDate.now(),
-        rooms = rooms,
-        slots = talkSlots,
-        talks = talks,
-        tracks = tracks,
-        description = description
+      name = name,
+      rooms = rooms,
+      slots = talkSlots,
+      talks = talks,
+      description = description,
+      tracks = tracks
     )
 }
 

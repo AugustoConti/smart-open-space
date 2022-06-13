@@ -2,19 +2,18 @@ package com.sos.smartopenspace.domain
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import java.time.LocalTime
 
 class QueueTest {
 
   private fun anyOS(talks: MutableSet<Talk> = mutableSetOf()) =
     OpenSpace(
-      "os", LocalDate.now(), emptySet(),
-      setOf(
+      "os", emptySet(), setOf(
         TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
         TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
         TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
-      ), talks
+      ),
+      talks
     )
 
   private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =

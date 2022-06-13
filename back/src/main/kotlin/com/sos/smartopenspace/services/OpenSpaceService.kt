@@ -41,11 +41,10 @@ class OpenSpaceService(
     // TODO: Eliminar date de OpenSpace
     val openSpace = OpenSpace(
       name = openSpaceDTO.name,
-      description = openSpaceDTO.description,
-      slots = slots.toSet(),
-      tracks = openSpaceDTO.tracks,
       rooms = openSpaceDTO.rooms,
-      date = openSpaceDTO.dates.first()
+      slots = slots.toSet(),
+      description = openSpaceDTO.description,
+      tracks = openSpaceDTO.tracks
     )
 
 
