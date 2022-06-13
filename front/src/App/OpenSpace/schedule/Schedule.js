@@ -17,15 +17,26 @@ import { Slots } from './Slots';
 const Schedule = () => {
   const user = useUser();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
-  const { data: { id, name, slots } = {}, isPending, isRejected } = useGetOpenSpace();
+  const {
+    data: { id, name, slots, startingDate } = {},
+    isPending,
+    isRejected,
+  } = useGetOpenSpace();
   const slotsSchedule = useSlots();
   const pushToOpenSpace = usePushToOpenSpace(id);
 
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
-  const sortedSlots = sortTimes(slots);
-  const talksOf = (slotId) => slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
+  console.log(startingDate);
+  console.log(slots);
+  const sortedSlots = sortTimes(slots).filter((slot) =>
+    slot.date
+      .map((zarasa, index) => zarasa === startingDate[index])
+      .reduce((a, b) => a && b)
+  );
+  const talksOf = (slotId) =>
+    slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
 
   return (
     <>
