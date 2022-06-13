@@ -65,8 +65,8 @@ const Talk = ({
   const [openExchange, setOpenExchange] = useState(false);
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
 
-  const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(talk.id, room.id, time, user.id).then(pushToSchedule);
+  const onSubmitSchedule = ({ value: { time, date, room } }) =>
+    scheduleTalk(talk.id, room.id, date, time, user.id).then(pushToSchedule);
 
   const onSubmitExchange = ({ value: { time, room } }) =>
     exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);

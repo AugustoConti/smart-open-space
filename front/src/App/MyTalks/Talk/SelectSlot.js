@@ -35,6 +35,12 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             }}
           />
           <MyForm.Select
+            icon={<HomeIcon />}
+            label="Fecha"
+            name="date"
+            options={['01/05/22', '05/07/22']}
+          />
+          <MyForm.Select
             icon={<ClockIcon />}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala"
