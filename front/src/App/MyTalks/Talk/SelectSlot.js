@@ -38,6 +38,7 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             icon={<HomeIcon />}
             label="Fecha"
             name="date"
+            emptySearchMessage="No hay fechas disponibles para esta sala"
             options={freeSlotsxxx.map((it) => it.date)}
           />
           <MyForm.Select
