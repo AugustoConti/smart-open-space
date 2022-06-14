@@ -145,7 +145,7 @@ class OpenSpace(
     return assignedSlot
   }
 
-  fun exchangeSlot(talk: Talk, time: LocalTime, room: Room) {
+  fun exchangeSlot(talk: Talk, time: LocalTime, room: Room, date: LocalDate) {
     val slot = findTalkSlot(time, date)
     val current = assignedSlots.find { it.talk == talk } ?: throw TalkIsNotScheduledException()
     assignedSlots.find { it.room == room && it.slot == slot }?.moveTo(current.slot, current.room)

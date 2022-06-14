@@ -4,13 +4,14 @@ import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
+import java.time.LocalDate
 import java.time.LocalTime
 
 fun anOpenSpace(
     talkSlots: Set<TalkSlot> = setOf(
-        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
-        TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45")),
-        TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"))
+        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()),
+        TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45"), LocalDate.now()) ,
+        TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"), LocalDate.now())
     ),
         name: String = "os",
         rooms: Set<Room> = setOf(Room("1")),
@@ -48,6 +49,15 @@ fun generateTalkBody(name: String = "asdf", description: String = "a generic des
                 "name": "${name}",
                 "description": "${description}",
                 "meetingLink": "${aMeeting}"
+            }
+        """.trimIndent()
+}
+
+fun generateScheduleTalkBody(time: LocalTime, date: LocalDate = LocalDate.now()): String {
+    return """
+            {
+                "time": "${time}",
+                "date": "${date}"
             }
         """.trimIndent()
 }

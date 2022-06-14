@@ -101,7 +101,7 @@ class SlotTest {
     val freeSlots = openSpace.freeSlots()
     assertIterableEquals(
       listOf(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalTime.parse("10:45")),
-      freeSlots[0].second
+            slotStartTimes(freeSlots)
     )
   }
 
@@ -110,7 +110,7 @@ class SlotTest {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
     val freeSlots = openSpace.freeSlots()
-    assertFalse(freeSlots[0].second.contains(LocalTime.parse("09:30")))
+    assertFalse(slotStartTimes(freeSlots).contains(LocalTime.parse("09:30")))
   }
 
   @Test
@@ -130,8 +130,8 @@ class SlotTest {
     openSpace.scheduleTalk(talk1, LocalTime.parse("09:00"), room1, openSpace.organizer)
     openSpace.exchangeSlot(talk1, LocalTime.parse("09:30"), room1)
     val freeSlots = openSpace.freeSlots()
-    assertTrue(freeSlots[0].second.contains(LocalTime.parse("09:00")))
-    assertFalse(freeSlots[0].second.contains(LocalTime.parse("09:30")))
+    assertTrue(slotStartTimes(freeSlots).contains(LocalTime.parse("09:00")))
+    assertFalse(slotStartTimes(freeSlots).contains(LocalTime.parse("09:30")))
   }
 
   @Test
@@ -148,7 +148,7 @@ class SlotTest {
   fun `Cambiar charla de slot pero la charla no esta agendada`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     assertThrows(TalkIsNotScheduledException::class.java) {
-      openSpace.exchangeSlot(talk1, LocalTime.parse("09:30"), room1)
+      openSpace.exchangeSlot(talk1, LocalTime.parse("09:30"), room1, openSpaceDate)
     }
   }
 
@@ -157,8 +157,11 @@ class SlotTest {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     openSpace.scheduleTalk(talk1, LocalTime.parse("09:00"), room1, openSpace.organizer)
     assertThrows(SlotNotFoundException::class.java) {
-      openSpace.exchangeSlot(talk1, LocalTime.parse("01:00"), room1)
+      openSpace.exchangeSlot(talk1, LocalTime.parse("01:00"), room1, openSpaceDate)
     }
   }
+
+  private fun slotStartTimes(freeSlots: List<Pair<Room, List<Slot>>>) =
+          freeSlots[0].second.map { it.startTime}
 
 }

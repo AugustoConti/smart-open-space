@@ -48,8 +48,8 @@ class Talk(
     return openSpace
   }
 
-  fun exchange(time: LocalTime, room: Room): OpenSpace {
-    openSpace.exchangeSlot(this, time, room)
+  fun exchange(time: LocalTime, room: Room, date: LocalDate): OpenSpace {
+    openSpace.exchangeSlot(this, time, room, date)
     return openSpace
   }
 

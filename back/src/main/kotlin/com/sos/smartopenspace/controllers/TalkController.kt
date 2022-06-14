@@ -31,10 +31,10 @@ class TalkController(private val talkService: TalkService) {
   fun exchangeTalk(
     @PathVariable talkID: Long,
     @PathVariable roomID: Long,
-
-    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) time: LocalTime
+    @RequestBody scheduleTalkDTO: ScheduleTalkDTO
+//    @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) time: LocalTime
   ) =
-    talkService.exchangeTalk(talkID, roomID, time)
+    talkService.exchangeTalk(talkID, roomID, scheduleTalkDTO.time, scheduleTalkDTO.date)
 
   @PutMapping("/nextTalk/{userID}/{osID}")
   fun nextTalk(@PathVariable userID: Long, @PathVariable osID: Long) =

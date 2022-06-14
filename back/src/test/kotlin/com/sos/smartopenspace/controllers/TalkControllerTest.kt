@@ -1,11 +1,8 @@
 package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
-import com.sos.smartopenspace.aUser
-import com.sos.smartopenspace.anOpenSpace
-import com.sos.smartopenspace.anOpenSpaceWith
+import com.sos.smartopenspace.*
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.generateTalkBody
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.RoomRepository
 import com.sos.smartopenspace.persistence.TalkRepository
@@ -50,6 +47,8 @@ class TalkControllerTest {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${room.id}/${time}")
+                        .contentType("application/json")
+                        .content(generateScheduleTalkBody(time = time))
         ).andExpect(MockMvcResultMatchers.status().isOk)
 
     }
@@ -66,6 +65,8 @@ class TalkControllerTest {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${room.id}/${time}")
+                        .contentType("application/json")
+                        .content(generateScheduleTalkBody(time = time))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 

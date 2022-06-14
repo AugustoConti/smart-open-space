@@ -38,8 +38,8 @@ class TalkService(
     return openSpace
   }
 
-  fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime): OpenSpace {
-    val openSpace = findTalk(talkID).exchange(time, findRoom(roomID))
+  fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime, date: LocalDate): OpenSpace {
+    val openSpace = findTalk(talkID).exchange(time, findRoom(roomID), date)
     scheduleSocket.sendFor(openSpace)
     return openSpace
   }
