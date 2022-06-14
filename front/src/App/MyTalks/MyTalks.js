@@ -251,6 +251,7 @@ const MyTalks = () => {
                 onEnqueue={reload}
                 assignableSlots={openSpace.assignableSlots}
                 currentUserIsOrganizer={currentUserIsOrganizer}
+                dates={openSpace.dates}
                 key={talk.id}
               />
             ))}

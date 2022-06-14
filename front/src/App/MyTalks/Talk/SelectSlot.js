@@ -13,7 +13,9 @@ const toTime = (time) => time.map(pad).join(':');
 const sortTimes = (times) =>
   times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
 
-const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
+const toDate = (datePart) => datePart.map(pad).join('/');
+
+const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
   const [freeSlotsxxx, setFreeSlotsxxx] = useState([]);
 
   return (
@@ -31,7 +33,7 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             options={freeSlots.map((p) => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
-              setFreeSlotsxxx(sortTimes(freeSlots[selected].second));
+              setFreeSlotsxxx(freeSlots[selected].second);
             }}
           />
           <MyForm.Select
@@ -39,14 +41,17 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             label="Fecha"
             name="date"
             emptySearchMessage="No hay fechas disponibles para esta sala"
-            options={freeSlotsxxx.map((it) => it.date)}
+            options={dates.map((date) => toDate(date))}
+            onChange={({ selected }) => {
+              setFreeSlotsxxx(freeSlots.filter((slot) => toDate(slot.date) === selected));
+            }}
           />
           <MyForm.Select
             icon={<ClockIcon />}
             label="Horario"
-            emptySearchMessage="No hay horarios disponibles para esta sala"
+            emptySearchMessage="No hay horarios disponibles para esta sala en esa fecha"
             name="time"
-            options={freeSlotsxxx.map((it) => toTime(it.startTime))}
+            options={sortTimes(freeSlotsxxx.map((slot) => toTime(slot.startTime)))}
           />
         </MyForm>
       </Box>

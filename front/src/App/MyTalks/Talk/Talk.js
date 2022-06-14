@@ -56,6 +56,7 @@ const Talk = ({
   hasAnother,
   onEnqueue,
   currentUserIsOrganizer,
+  dates,
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
@@ -68,8 +69,8 @@ const Talk = ({
   const onSubmitSchedule = ({ value: { time, date, room } }) =>
     scheduleTalk(talk.id, room.id, date, time, user.id).then(pushToSchedule);
 
-  const onSubmitExchange = ({ value: { time, room } }) =>
-    exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);
+  const onSubmitExchange = ({ value: { time, date, room } }) =>
+    exchangeTalk(talk.id, room.id, time, date).then(pushToOpenSpace);
 
   const color = talk.colorForTalkManagement();
 
@@ -130,6 +131,7 @@ const Talk = ({
         <SelectSlot
           freeSlots={freeSlots}
           name={talk.name}
+          dates={dates}
           onExit={() => setOpenSchedule(false)}
           onSubmit={onSubmitSchedule}
           title="Agendate!"
@@ -139,6 +141,7 @@ const Talk = ({
         <SelectSlot
           freeSlots={assignableSlots}
           name={talk.name}
+          dates={dates}
           onExit={() => setOpenExchange(false)}
           onSubmit={onSubmitExchange}
           title="Mover a:"
