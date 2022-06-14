@@ -18,14 +18,14 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
     <RowBetween alignSelf="end">
       {canVote && (
         <Button
-          plain="false"
+          plain={true}
           icon={<PlusHeartIcon />}
           onClick={() => voteTalk(id).then(() => reloadTalks())}
         />
       )}
       {alreadyVotedByTheCurrentUser && (
         <Button
-          plain="false"
+          plain={true}
           icon={<CrossHeartIcon color="status-error" />}
           onClick={() => unvoteTalk(id).then(() => reloadTalks())}
         />
