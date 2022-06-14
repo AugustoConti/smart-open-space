@@ -14,7 +14,7 @@ const sortTimes = (times) =>
   times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
 
 const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
-  const [freeHours, setFreeHours] = useState([]);
+  const [freeSlotsxxx, setFreeSlotsxxx] = useState([]);
 
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -31,21 +31,21 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
             options={freeSlots.map((p) => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
-              setFreeHours(sortTimes(freeSlots[selected].second).map(toTime));
+              setFreeSlotsxxx(sortTimes(freeSlots[selected].second));
             }}
           />
           <MyForm.Select
             icon={<HomeIcon />}
             label="Fecha"
             name="date"
-            options={['01/05/22', '05/07/22']}
+            options={freeSlotsxxx.map((it) => it.date)}
           />
           <MyForm.Select
             icon={<ClockIcon />}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala"
             name="time"
-            options={freeHours}
+            options={freeSlotsxxx.map((it) => toTime(it.startTime))}
           />
         </MyForm>
       </Box>

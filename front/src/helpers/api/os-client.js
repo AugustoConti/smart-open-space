@@ -39,7 +39,7 @@ const getTalks = ({ osId }) => get(`openSpace/talks/${osId}`).then((talks) => ta
 const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id });
 
 const scheduleTalk = (talkID, roomID, date, hour, userID) =>
-  put(`talk/schedule/${userID}/${talkID}/${roomID}/${hour}`);
+  put(`talk/schedule/${userID}/${talkID}/${roomID}/${hour}`, { hour: hour, date: date });
 
 const exchangeTalk = (talkID, roomID, hour) =>
   put(`talk/exchange/${talkID}/${roomID}/${hour}`);

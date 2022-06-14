@@ -3,6 +3,7 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URL
+import java.time.LocalDate
 import java.time.LocalTime
 import javax.persistence.*
 import javax.validation.Valid
@@ -42,8 +43,8 @@ class Talk(
   @JsonIgnore
   lateinit var openSpace: OpenSpace
 
-  fun schedule(time: LocalTime, room: Room, user: User): OpenSpace {
-    openSpace.scheduleTalk(this, time, room, user)
+  fun schedule(time: LocalTime, room: Room, user: User, date: LocalDate): OpenSpace {
+    openSpace.scheduleTalk(this, time, room, user, date)
     return openSpace
   }
 
