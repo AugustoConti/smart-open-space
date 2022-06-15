@@ -10,12 +10,15 @@ class SlotTest {
   private val room1 = Room("1")
   private val talk1 = Talk("talk1")
   private val talk2 = Talk("talk2")
+  private val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
+  private val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("09:45"), LocalDate.now())
+
 
   private val openSpaceDate = LocalDate.now()
 
   private fun anyUser(talk: Talk) = User("augusto@sos.sos", "Augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
 
-  private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, talkSlots: Set<TalkSlot>): OpenSpace {
+  private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, talkSlots: Set<TalkSlot> = setOf(aSlot, otherSlot)): OpenSpace {
     val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1), talkSlots = talkSlots)
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(openSpace))
     openSpace.activeQueue(organizer)
@@ -27,7 +30,9 @@ class SlotTest {
     return openSpace
   }
 
-  private fun anyOpenSpaceWithOrganizer(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)): OpenSpace {
+  private fun anyOpenSpaceWithOrganizer(
+    talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)
+  ): OpenSpace {
     val OpenSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1))
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(OpenSpace))
     OpenSpace.activeQueue(organizer)
@@ -55,7 +60,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charla en un horario y en una sala`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     val slot = openSpace.scheduleTalk(talk1, openSpace.organizer, openSpace.slots.first() as TalkSlot, room1)
     assertTrue(slot.startAt(LocalTime.parse("09:00")))
     assertEquals(room1, slot.room)
@@ -64,8 +69,6 @@ class SlotTest {
 
   @Test
   fun `No se puede agendar una charla fuera de horario`() {
-    val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
-    val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:00"), LocalDate.now())
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf(aSlot))
     assertThrows(SlotNotFoundException::class.java) {
       openSpace.scheduleTalk(talk1, room = room1, user = openSpace.organizer, slot = otherSlot)
@@ -74,7 +77,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charla pero el slot esta ocupado`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2))
     openSpace.scheduleTalk(talk1, openSpace.organizer, openSpace.slots.first() as TalkSlot, room1)
     assertThrows(BusySlotException::class.java) {
       openSpace.scheduleTalk(talk2, openSpace.organizer, openSpace.slots.first() as TalkSlot, room1)
@@ -92,7 +95,7 @@ class SlotTest {
 
   @Test
   fun `Asignar una charla que ya se encuentra asignada`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     openSpace.scheduleTalk(talk1, openSpace.organizer, openSpace.slots.first() as TalkSlot, room1)
     assertThrows(TalkAlreadyAssignedException::class.java) {
       openSpace.scheduleTalk(
@@ -116,8 +119,6 @@ class SlotTest {
 
   @Test
   fun `Asignar una charlas, ese slot no esta mas libre`() {
-    val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
-    val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("09:45"), LocalDate.now())
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf(aSlot, otherSlot))
     openSpace.scheduleTalk(talk1, openSpace.organizer, slot = aSlot, room = room1)
     val freeSlots = openSpace.freeSlots()
@@ -126,7 +127,6 @@ class SlotTest {
 
   @Test
   fun `Todos los slots asignados no quedan lugares libres`() {
-    val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf(aSlot))
     openSpace.scheduleTalk(talk1, room = room1, user = openSpace.organizer, slot = aSlot)
     val freeSlots = openSpace.freeSlots()
@@ -135,7 +135,7 @@ class SlotTest {
 
   @Test
   fun `Cambiar charla de slot a uno vacio`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     openSpace.scheduleTalk(talk1, room = room1, user = openSpace.organizer, slot = openSpace.slots.first() as TalkSlot)
     openSpace.exchangeSlot(talk1, LocalTime.parse("09:30"), room1, openSpaceDate)
     val freeSlots = openSpace.freeSlots()
@@ -145,8 +145,6 @@ class SlotTest {
 
   @Test
   fun `Cambiar charla de slot a uno ocupado`() {
-    val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
-    val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("09:45"), LocalDate.now())
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2), setOf(aSlot, otherSlot))
     openSpace.scheduleTalk(talk1, room = room1, user = openSpace.organizer, slot = aSlot)
     openSpace.scheduleTalk(talk2, openSpace.organizer, otherSlot, room1)
@@ -157,7 +155,7 @@ class SlotTest {
 
   @Test
   fun `Cambiar charla de slot pero la charla no esta agendada`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     assertThrows(TalkIsNotScheduledException::class.java) {
       openSpace.exchangeSlot(talk1, LocalTime.parse("09:30"), room1, openSpaceDate)
     }
@@ -165,7 +163,7 @@ class SlotTest {
 
   @Test
   fun `Cambiar charla de slot a un horario inexistente`() {
-    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1), setOf())
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
     openSpace.scheduleTalk(talk1, room = room1, user = openSpace.organizer, slot = openSpace.slots.first() as TalkSlot)
     assertThrows(SlotNotFoundException::class.java) {
       openSpace.exchangeSlot(talk1, LocalTime.parse("01:00"), room1, openSpaceDate)
