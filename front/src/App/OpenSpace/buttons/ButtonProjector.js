@@ -5,7 +5,7 @@ import React from 'react';
 
 export const ButtonProjector = () => (
   <MainHeader.Button
-    color="accent-2"
+    color="accent-1"
     icon={<VideoIcon />}
     label="Proyector"
     onClick={usePushToProjector()}

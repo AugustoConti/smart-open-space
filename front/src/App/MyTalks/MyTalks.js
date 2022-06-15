@@ -13,15 +13,15 @@ import { useQueue } from '#api/sockets-client';
 import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
-import { RedirectToRoot, usePushToNewTalk, usePushToOpenSpace } from '#helpers/routes';
+import { RedirectToRoot, usePushToNewTalk, usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
 import ButtonLoading from '#shared/ButtonLoading';
 import Detail from '#shared/Detail';
-import { TalkIcon, UserIcon } from '#shared/icons';
+import { TalkIcon, UserIcon, ScheduleIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import MyForm from '#shared/MyForm';
 import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
-import Spinner, { TinySpinner } from '#shared/Spinner';
+import Spinner from '#shared/Spinner';
 import Title from '#shared/Title';
 
 import EmptyTalk from './EmptyTalk';
@@ -192,6 +192,7 @@ const MyTalks = () => {
   const shouldDisplayEmptyTalkButton = !hasTalks && canAddTalk;
 
   const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
+  const pushToSchedule = usePushToSchedule(openSpace.id);
 
   return (
     <>
@@ -199,16 +200,21 @@ const MyTalks = () => {
         <MainHeader.TitleLink onClick={pushToOS}>{openSpace.name}</MainHeader.TitleLink>
         <MainHeader.SubTitle
           icon={TalkIcon}
-          label={currentUserIsOrganizer ? 'GESTIONAR CHARLAS' : 'MIS CHARLAS'}
+          label={currentUserIsOrganizer ? 'Gestionar Charlas' : 'Mis Charlas'}
         />
-        <MainHeader.Description description={openSpace.description} />
+        <MainHeader.Button
+          margin={{ top: 'medium' }}
+          color="accent-1"
+          icon={<ScheduleIcon />}
+          label="Agenda"
+          onClick={pushToSchedule}
+        />
         <MainHeader.Buttons>
           {shouldDisplayAddTalkButton && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
           )}
           {shouldDisplayTalkForSpeakerButton && (
             <MainHeader.ButtonNew
-              color="accent-1"
               label="Charla para Orador"
               key="newTalkSpeaker"
               onClick={() => setShowQuerySpeaker(true)}
