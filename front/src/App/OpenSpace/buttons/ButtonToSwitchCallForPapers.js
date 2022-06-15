@@ -10,7 +10,7 @@ export const ButtonToSwitchCallForPapers = ({
   ...props
 }) => (
   <MainHeader.Button
-    color="accent-3"
+    color="accent-4"
     icon={isActiveCallForPapers ? <LockIcon /> : <UnlockIcon />}
     label={isActiveCallForPapers ? 'Cerrar convocatoria' : 'Abrir convocatoria'}
     onClick={() => startCallForPapers(openSpaceID).then(setData)}
