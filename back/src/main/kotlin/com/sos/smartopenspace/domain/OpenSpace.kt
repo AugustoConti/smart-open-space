@@ -210,7 +210,7 @@ class OpenSpace(
   }
 
   @JsonProperty
-  fun startingDate(): LocalDate? {
+  fun startDate(): LocalDate? {
     return Collections.min(dates())
   }
 
