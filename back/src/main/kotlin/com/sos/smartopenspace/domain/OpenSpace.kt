@@ -113,6 +113,7 @@ class OpenSpace(
     !(tracks.isEmpty() && track == null)
 
   fun containsTalk(talk: Talk) = talks.contains(talk)
+  fun containsSlot(slot: TalkSlot) = slots.contains(slot)
 
   private fun checkIsActiveCallForPapers() {
     if (!isActiveCallForPapers)
@@ -125,9 +126,14 @@ class OpenSpace(
     if (!containsTalk(talk))
       throw TalkDoesntBelongException()
   }
+  private fun checkSlotBelongs(slot: TalkSlot) {
+    if (!containsSlot(slot))
+      throw SlotNotFoundException()
+  }
 
   private fun checkScheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room) {
     checkTalkBelongs(talk)
+    checkSlotBelongs(slot)
     assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
     !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
     isBusySlot(room, slot) && throw BusySlotException()
