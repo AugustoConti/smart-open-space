@@ -30,6 +30,7 @@ const Schedule = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const sortedSlots = sortTimes(slots);
+  const sortedDates = dates.sort(compareDates);
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
 
@@ -49,21 +50,20 @@ const Schedule = () => {
         </MainHeader.Buttons>
       </MainHeader>
       <Tabs>
-        {dates
-          .sort((date1, date2) => compareDates(date1, date2))
-          .map((date) => {
-            const dateSlots = sortedSlots.filter((slot) => equalDates(slot.date, date));
-            return (
-              <Tab title={`${date[0]}-${date[1]}-${date[2]}`}>
-                <DateSlots talksOf={talksOf} sortedSlots={dateSlots} />
-              </Tab>
-            );
-          })}
+        {sortedDates.map((date) => (
+          <Tab title={`${date[0]}-${date[1]}-${date[2]}`}>
+            <DateSlots talksOf={talksOf} sortedSlots={dateSlots(date, sortedSlots)} />
+          </Tab>
+        ))}
       </Tabs>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
     </>
   );
 };
+
+function dateSlots(date, sortedSlots) {
+  return sortedSlots.filter((slot) => equalDates(slot.date, date));
+}
 
 function compareDates(date1, date2) {
   if (equalDates(date1, date2)) return 0;
