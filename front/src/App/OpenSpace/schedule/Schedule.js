@@ -12,13 +12,14 @@ import Spinner from '#shared/Spinner';
 import { useUser } from '#helpers/useAuth';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
 import { sortTimes } from '#helpers/time';
-import { Slots } from './Slots';
+import { DateSlots } from './DateSlots';
+import { Tab, Tabs } from 'grommet';
 
 const Schedule = () => {
   const user = useUser();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const {
-    data: { id, name, slots, startingDate } = {},
+    data: { id, name, slots, dates } = {},
     isPending,
     isRejected,
   } = useGetOpenSpace();
@@ -28,13 +29,7 @@ const Schedule = () => {
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
-  console.log(startingDate);
-  console.log(slots);
-  const sortedSlots = sortTimes(slots).filter((slot) =>
-    slot.date
-      .map((zarasa, index) => zarasa === startingDate[index])
-      .reduce((a, b) => a && b)
-  );
+  const sortedSlots = sortTimes(slots);
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
 
@@ -53,10 +48,35 @@ const Schedule = () => {
           {!user && <ButtonSingIn onClick={() => setRedirectToLogin(true)} />}
         </MainHeader.Buttons>
       </MainHeader>
-      <Slots talksOf={talksOf} sortedSlots={sortedSlots} />
+      <Tabs>
+        {dates
+          .sort((date1, date2) => compareDates(date1, date2))
+          .map((date) => {
+            const dateSlots = sortedSlots.filter((slot) => equalDates(slot.date, date));
+            return (
+              <Tab title={`${date[0]}-${date[1]}-${date[2]}`}>
+                <DateSlots talksOf={talksOf} sortedSlots={dateSlots} />
+              </Tab>
+            );
+          })}
+      </Tabs>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
     </>
   );
 };
+
+function compareDates(date1, date2) {
+  if (equalDates(date1, date2)) return 0;
+  if (date1.toString() > date2.toString()) return 1;
+  if (date1.toString() < date2.toString()) return -1;
+  return 0;
+}
+
+function equalDates(date1, date2) {
+  if (date1 === date2) return true;
+  if (!date1 || !date2) return false;
+
+  return date1.map((element, index) => element === date2[index]).reduce((a, b) => a && b);
+}
 
 export default Schedule;
