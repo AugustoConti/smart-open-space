@@ -158,6 +158,6 @@ class DataService(private val userRepository: UserRepository) {
   private fun schedule(openSpace: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
     talk.enqueue()
     openSpace.nextTalk(openSpace.organizer)
-    talk.schedule(time, room, openSpace.organizer, date)
+//    talk.schedule(time, room)
   }
 }

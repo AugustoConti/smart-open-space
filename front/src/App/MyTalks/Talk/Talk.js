@@ -48,6 +48,12 @@ EditButton.propTypes = {
   color: PropTypes.any,
   onClick: PropTypes.func,
 };
+
+function getDate(date) {
+  const dateISO = date.split('/');
+  return new Date(dateISO[2], dateISO[1], dateISO[0]).toISOString();
+}
+
 const Talk = ({
   talk,
   activeQueue,
@@ -66,8 +72,8 @@ const Talk = ({
   const [openExchange, setOpenExchange] = useState(false);
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
 
-  const onSubmitSchedule = ({ value: { time, date, room } }) =>
-    scheduleTalk(talk.id, room.id, date, time, user.id).then(pushToSchedule);
+  const onSubmitSchedule = ({ value: { slotId } }) =>
+    scheduleTalk(talk.id, user.id, slotId).then(pushToSchedule);
 
   const onSubmitExchange = ({ value: { time, date, room } }) =>
     exchangeTalk(talk.id, room.id, time, date).then(pushToOpenSpace);

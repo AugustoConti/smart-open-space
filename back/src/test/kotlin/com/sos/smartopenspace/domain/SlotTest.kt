@@ -44,7 +44,7 @@ class SlotTest {
   fun `El organizador puede agendar una charla siempre`() {
     val openSpace = anyOpenSpaceWithOrganizer()
 
-    val slot = openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
+    val slot = cosaACambiar(openSpace)
 
     assertTrue(slot.startAt(LocalTime.parse("09:30")))
     assertEquals(room1, slot.room)
@@ -54,7 +54,7 @@ class SlotTest {
   @Test
   fun `Asignar una charla en un horario y en una sala`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
-    val slot = openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
+    val slot = cosaACambiar(openSpace)
     assertTrue(slot.startAt(LocalTime.parse("09:30")))
     assertEquals(room1, slot.room)
     assertEquals(talk1, slot.talk)
@@ -71,7 +71,7 @@ class SlotTest {
   @Test
   fun `Asignar una charla pero el slot esta ocupado`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2))
-    openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
+    cosaACambiar(openSpace)
     assertThrows(BusySlotException::class.java) {
       openSpace.scheduleTalk(talk2, LocalTime.parse("09:30"), room1, openSpace.organizer)
     }
@@ -89,7 +89,7 @@ class SlotTest {
   @Test
   fun `Asignar una charla que ya se encuentra asignada`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
-    openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
+    cosaACambiar(openSpace)
     assertThrows(TalkAlreadyAssignedException::class.java) {
       openSpace.scheduleTalk(talk1, LocalTime.parse("10:45"), room1, openSpace.organizer)
     }
@@ -108,10 +108,13 @@ class SlotTest {
   @Test
   fun `Asignar una charlas, ese slot no esta mas libre`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
-    openSpace.scheduleTalk(talk1, LocalTime.parse("09:30"), room1, openSpace.organizer)
+    cosaACambiar(openSpace)
     val freeSlots = openSpace.freeSlots()
     assertFalse(slotStartTimes(freeSlots).contains(LocalTime.parse("09:30")))
   }
+
+  private fun SlotTest.cosaACambiar(openSpace: OpenSpace) =
+          openSpace.scheduleTalk(talk1, openSpace.organizer, openSpace.slots.first() as TalkSlot ,room1 )
 
   @Test
   fun `Todos los slots asignados no quedan lugares libres`() {

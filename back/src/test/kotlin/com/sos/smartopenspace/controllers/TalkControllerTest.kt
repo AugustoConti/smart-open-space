@@ -42,7 +42,7 @@ class TalkControllerTest {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
         val room = anySavedRoom()
-        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
+        openSpaceRepository.save(anOpenSpaceWith(talk, organizer))
         val time = LocalTime.parse("09:00")
 
         mockMvc.perform(
@@ -58,15 +58,11 @@ class TalkControllerTest {
         val organizer = anySavedUser()
         val talk = anySavedTalk()
         val speaker = aSavedUserWithTalk(talk)
-        val room = anySavedRoom()
-        val time = LocalTime.parse("09:00")
-        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
-
+        val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer))
+        val slot = openSpace.slots.first()
 
         mockMvc.perform(
-                MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${room.id}/${time}")
-                        .contentType("application/json")
-                        .content(generateScheduleTalkBody(time = time))
+                MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${slot.id}")
         ).andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 

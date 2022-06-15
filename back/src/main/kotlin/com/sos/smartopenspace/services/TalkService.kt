@@ -1,13 +1,11 @@
 package com.sos.smartopenspace.services
 
+import com.sos.smartopenspace.domain.NotFoundException
 import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.domain.Track
 import com.sos.smartopenspace.helpers.CreateTalkDTO
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.persistence.RoomRepository
-import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.persistence.TrackRepository
+import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
 import com.sos.smartopenspace.websockets.ScheduleSocket
 import org.springframework.data.repository.findByIdOrNull
@@ -19,24 +17,27 @@ import java.time.LocalTime
 @Service
 @Transactional
 class TalkService(
-  private val openSpaceRepository: OpenSpaceRepository,
-  private val talkRepository: TalkRepository,
-  private val roomRepository: RoomRepository,
-  private val trackRepository: TrackRepository,
-  private val userService: UserService,
-  private val scheduleSocket: ScheduleSocket,
-  private val queueSocket: QueueSocket
+        private val openSpaceRepository: OpenSpaceRepository,
+        private val talkRepository: TalkRepository,
+        private val roomRepository: RoomRepository,
+        private val trackRepository: TrackRepository,
+        private val userService: UserService,
+        private val scheduleSocket: ScheduleSocket,
+        private val queueSocket: QueueSocket,
+        private val slotRepository: SlotRepository
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
   private fun findOpenSpace(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
   private fun findTalk(id: Long) = talkRepository.findByIdOrNull(id) ?: throw TalkNotFoundException()
   private fun findRoom(id: Long) = roomRepository.findByIdOrNull(id) ?: throw RoomNotFoundException()
+  private fun findSlot(slotID: Long) = slotRepository.findByIdOrNull(slotID) ?: throw NotFoundException("No se encontro el slot con el id ${slotID}")
 
-  fun scheduleTalk(talkID: Long, roomID: Long, time: LocalTime, userID: Long, date: LocalDate): OpenSpace {
-    val openSpace = findTalk(talkID).schedule(time, findRoom(roomID), findUser(userID), date)
+  fun scheduleTalk(talkID: Long, userID: Long, slotID: Long, roomID: Long): OpenSpace {
+    val openSpace = findTalk(talkID).schedule(findUser(userID), findSlot(slotID), findRoom(roomID))
     scheduleSocket.sendFor(openSpace)
     return openSpace
   }
+
 
   fun exchangeTalk(talkID: Long, roomID: Long, time: LocalTime, date: LocalDate): OpenSpace {
     val openSpace = findTalk(talkID).exchange(time, findRoom(roomID), date)

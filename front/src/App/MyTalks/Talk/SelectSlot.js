@@ -10,13 +10,38 @@ import Title from '#shared/Title';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
-const sortTimes = (times) =>
-  times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
+let compareTime = ([anHour, aMinute], [otherHour, otherMinute]) =>
+  anHour < otherHour || (anHour === otherHour && aMinute < otherMinute) ? -1 : 1;
+const sortTimes = (times) => times.sort(compareTime);
 
-const toDate = (datePart) => datePart.map(pad).join('/');
+const toDate = ([year, month, day]) => {
+  return new Date(year, month, day);
+};
 
 const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
-  const [freeSlotsxxx, setFreeSlotsxxx] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState([]);
+  const [slots, setSlots] = useState([]);
+
+  console.log(
+    slots.map((slot) => ({
+      ...slot,
+      startTime: toTime(slot.startTime),
+    }))
+  );
+
+  function getSlotsForDate(selected) {
+    return selectedSlot.filter(
+      (slot) =>
+        toDate(slot.date).toLocaleDateString('es') ===
+        toDate(dates[selected]).toLocaleDateString('es')
+    );
+  }
+
+  function getSortTimes(selected) {
+    return getSlotsForDate(selected).sort((aSlot, otherSlot) =>
+      compareTime(aSlot.startTime, otherSlot.startTime)
+    );
+  }
 
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -33,25 +58,30 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
             options={freeSlots.map((p) => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
-              setFreeSlotsxxx(freeSlots[selected].second);
+              setSelectedSlot(freeSlots[selected].second);
             }}
           />
           <MyForm.Select
             icon={<HomeIcon />}
             label="Fecha"
             name="date"
-            emptySearchMessage="No hay fechas disponibles para esta sala"
-            options={dates.map((date) => toDate(date))}
+            options={dates.map((date) => toDate(date).toLocaleDateString('es'))}
             onChange={({ selected }) => {
-              setFreeSlotsxxx(freeSlots.filter((slot) => toDate(slot.date) === selected));
+              console.log(selected);
+              setSlots(getSortTimes(selected));
             }}
           />
           <MyForm.Select
             icon={<ClockIcon />}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala en esa fecha"
-            name="time"
-            options={sortTimes(freeSlotsxxx.map((slot) => toTime(slot.startTime)))}
+            name="slotId"
+            labelKey="startTime"
+            valueKey="id"
+            options={slots.map((slot) => ({
+              ...slot,
+              startTime: toTime(slot.startTime),
+            }))}
           />
         </MyForm>
       </Box>

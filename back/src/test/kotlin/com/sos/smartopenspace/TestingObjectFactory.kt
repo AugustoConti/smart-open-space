@@ -62,8 +62,8 @@ fun generateScheduleTalkBody(time: LocalTime, date: LocalDate = LocalDate.now())
         """.trimIndent()
 }
 
-fun anOpenSpaceWith(talk: Talk, organizer: User, room: Room): OpenSpace {
-    val openSpace = anOpenSpace(talks = mutableSetOf(talk), rooms = setOf(room))
+fun anOpenSpaceWith(talk: Talk, organizer: User): OpenSpace {
+    val openSpace = anOpenSpace(talks = mutableSetOf(talk))
     organizer.addOpenSpace(openSpace)
     return openSpace
 }

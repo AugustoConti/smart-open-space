@@ -119,26 +119,25 @@ class OpenSpace(
       throw CallForPapersClosedException()
   }
 
-  private fun isBusySlot(room: Room, time: LocalTime, date: LocalDate?) = assignedSlots.any { it.startAt(time) && it.hasDateOf(date) && it.room == room }
+  private fun isBusySlot(room: Room, slot: Slot) = assignedSlots.any { it.startAt(slot.startTime) && it.hasDateOf(slot.date) && it.room == room }
 
   private fun checkTalkBelongs(talk: Talk) {
     if (!containsTalk(talk))
       throw TalkDoesntBelongException()
   }
 
-  private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User, date: LocalDate) {
+  private fun checkScheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room) {
     checkTalkBelongs(talk)
     assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
     !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
-    isBusySlot(room, time, date) && throw BusySlotException()
+    isBusySlot(room, slot) && throw BusySlotException()
   }
 
   private fun findTalkSlot(time: LocalTime, date: LocalDate) =
     slots.find { it.startTime == time && it.date == date && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
 
-  fun scheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User, date: LocalDate): AssignedSlot {
-    val slot = findTalkSlot(time, date)
-    checkScheduleTalk(talk, time, room, user, date)
+  fun scheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room): AssignedSlot {
+    checkScheduleTalk(talk, user, slot, room)
     val assignedSlot = AssignedSlot(slot, room, talk)
     assignedSlots.add(assignedSlot)
     toSchedule.remove(talk)
@@ -155,7 +154,7 @@ class OpenSpace(
   @JsonProperty
   fun freeSlots() = rooms.map { room ->
     room to slots.filter {
-      it.isAssignable() && !isBusySlot(room, it.startTime, it.date)
+      it.isAssignable() && !isBusySlot(room, it)
     }
   }.filter { it.second.isNotEmpty() }
 
