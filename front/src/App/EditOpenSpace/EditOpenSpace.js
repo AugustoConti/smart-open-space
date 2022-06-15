@@ -119,9 +119,6 @@ InputSlot.propTypes = {
   type: PropTypes.string.isRequired,
 };
 
-const beforeToday = (date) =>
-  new Date(date) < new Date(new Date().setDate(new Date().getDate() - 1));
-
 const initialValues = {
   dates: [],
   rooms: [],
@@ -168,6 +165,10 @@ const EditOpenSpace = () => {
     return times.length < 1;
   }
 
+  function hasDates(dates) {
+    return dates.length < 1;
+  }
+
   return (
     <>
       <MainHeader>
@@ -206,9 +207,9 @@ const EditOpenSpace = () => {
             icon={<CalendarIcon />}
             label="Fecha"
             name="dates"
-            validate={(date) => {
-              if (beforeToday(date)) {
-                return 'Ingresa una fecha mayor o igual a hoy';
+            validate={(dates) => {
+              if (hasDates(dates)) {
+                return 'Ingresa al menos una fecha';
               }
             }}
           />
