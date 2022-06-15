@@ -31,4 +31,13 @@ class OpenSpaceDTO(
     @field:Valid
     val tracks: Set<Track> = emptySet()
     ) {
+
+    fun slotsWithDates(): List<Slot> {
+        return slots.flatMap {slot ->
+            dates.map { date ->
+                slot.cloneWithDate(date)
+            }
+        }
+    }
+
 }
