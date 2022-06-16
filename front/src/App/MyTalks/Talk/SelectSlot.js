@@ -3,32 +3,28 @@ import React, { useState } from 'react';
 import { Box, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { ClockIcon, HomeIcon } from '#shared/icons';
+import { CalendarIcon, ClockIcon, HomeIcon } from '#shared/icons';
 import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
+import { compareTime } from '#helpers/time';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
-let compareTime = ([anHour, aMinute], [otherHour, otherMinute]) =>
-  anHour < otherHour || (anHour === otherHour && aMinute < otherMinute) ? -1 : 1;
 const toDate = ([year, month, day]) => {
   return new Date(year, month, day);
 };
 
 const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
-  const [selectedSlot, setSelectedSlot] = useState([]);
-  const [slots, setSlots] = useState([]);
+  const [freeSlotsOfRoom, setFreeSlotsOfRoom] = useState([]);
+  const [freeSlotsOnCertainDate, setFreeSlotsOnCertainDate] = useState([]);
 
-  console.log(
-    slots.map((slot) => ({
-      ...slot,
-      startTime: toTime(slot.startTime),
-    }))
-  );
+  const emptyRoom = freeSlotsOfRoom.length === 0;
+  const emptyDay = freeSlotsOnCertainDate.length === 0;
+  let sortByDate = (aSlot, otherSlot) => aSlot.date > otherSlot.date;
 
   function getSlotsForDate(selected) {
-    return selectedSlot.filter(
+    return freeSlotsOfRoom.filter(
       (slot) =>
         toDate(slot.date).toLocaleDateString('es') ===
         toDate(dates[selected]).toLocaleDateString('es')
@@ -37,7 +33,7 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
 
   function getSortTimes(selected) {
     return getSlotsForDate(selected).sort((aSlot, otherSlot) =>
-      compareTime(aSlot.startTime, otherSlot.startTime)
+      compareTime(aSlot.startTime, otherSlot.startTime) ? -1 : 1
     );
   }
 
@@ -56,27 +52,26 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
             options={freeSlots.map((p) => p.first)}
             labelKey="name"
             onChange={({ selected }) => {
-              setSelectedSlot(freeSlots[selected].second);
+              setFreeSlotsOfRoom(freeSlots[selected].second.sort(sortByDate));
             }}
           />
           <MyForm.Select
-            icon={<HomeIcon />}
+            icon={<CalendarIcon />}
+            disabled={emptyRoom}
             label="Fecha"
             name="date"
             options={dates.map((date) => toDate(date).toLocaleDateString('es'))}
-            onChange={({ selected }) => {
-              console.log(selected);
-              setSlots(getSortTimes(selected));
-            }}
+            onChange={({ selected }) => setFreeSlotsOnCertainDate(getSortTimes(selected))}
           />
           <MyForm.Select
             icon={<ClockIcon />}
+            disabled={emptyDay}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala en esa fecha"
             name="slotId"
             labelKey="startTime"
             valueKey="id"
-            options={slots.map((slot) => ({
+            options={freeSlotsOnCertainDate.map((slot) => ({
               ...slot,
               startTime: toTime(slot.startTime),
             }))}
