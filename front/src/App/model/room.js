@@ -1,6 +1,9 @@
-import { compareAsc } from 'date-fns';
+import { compareAsc, isEqual } from 'date-fns';
+import { compareTime } from '#helpers/time';
 
 export class Room {
+  byDate = (date) => (slot) => isEqual(this._toDate(slot.date), date);
+  byTime = (aSlot, otherSlot) => compareTime(aSlot.startTime, otherSlot.startTime);
   constructor(slots, id, name, description) {
     this._slots = slots;
     this.id = id;
@@ -16,5 +19,9 @@ export class Room {
 
   _toDate(date) {
     return new Date(date[2], date[1], date[0]);
+  }
+
+  slotsAt(date) {
+    return this._slots.filter(this.byDate(date)).sort(this.byTime);
   }
 }
