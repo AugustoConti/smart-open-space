@@ -3,10 +3,7 @@ package com.sos.smartopenspace.controllers
 import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.*
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.persistence.RoomRepository
-import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.persistence.UserRepository
+import com.sos.smartopenspace.persistence.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -16,12 +13,17 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
+import java.time.LocalTime
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
 class TalkControllerTest {
+
+  @Autowired
+  lateinit var slotRepository: SlotRepository
 
   @Autowired
   lateinit var mockMvc: MockMvc
@@ -66,6 +68,22 @@ class TalkControllerTest {
     mockMvc.perform(
       MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${slot.id}/${room.id}")
     ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
+
+  @Test
+  fun `exchange a talk returns an ok status response`() {
+    val organizer = anySavedUser()
+    val talk = anySavedTalk()
+    val room = anySavedRoom()
+    val aSlot = aSavedSlot()
+    val otherSlot = otherSavedSlot()
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer, setOf(aSlot, otherSlot)))
+    openSpace.scheduleTalk(talk, organizer, aSlot as TalkSlot, room)
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/exchange/${talk.id}/${otherSlot.id}/${room.id}")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+
   }
 
   @Test
@@ -185,5 +203,13 @@ class TalkControllerTest {
 
   private fun aSavedUserWithTalk(talk: Talk) =
     userRepository.save(aUser(mutableSetOf(), mutableSetOf(talk)))
+
+  private fun aSavedSlot(): Slot {
+    return slotRepository.save(TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()))
+  }
+
+  private fun otherSavedSlot(): Slot {
+    return slotRepository.save(TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:00"), LocalDate.now()))
+  }
 
 }

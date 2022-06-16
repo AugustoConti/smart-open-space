@@ -87,7 +87,7 @@ class OpenSpace(
 
   @JsonProperty
   fun assignableSlots() = rooms.map { room ->
-    room to slots.filter { it.isAssignable() }.map { it.startTime }
+    room to slots.filter { it.isAssignable() }
   }.filter { it.second.isNotEmpty() }
 
   fun addTalk(talk: Talk): OpenSpace {
@@ -139,9 +139,6 @@ class OpenSpace(
     isBusySlot(room, slot) && throw BusySlotException()
   }
 
-  private fun findTalkSlot(time: LocalTime, date: LocalDate) =
-    slots.find { it.startTime == time && it.date == date && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
-
   fun scheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room): AssignedSlot {
     checkScheduleTalk(talk, user, slot, room)
     val assignedSlot = AssignedSlot(slot, room, talk)
@@ -150,8 +147,8 @@ class OpenSpace(
     return assignedSlot
   }
 
-  fun exchangeSlot(talk: Talk, time: LocalTime, room: Room, date: LocalDate) {
-    val slot = findTalkSlot(time, date)
+  fun exchangeSlot(talk: Talk, room: Room, slot: TalkSlot) {
+    checkSlotBelongs(slot)
     val current = assignedSlots.find { it.talk == talk } ?: throw TalkIsNotScheduledException()
     assignedSlots.find { it.room == room && it.slot == slot }?.moveTo(current.slot, current.room)
     current.moveTo(slot, room)

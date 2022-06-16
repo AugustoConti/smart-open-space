@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 fun anOpenSpace(
-    talkSlots: Set<TalkSlot> = setOf(
+        slots: Set<Slot> = setOf(
         TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()),
         TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45"), LocalDate.now()) ,
         TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"), LocalDate.now())
@@ -22,7 +22,7 @@ fun anOpenSpace(
     return OpenSpace(
       name = name,
       rooms = rooms,
-      slots = talkSlots,
+      slots = slots,
       talks = talks,
       description = description,
       tracks = tracks
@@ -53,17 +53,15 @@ fun generateTalkBody(name: String = "asdf", description: String = "a generic des
         """.trimIndent()
 }
 
-fun generateScheduleTalkBody(time: LocalTime, date: LocalDate = LocalDate.now()): String {
-    return """
-            {
-                "time": "${time}",
-                "date": "${date}"
-            }
-        """.trimIndent()
-}
-
-fun anOpenSpaceWith(talk: Talk, organizer: User): OpenSpace {
-    val openSpace = anOpenSpace(talks = mutableSetOf(talk))
+fun anOpenSpaceWith(
+        talk: Talk,
+        organizer: User,
+        slots: Set<Slot> = setOf(
+            TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()),
+            TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45"), LocalDate.now()) ,
+            TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"), LocalDate.now()))
+): OpenSpace {
+    val openSpace = anOpenSpace(talks = mutableSetOf(talk), slots = slots)
     organizer.addOpenSpace(openSpace)
     return openSpace
 }

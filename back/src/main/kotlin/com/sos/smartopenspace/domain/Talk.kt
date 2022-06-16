@@ -3,8 +3,6 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.net.URL
-import java.time.LocalDate
-import java.time.LocalTime
 import javax.persistence.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -48,8 +46,8 @@ class Talk(
     return openSpace
   }
 
-  fun exchange(time: LocalTime, room: Room, date: LocalDate): OpenSpace {
-    openSpace.exchangeSlot(this, time, room, date)
+  fun exchange(room: Room, slot: TalkSlot): OpenSpace {
+    openSpace.exchangeSlot(this, room, slot)
     return openSpace
   }
 

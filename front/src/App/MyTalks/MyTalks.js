@@ -200,6 +200,13 @@ const MyTalks = () => {
 
   const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
 
+  function getRoomsWithSlots(roomWithSlots) {
+    return roomWithSlots.map(
+      ({ first: room, second: slots }) =>
+        new Room(slots, room.id, room.name, room.description)
+    );
+  }
+
   return (
     <>
       <MainHeader>
@@ -247,13 +254,10 @@ const MyTalks = () => {
               <TalkView
                 talk={talk}
                 activeQueue={openSpace.activeQueue}
-                rooms={openSpace.freeSlots.map(
-                  ({ first: room, second: slots }) =>
-                    new Room(slots, room.id, room.name, room.description)
-                )}
+                roomsWithFreeSlots={getRoomsWithSlots(openSpace.freeSlots)}
                 hasAnother={hasAnother(talk.id)}
                 onEnqueue={reload}
-                assignableSlots={openSpace.assignableSlots}
+                roomsWithAssignableSlots={getRoomsWithSlots(openSpace.assignableSlots)}
                 currentUserIsOrganizer={currentUserIsOrganizer}
                 dates={openSpace.dates}
                 key={talk.id}

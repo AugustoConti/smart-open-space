@@ -52,8 +52,8 @@ EditButton.propTypes = {
 const Talk = ({
   talk,
   activeQueue,
-  assignableSlots,
-  rooms,
+  roomsWithAssignableSlots,
+  roomsWithFreeSlots,
   hasAnother,
   onEnqueue,
   currentUserIsOrganizer,
@@ -66,12 +66,12 @@ const Talk = ({
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
-
+  console.log(roomsWithAssignableSlots);
   const onSubmitSchedule = ({ value: { slotId, room } }) =>
     scheduleTalk(talk.id, user.id, slotId, room.id).then(pushToSchedule);
 
-  const onSubmitExchange = ({ value: { time, date, room } }) =>
-    exchangeTalk(talk.id, room.id, time, date).then(pushToOpenSpace);
+  const onSubmitExchange = ({ value: { slotId, room } }) =>
+    exchangeTalk(talk.id, slotId, room.id).then(pushToOpenSpace);
 
   const color = talk.colorForTalkManagement();
 
@@ -128,9 +128,9 @@ const Talk = ({
           <EditButton color={color} onClick={pushToEditTalk} />
         )}
       </Grid>
-      {openSchedule && rooms && (
+      {openSchedule && roomsWithFreeSlots && (
         <SelectSlot
-          rooms={rooms}
+          rooms={roomsWithFreeSlots}
           name={talk.name}
           dates={dates}
           onExit={() => setOpenSchedule(false)}
@@ -140,7 +140,7 @@ const Talk = ({
       )}
       {openExchange && (
         <SelectSlot
-          rooms={assignableSlots}
+          rooms={roomsWithAssignableSlots}
           name={talk.name}
           dates={dates}
           onExit={() => setOpenExchange(false)}
@@ -153,8 +153,8 @@ const Talk = ({
 };
 Talk.propTypes = {
   activeQueue: PropTypes.bool.isRequired,
-  assignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
-  rooms: PropTypes.arrayOf(PropTypes.shape(Room).isRequired).isRequired,
+  roomsWithAssignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  roomsWithFreeSlots: PropTypes.arrayOf(PropTypes.shape(Room).isRequired).isRequired,
   hasAnother: PropTypes.bool.isRequired,
   onEnqueue: PropTypes.func.isRequired,
 };

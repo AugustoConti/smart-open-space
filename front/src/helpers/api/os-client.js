@@ -41,8 +41,8 @@ const useGetTalks = () => useAsync({ promiseFn: getTalks, osId: useParams().id }
 const scheduleTalk = (talkID, userID, slotId, roomID) =>
   put(`talk/schedule/${userID}/${talkID}/${slotId}/${roomID}`);
 
-const exchangeTalk = (talkID, roomID, hour, date) =>
-  put(`talk/exchange/${talkID}/${roomID}/${hour}`, { hour: hour, date: date });
+const exchangeTalk = (talkID, slotId, roomID) =>
+  put(`talk/exchange/${talkID}/${slotId}/${roomID}`);
 
 const startCallForPapers = (openSpaceId) =>
   withUser(({ id }) => put(`openSpace/${openSpaceId}/user/${id}/callForPapers`));
