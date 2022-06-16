@@ -8,6 +8,7 @@ import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 import { Room } from '../../model/room';
+import { compareAsc } from 'date-fns';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
@@ -17,8 +18,9 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
   const [room, setRoom] = useState(new Room([]));
   const [filteredSlotsByDate, setFilteredSlotsByDate] = useState([]);
 
-  const emptyRoom = room.slots().length === 0;
+  const noSlots = room.slots().length === 0;
   const emptyDay = filteredSlotsByDate.length === 0;
+  const sortedDates = dates.map((date) => toDate(date)).sort(compareAsc);
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
@@ -39,10 +41,10 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
           />
           <MyForm.Select
             icon={<CalendarIcon />}
-            disabled={emptyRoom}
+            disabled={noSlots}
             label="Fecha"
             name="date"
-            options={dates.map((date) => toDate(date).toLocaleDateString('es'))}
+            options={sortedDates.map((date) => date.toLocaleDateString('es'))}
             onChange={({ selected: selectedIndex }) =>
               setFilteredSlotsByDate(room.slotsAt(toDate(dates[selectedIndex])))
             }
