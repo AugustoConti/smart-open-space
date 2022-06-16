@@ -7,33 +7,18 @@ import { CalendarIcon, ClockIcon, HomeIcon } from '#shared/icons';
 import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
-import { compareTime } from '#helpers/time';
+import { Room } from '../../model/room';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
 const toDate = ([year, month, day]) => new Date(year, month, day);
 
 const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
-  const [freeSlotsOfRoom, setFreeSlotsOfRoom] = useState([]);
-  const [freeSlotsOnCertainDate, setFreeSlotsOnCertainDate] = useState([]);
+  const [room, setRoom] = useState(new Room([]));
+  const [filteredSlotsByDate, setFilteredSlotsByDate] = useState([]);
 
-  const emptyRoom = freeSlotsOfRoom.length === 0;
-  const emptyDay = freeSlotsOnCertainDate.length === 0;
-
-  function getSlotsForDate(selected) {
-    return freeSlotsOfRoom.filter(
-      (slot) =>
-        toDate(slot.date).toLocaleDateString('es') ===
-        toDate(dates[selected]).toLocaleDateString('es')
-    );
-  }
-
-  function getSortTimes(selected) {
-    return getSlotsForDate(selected).sort((aSlot, otherSlot) =>
-      compareTime(aSlot.startTime, otherSlot.startTime)
-    );
-  }
-
+  const emptyRoom = room.slots().length === 0;
+  const emptyDay = filteredSlotsByDate.length === 0;
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
@@ -49,7 +34,7 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
             options={rooms}
             labelKey="name"
             onChange={({ selected: selectedIndex }) => {
-              setFreeSlotsOfRoom(rooms[selectedIndex].slots());
+              setRoom(rooms[selectedIndex]);
             }}
           />
           <MyForm.Select
@@ -59,7 +44,7 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
             name="date"
             options={dates.map((date) => toDate(date).toLocaleDateString('es'))}
             onChange={({ selected: selectedIndex }) =>
-              setFreeSlotsOnCertainDate(getSortTimes(selectedIndex))
+              setFilteredSlotsByDate(room.slotsAt(toDate(dates[selectedIndex])))
             }
           />
           <MyForm.Select
@@ -70,7 +55,7 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
             name="slotId"
             labelKey="startTime"
             valueKey="id"
-            options={freeSlotsOnCertainDate.map((slot) => ({
+            options={filteredSlotsByDate.map((slot) => ({
               ...slot,
               startTime: toTime(slot.startTime),
             }))}

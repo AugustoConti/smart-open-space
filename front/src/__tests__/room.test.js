@@ -2,8 +2,8 @@ import { Room } from '../App/model/room';
 
 describe('a room', () => {
   it('when their slots are asked, it sorts them by date', () => {
-    const slotOnJanuary2022 = { date: [1, 1, 2022] };
-    const slotOnDecember2022 = { date: [2, 12, 2021] };
+    const slotOnJanuary2022 = { date: [2022, 1, 1] };
+    const slotOnDecember2022 = { date: [2021, 12, 2] };
     const slots = [slotOnJanuary2022, slotOnDecember2022];
     const room = new Room(slots);
 
@@ -25,8 +25,8 @@ describe('a room', () => {
   });
 
   it('can get slots of certain date sorted by times', () => {
-    const slotOnJanuary202210am = { date: [1, 1, 2022], startTime: [10, 0] };
-    const slotOnJanuary202210pm = { date: [1, 1, 2022], startTime: [22, 0] };
+    const slotOnJanuary202210am = { date: [2022, 1, 1], startTime: [10, 0] };
+    const slotOnJanuary202210pm = { date: [2022, 1, 1], startTime: [22, 0] };
     const slotOnDecember2022 = { date: [2, 12, 2021] };
     const room = new Room([
       slotOnJanuary202210pm,

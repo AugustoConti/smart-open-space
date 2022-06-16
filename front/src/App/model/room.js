@@ -18,7 +18,7 @@ export class Room {
   }
 
   _toDate(date) {
-    return new Date(date[2], date[1], date[0]);
+    return new Date(date[0], date[1], date[2]);
   }
 
   slotsAt(date) {
