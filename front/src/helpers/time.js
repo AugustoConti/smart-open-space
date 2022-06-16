@@ -10,3 +10,5 @@ export const sortTimes = (times) =>
   times.sort(({ startTime: [hour1, minute1] }, { startTime: [hour2, minute2] }) =>
     compareTime([hour1, minute1], [hour2, minute2])
   );
+
+export const toDate = ([year, month, day]) => new Date(year, month, day);

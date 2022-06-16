@@ -9,10 +9,7 @@ import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 import { Room } from '../../model/room';
 import { compareAsc } from 'date-fns';
-
-const pad = (n) => (n < 10 ? '0' : '') + n;
-const toTime = (time) => time.map(pad).join(':');
-const toDate = ([year, month, day]) => new Date(year, month, day);
+import { toDate, numbersToTime } from '#helpers/time';
 
 const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
   const [room, setRoom] = useState(new Room([]));
@@ -21,6 +18,8 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
   const noSlots = room.slots().length === 0;
   const emptyDay = filteredSlotsByDate.length === 0;
   const sortedDates = dates.map((date) => toDate(date)).sort(compareAsc);
+  const hasOneDate = dates.length === 1;
+
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
       <Box pad="medium">
@@ -37,30 +36,40 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
             labelKey="name"
             onChange={({ selected: selectedIndex }) => {
               setRoom(rooms[selectedIndex]);
+              setFilteredSlotsByDate([]);
             }}
           />
-          <MyForm.Select
-            icon={<CalendarIcon />}
-            disabled={noSlots}
-            label="Fecha"
-            name="date"
-            options={sortedDates.map((date) => date.toLocaleDateString('es'))}
-            onChange={({ selected: selectedIndex }) =>
-              setFilteredSlotsByDate(room.slotsAt(toDate(dates[selectedIndex])))
-            }
-          />
+          {!hasOneDate && (
+            <MyForm.Select
+              icon={<CalendarIcon />}
+              disabled={noSlots}
+              label="Fecha"
+              name="date"
+              options={sortedDates.map((date) => date.toLocaleDateString('es'))}
+              onChange={({ selected: selectedIndex }) =>
+                setFilteredSlotsByDate(room.slotsAt(toDate(dates[selectedIndex])))
+              }
+            />
+          )}
           <MyForm.Select
             icon={<ClockIcon />}
-            disabled={emptyDay}
+            disabled={(emptyDay && !hasOneDate) || noSlots}
             label="Horario"
             emptySearchMessage="No hay horarios disponibles para esta sala en esa fecha"
             name="slotId"
             labelKey="startTime"
             valueKey="id"
-            options={filteredSlotsByDate.map((slot) => ({
-              ...slot,
-              startTime: toTime(slot.startTime),
-            }))}
+            options={
+              hasOneDate
+                ? room.slotsAt(toDate(dates[0])).map((slot) => ({
+                    ...slot,
+                    startTime: numbersToTime(slot.startTime),
+                  }))
+                : filteredSlotsByDate.map((slot) => ({
+                    ...slot,
+                    startTime: numbersToTime(slot.startTime),
+                  }))
+            }
           />
         </MyForm>
       </Box>

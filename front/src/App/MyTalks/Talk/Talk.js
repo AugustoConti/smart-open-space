@@ -66,7 +66,6 @@ const Talk = ({
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
-  console.log(roomsWithAssignableSlots);
   const onSubmitSchedule = ({ value: { slotId, room } }) =>
     scheduleTalk(talk.id, user.id, slotId, room.id).then(pushToSchedule);
 
