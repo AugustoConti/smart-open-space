@@ -11,17 +11,14 @@ import { compareTime } from '#helpers/time';
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
-const toDate = ([year, month, day]) => {
-  return new Date(year, month, day);
-};
+const toDate = ([year, month, day]) => new Date(year, month, day);
 
-const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
+const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
   const [freeSlotsOfRoom, setFreeSlotsOfRoom] = useState([]);
   const [freeSlotsOnCertainDate, setFreeSlotsOnCertainDate] = useState([]);
 
   const emptyRoom = freeSlotsOfRoom.length === 0;
   const emptyDay = freeSlotsOnCertainDate.length === 0;
-  let sortByDate = (aSlot, otherSlot) => aSlot.date > otherSlot.date;
 
   function getSlotsForDate(selected) {
     return freeSlotsOfRoom.filter(
@@ -33,7 +30,7 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
 
   function getSortTimes(selected) {
     return getSlotsForDate(selected).sort((aSlot, otherSlot) =>
-      compareTime(aSlot.startTime, otherSlot.startTime) ? -1 : 1
+      compareTime(aSlot.startTime, otherSlot.startTime)
     );
   }
 
@@ -49,10 +46,10 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
             icon={<HomeIcon />}
             label="Sala"
             name="room"
-            options={freeSlots.map((p) => p.first)}
+            options={rooms}
             labelKey="name"
-            onChange={({ selected }) => {
-              setFreeSlotsOfRoom(freeSlots[selected].second.sort(sortByDate));
+            onChange={({ selected: selectedIndex }) => {
+              setFreeSlotsOfRoom(rooms[selectedIndex].slots());
             }}
           />
           <MyForm.Select
@@ -61,7 +58,9 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
             label="Fecha"
             name="date"
             options={dates.map((date) => toDate(date).toLocaleDateString('es'))}
-            onChange={({ selected }) => setFreeSlotsOnCertainDate(getSortTimes(selected))}
+            onChange={({ selected: selectedIndex }) =>
+              setFreeSlotsOnCertainDate(getSortTimes(selectedIndex))
+            }
           />
           <MyForm.Select
             icon={<ClockIcon />}
@@ -82,7 +81,7 @@ const SelectSlot = ({ freeSlots, dates, name, onExit, onSubmit, title }) => {
   );
 };
 SelectSlot.propTypes = {
-  freeSlots: PropTypes.arrayOf(
+  rooms: PropTypes.arrayOf(
     PropTypes.shape({
       second: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
     }).isRequired

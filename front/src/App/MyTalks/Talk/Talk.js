@@ -17,6 +17,7 @@ import {
   usePushToOpenSpace,
   usePushToSchedule,
 } from '#helpers/routes';
+import { Room } from '../../model/room';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -52,7 +53,7 @@ const Talk = ({
   talk,
   activeQueue,
   assignableSlots,
-  freeSlots,
+  rooms,
   hasAnother,
   onEnqueue,
   currentUserIsOrganizer,
@@ -127,9 +128,9 @@ const Talk = ({
           <EditButton color={color} onClick={pushToEditTalk} />
         )}
       </Grid>
-      {openSchedule && freeSlots && (
+      {openSchedule && rooms && (
         <SelectSlot
-          freeSlots={freeSlots}
+          rooms={rooms}
           name={talk.name}
           dates={dates}
           onExit={() => setOpenSchedule(false)}
@@ -139,7 +140,7 @@ const Talk = ({
       )}
       {openExchange && (
         <SelectSlot
-          freeSlots={assignableSlots}
+          rooms={assignableSlots}
           name={talk.name}
           dates={dates}
           onExit={() => setOpenExchange(false)}
@@ -153,7 +154,7 @@ const Talk = ({
 Talk.propTypes = {
   activeQueue: PropTypes.bool.isRequired,
   assignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
-  freeSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  rooms: PropTypes.arrayOf(PropTypes.shape(Room).isRequired).isRequired,
   hasAnother: PropTypes.bool.isRequired,
   onEnqueue: PropTypes.func.isRequired,
 };

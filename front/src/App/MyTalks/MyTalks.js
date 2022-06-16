@@ -32,6 +32,7 @@ import Title from '#shared/Title';
 import EmptyTalk from './EmptyTalk';
 import TalkView from './Talk';
 import Talk from '../model/talk';
+import { Room } from '../model/room';
 
 const slideDownAnimation = {
   type: 'slideDown',
@@ -246,7 +247,10 @@ const MyTalks = () => {
               <TalkView
                 talk={talk}
                 activeQueue={openSpace.activeQueue}
-                freeSlots={openSpace.freeSlots}
+                rooms={openSpace.freeSlots.map(
+                  ({ first: room, second: slots }) =>
+                    new Room(slots, room.id, room.name, room.description)
+                )}
                 hasAnother={hasAnother(talk.id)}
                 onEnqueue={reload}
                 assignableSlots={openSpace.assignableSlots}
