@@ -12,8 +12,6 @@ const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
 let compareTime = ([anHour, aMinute], [otherHour, otherMinute]) =>
   anHour < otherHour || (anHour === otherHour && aMinute < otherMinute) ? -1 : 1;
-const sortTimes = (times) => times.sort(compareTime);
-
 const toDate = ([year, month, day]) => {
   return new Date(year, month, day);
 };
