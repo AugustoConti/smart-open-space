@@ -14,6 +14,7 @@ import { ButtonSingIn } from '#shared/ButtonSingIn';
 import { sortTimes } from '#helpers/time';
 import { DateSlots } from './DateSlots';
 import { Tab, Tabs } from 'grommet';
+import { compareAsc, format, isEqual } from 'date-fns';
 
 const Schedule = () => {
   const user = useUser();
@@ -30,7 +31,7 @@ const Schedule = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const sortedSlots = sortTimes(slots);
-  const sortedDates = dates.sort(compareDates);
+  const sortedDates = dates.map((date) => new Date(...date)).sort(compareAsc);
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
 
@@ -51,7 +52,7 @@ const Schedule = () => {
       </MainHeader>
       <Tabs>
         {sortedDates.map((date) => (
-          <Tab title={`${date[0]}-${date[1]}-${date[2]}`}>
+          <Tab title={format(date, 'yyyy-MM-dd')}>
             <DateSlots talksOf={talksOf} sortedSlots={dateSlots(date, sortedSlots)} />
           </Tab>
         ))}
@@ -62,21 +63,7 @@ const Schedule = () => {
 };
 
 function dateSlots(date, sortedSlots) {
-  return sortedSlots.filter((slot) => equalDates(slot.date, date));
-}
-
-function compareDates(date1, date2) {
-  if (equalDates(date1, date2)) return 0;
-  if (date1.toString() > date2.toString()) return 1;
-  if (date1.toString() < date2.toString()) return -1;
-  return 0;
-}
-
-function equalDates(date1, date2) {
-  if (date1 === date2) return true;
-  if (!date1 || !date2) return false;
-
-  return date1.map((element, index) => element === date2[index]).reduce((a, b) => a && b);
+  return sortedSlots.filter((slot) => isEqual(new Date(...slot.date), date));
 }
 
 export default Schedule;
