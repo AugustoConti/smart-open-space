@@ -1,7 +1,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import { Box, Text, Button, Paragraph, List } from 'grommet';
+import { Box, Text, Button, Paragraph, List, Markdown } from 'grommet';
 
 import MyProps from '#helpers/MyProps';
 import useSize from '#helpers/useSize';
@@ -50,10 +50,9 @@ MySubTitle.propTypes = {
 };
 
 const Description = ({ children, description, ...props }) => (
-  <Paragraph fill={true} {...props}>
+  <Markdown components={{ p: (props) => <Paragraph {...props} fill /> }}>
     {description}
-    {children}
-  </Paragraph>
+  </Markdown>
 );
 
 const Tracks = ({ children, tracks, ...props }) => (
