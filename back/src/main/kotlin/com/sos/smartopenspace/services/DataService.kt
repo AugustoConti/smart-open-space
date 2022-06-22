@@ -146,18 +146,8 @@ class DataService(private val userRepository: UserRepository) {
     testear.enqueue()
     front.enqueue()
     master.enqueue()
-
-    schedule(cpi, api, LocalTime.parse("15:00"), room60)
-    schedule(cpi, dessAgil, LocalTime.parse("15:00"), room213)
-    schedule(cpi, js, LocalTime.parse("17:00"), room60)
     desSinJefe.enqueue()
     cuis.enqueue()
     dessDeberia.enqueue()
-  }
-
-  private fun schedule(openSpace: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
-    talk.enqueue()
-    openSpace.nextTalk(openSpace.organizer)
-//    talk.schedule(time, room)
   }
 }
