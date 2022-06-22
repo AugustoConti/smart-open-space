@@ -35,4 +35,7 @@ class UserServiceREST(private val userService: UserService) {
 
   @GetMapping("/identify/{email}/")
   fun identify(@Email @PathVariable email: String) = Data(userService.identify(email))
+
+  @PostMapping("/hash/{hashKey}")
+  fun hash(@PathVariable hashKey:String) = userService.hash(hashKey)
 }
