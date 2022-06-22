@@ -1,8 +1,8 @@
 package com.sos.smartopenspace.domain
 
+import com.sos.smartopenspace.anOpenSpace
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import java.time.LocalTime
 
 class SlotTest {
@@ -10,19 +10,10 @@ class SlotTest {
   private val talk1 = Talk("talk1")
   private val talk2 = Talk("talk2")
 
-  private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) = OpenSpace(
-    "os", LocalDate.now(), setOf(room1),
-    setOf(
-      TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
-      TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45")),
-      TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("12:00"))
-    ), talks
-  )
-
   private fun anyUser(talk: Talk) = User("augusto@sos.sos", "Augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
 
   private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>): OpenSpace {
-    val openSpace = anyOpenSpace(talks.toMutableSet())
+    val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1))
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(openSpace))
     openSpace.activeQueue(organizer)
     talks.forEach {
@@ -33,8 +24,8 @@ class SlotTest {
     return openSpace
   }
 
-  private fun anyOpenSpaceWithOrganizer(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)) : OpenSpace {
-    val OpenSpace = anyOpenSpace(talks.toMutableSet())
+  private fun anyOpenSpaceWithOrganizer(talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)): OpenSpace {
+    val OpenSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1))
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(OpenSpace))
     OpenSpace.activeQueue(organizer)
     return OpenSpace
@@ -105,7 +96,7 @@ class SlotTest {
 
   @Test
   fun `Open space sin charlas agendadas, tiene los slots libres`() {
-    val openSpace = anyOpenSpace()
+    val openSpace = anOpenSpace(talks = mutableSetOf(talk1, talk2), rooms = setOf(room1))
     val freeSlots = openSpace.freeSlots()
     assertIterableEquals(
       listOf(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalTime.parse("10:45")),

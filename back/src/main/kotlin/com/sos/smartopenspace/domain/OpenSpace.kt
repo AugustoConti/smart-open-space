@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 import javax.persistence.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -15,7 +16,6 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
-  val date: LocalDate,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
@@ -45,6 +45,7 @@ class OpenSpace(
   val tracks: Set<Track> = emptySet(),
 
   val urlImage: String = "",
+
   @Id @GeneratedValue
   val id: Long = 0
 ) {
@@ -206,6 +207,21 @@ class OpenSpace(
   @JsonProperty
   fun amountOfTalks(): Int {
     return talks.size
+  }
+
+  @JsonProperty
+  fun startDate(): LocalDate? {
+    return Collections.min(dates())
+  }
+
+  @JsonProperty
+  fun endDate(): LocalDate? {
+    return Collections.max(dates())
+  }
+
+  @JsonProperty
+  fun dates(): Set<LocalDate?> {
+    return slots.map { it.date }.toSet()
   }
 }
 

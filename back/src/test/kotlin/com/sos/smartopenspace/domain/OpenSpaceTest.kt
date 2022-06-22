@@ -11,12 +11,12 @@ class OpenSpaceTest {
 
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
         OpenSpace(
-            "os", LocalDate.now(), emptySet(),
-            setOf(
+            "os", emptySet(), setOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
                 TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
                 TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
-            ), talks
+            ),
+            talks
         )
 
     private fun anyOpenSpaceWith(organizer: User): OpenSpace {
@@ -33,12 +33,10 @@ class OpenSpaceTest {
         val nameOpenSpace = "os"
         val date = LocalDate.now()
         val openSpace = OpenSpace(
-            nameOpenSpace, date, emptySet(),
-            emptySet()
+            nameOpenSpace, emptySet(), emptySet()
         )
 
         assertEquals(openSpace.name, nameOpenSpace)
-        assertEquals(openSpace.date, date)
     }
 
     @Test
@@ -47,8 +45,8 @@ class OpenSpaceTest {
         val date = LocalDate.now()
         val description = "A description"
         val openSpace = OpenSpace(
-            nameOpenSpace, date, emptySet(),
-            emptySet(), mutableSetOf(), description
+            nameOpenSpace, emptySet(), emptySet(),
+            mutableSetOf(), description
         )
 
         assertEquals(openSpace.description, description)
@@ -175,13 +173,52 @@ class OpenSpaceTest {
     fun `an open space is created with a track`() {
         val track = Track(name = "track", color = "#FFFFFF")
         val openSpace = OpenSpace(
-            name = "os", date = LocalDate.now(), slots = emptySet(),
-            rooms = emptySet(), talks = mutableSetOf(), tracks = setOf(track)
+            name = "os", rooms = emptySet(), slots = emptySet(),
+            talks = mutableSetOf(), tracks = setOf(track)
         )
 
         assertEquals(1, openSpace.tracks.size)
         assertEquals(track.color, openSpace.tracks.first().color)
         assertEquals(track.name, openSpace.tracks.first().name)
         assertEquals(track.description, openSpace.tracks.first().description)
+    }
+    @Test
+    fun `an openSpace knows when it starts`() {
+        val startDate = LocalDate.now()
+        val endDate = LocalDate.now().plusDays(1)
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
+
+        assertEquals(startDate, openSpace.startDate())
+    }
+
+    @Test
+    fun `an openSpace knows when it finishes`() {
+        val startDate = LocalDate.now()
+        val endDate = LocalDate.now().plusDays(1)
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
+
+        assertEquals(endDate, openSpace.endDate())
+    }
+
+    @Test
+    fun `an openSpace knows when is hold`() {
+        val startDate = LocalDate.now()
+        val endDate = LocalDate.now().plusDays(1)
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
+
+        assertEquals(setOf(startDate, endDate), openSpace.dates())
+    }
+
+    private fun openSpaceWithTwoDates(
+        startDate: LocalDate?,
+        endDate: LocalDate?
+    ): OpenSpace {
+        val first_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), startDate)
+        val end_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), endDate)
+        val openSpace = OpenSpace(
+            name = "os", rooms = emptySet(), slots = setOf(first_date_slot, end_date_slot),
+            talks = mutableSetOf()
+        )
+        return openSpace
     }
 }

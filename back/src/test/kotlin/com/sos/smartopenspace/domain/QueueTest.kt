@@ -1,21 +1,10 @@
 package com.sos.smartopenspace.domain
 
+import com.sos.smartopenspace.anOpenSpace
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
-import java.time.LocalTime
 
 class QueueTest {
-
-  private fun anyOS(talks: MutableSet<Talk> = mutableSetOf()) =
-    OpenSpace(
-      "os", LocalDate.now(), emptySet(),
-      setOf(
-        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
-        TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
-        TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
-      ), talks
-    )
 
   private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
     User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
@@ -23,7 +12,7 @@ class QueueTest {
   private fun anyTalk() = Talk("Talk1")
 
   private fun anyOSWithActiveQueue(talks: MutableSet<Talk> = mutableSetOf()): OpenSpace {
-    val os = anyOS(talks)
+    val os = anOpenSpace(talks = talks)
     val user = anyUser(mutableSetOf(os))
     os.activeQueue(user)
     return os
@@ -31,7 +20,7 @@ class QueueTest {
 
   @Test
   fun `No puedo activar encolamiento si no soy el organizador`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     anyUser(mutableSetOf(os))
     assertThrows(NotTheOrganizerException::class.java) {
       os.activeQueue(anyUser())
@@ -40,7 +29,7 @@ class QueueTest {
 
   @Test
   fun `Se crea un nuevo openSpace tiene el encolamiento pendiente`() {
-    assertTrue(anyOS().isPendingQueue())
+    assertTrue(anOpenSpace().isPendingQueue())
   }
 
   @Test
@@ -50,13 +39,13 @@ class QueueTest {
 
   @Test
   fun `Os sin charlas encoladas, no tiene charla actual`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     assertNull(os.currentTalk())
   }
 
   @Test
   fun `Os sin charlas encoladas, no puedo pasar a la siguiente charla`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     val user = anyUser(mutableSetOf(os))
     assertThrows(EmptyQueueException::class.java) {
       os.nextTalk(user)
@@ -134,7 +123,7 @@ class QueueTest {
   fun `El organizador puede terminar la charla`() {
     val talk1 = anyTalk()
     val talk2 = anyTalk()
-    val os = anyOS(mutableSetOf(talk1, talk2))
+    val os = anOpenSpace(talks = mutableSetOf(talk1, talk2))
     val organizer = anyUser(mutableSetOf(os))
     anyUser(talks = mutableSetOf(talk1))
     anyUser(talks = mutableSetOf(talk2))
@@ -185,7 +174,7 @@ class QueueTest {
   @Test
   fun `No se puede encolar una charla, si no esta activo el encolamiento`() {
     val talk = anyTalk()
-    anyOS(talks = mutableSetOf(talk))
+    anOpenSpace(talks = mutableSetOf(talk))
     assertThrows(InactiveQueueException::class.java) {
       talk.enqueue()
     }
@@ -193,7 +182,7 @@ class QueueTest {
 
   @Test
   fun `Solo el organizador puede cerrar el encolamiento`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     anyUser(mutableSetOf(os))
     assertThrows(NotTheOrganizerException::class.java) {
       os.finishQueuing(anyUser())
@@ -203,7 +192,7 @@ class QueueTest {
   @Test
   fun `Cuando cierra el encolamiento, la queue esta finalizada`() {
     val talk = anyTalk()
-    val os = anyOS(mutableSetOf(talk))
+    val os = anOpenSpace(talks = mutableSetOf(talk))
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
     assertTrue(os.isFinishedQueue())
@@ -212,7 +201,7 @@ class QueueTest {
   @Test
   fun `Cuando cierra el encolamiento, no se pueden encolar charlas`() {
     val talk = anyTalk()
-    val os = anyOS(mutableSetOf(talk))
+    val os = anOpenSpace(talks = mutableSetOf(talk))
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
     assertThrows(FinishedQueuingException::class.java) {
@@ -222,7 +211,7 @@ class QueueTest {
 
   @Test
   fun `Cuando cierra el encolamiento, no se pueden cargar charlas`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
     assertThrows(FinishedQueuingException::class.java) {
@@ -232,7 +221,7 @@ class QueueTest {
 
   @Test
   fun `No puedo activar el encolamiento dos veces`() {
-    val os = anyOS()
+    val os = anOpenSpace()
     val organizer = anyUser(mutableSetOf(os))
     os.activeQueue(organizer)
     assertThrows(AlreadyActivedQueuingException::class.java) {
@@ -244,7 +233,7 @@ class QueueTest {
   fun `Se cierra el encolamiento, se descartan las charlas en la cola`() {
     val talk1 = anyTalk()
     val talk2 = anyTalk()
-    val os = anyOS(mutableSetOf(talk1, talk2))
+    val os = anOpenSpace(talks = mutableSetOf(talk1, talk2))
     val organizer = anyUser(mutableSetOf(os), mutableSetOf(talk1))
     anyUser(talks = mutableSetOf(talk2))
     os.activeQueue(organizer)

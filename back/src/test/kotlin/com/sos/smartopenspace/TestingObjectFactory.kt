@@ -4,12 +4,13 @@ import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
-import java.time.LocalDate
 import java.time.LocalTime
 
 fun anOpenSpace(
-        talkSlots: Set<TalkSlot> = setOf(
-        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
+    talkSlots: Set<TalkSlot> = setOf(
+        TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30")),
+        TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45")),
+        TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"))
     ),
         name: String = "os",
         rooms: Set<Room> = setOf(Room("1")),
@@ -18,13 +19,12 @@ fun anOpenSpace(
         talks: MutableSet<Talk> = mutableSetOf()
 ): OpenSpace {
     return OpenSpace(
-        name = name,
-        date = LocalDate.now(),
-        rooms = rooms,
-        slots = talkSlots,
-        talks = talks,
-        tracks = tracks,
-        description = description
+      name = name,
+      rooms = rooms,
+      slots = talkSlots,
+      talks = talks,
+      description = description,
+      tracks = tracks
     )
 }
 

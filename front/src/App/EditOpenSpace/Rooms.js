@@ -20,7 +20,7 @@ const Rooms = ({ value, onChange }) => {
           value={room.name}
         />
         <PlusButton
-          conditionToAdd={hasNoRoomName}
+          conditionToDisable={hasNoRoomName}
           item={room}
           setItem={setRoom}
           value={value}

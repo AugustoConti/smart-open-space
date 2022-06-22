@@ -58,7 +58,7 @@ const Tracks = ({ value, onChange }) => {
           </Box>
         </Box>
         <PlusButton
-          conditionToAdd={hasNoTrackName}
+          conditionToDisable={hasNoTrackName}
           onChange={onChange}
           value={value}
           item={track}

@@ -21,14 +21,14 @@ Item.propTypes = {
   itemName: PropTypes.string.isRequired,
 };
 
-const ListWithRemoveButton = ({ items, onChange }) => {
+const ListWithRemoveButton = ({ items, onChange, displayName = (item) => item.name }) => {
   return (
     <List>
       {items.map((item, itemIndex) => (
         <Item
           color={item.color}
-          key={`${item.name}-${itemIndex}`}
-          itemName={item.name}
+          key={itemIndex}
+          itemName={displayName(item)}
           onRemove={() =>
             onChange({
               target: { value: items.filter((_, index) => index !== itemIndex) },

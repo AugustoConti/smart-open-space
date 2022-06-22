@@ -17,8 +17,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
-import java.net.URL
-import java.time.LocalDate
 import java.time.LocalTime
 
 
@@ -69,6 +67,9 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].color").value(track_color))
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].name").value(track_name))
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].description").value(track_description))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.startingDate").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.endDate").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.dates").isNotEmpty)
     }
 
     @Test
@@ -172,8 +173,7 @@ class OpenSpaceControllerTest {
 
     private fun anyOpenSpace(): OpenSpace {
         return OpenSpace(
-            "os", LocalDate.now(), setOf(Room("1")),
-            setOf(
+            "os", setOf(Room("1")), setOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
             )
         )
@@ -185,7 +185,7 @@ class OpenSpaceControllerTest {
     ): String {
         return """
 {
-    "date": "2022-05-11T03:00:00.000Z",
+    "dates": ["2022-05-11T03:00:00.000Z"],
     "name": "asd",
     "description": "${description}",
     "rooms": [{"name": "a"}],
