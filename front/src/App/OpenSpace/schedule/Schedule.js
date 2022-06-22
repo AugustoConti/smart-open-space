@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSlots } from '#api/sockets-client';
 import { useGetOpenSpace } from '#api/os-client';
 import MainHeader from '#shared/MainHeader';
-import { PreviousLinkIcon } from '#shared/icons';
+import { OpenSpaceIcon, ScheduleIcon } from '#shared/icons';
 import {
   RedirectToLoginFromOpenSpace,
   RedirectToRoot,
@@ -13,12 +13,14 @@ import { useUser } from '#helpers/useAuth';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
 import { sortTimes } from '#helpers/time';
 import { Slots } from './Slots';
+import { ButtonMyTalks } from '../buttons/ButtonMyTalks';
 
 const Schedule = () => {
   const user = useUser();
   const [redirectToLogin, setRedirectToLogin] = useState(false);
+
   const {
-    data: { id, name, slots, startingDate } = {},
+    data: { id, name, slots, startingDate, organizer } = {},
     isPending,
     isRejected,
   } = useGetOpenSpace();
@@ -28,8 +30,7 @@ const Schedule = () => {
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
 
-  console.log(startingDate);
-  console.log(slots);
+
   const sortedSlots = sortTimes(slots).filter((slot) =>
     slot.date
       .map((zarasa, index) => zarasa === startingDate[index])
@@ -37,20 +38,22 @@ const Schedule = () => {
   );
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
+    const amTheOrganizer = user && organizer.id === user.id;
 
   return (
     <>
       <MainHeader>
-        <MainHeader.Title label={name} />
-        <MainHeader.Button
-          margin={{ top: 'medium' }}
-          color="accent-1"
-          icon={<PreviousLinkIcon size="30px" />}
-          label="Volver"
-          onClick={pushToOpenSpace}
-        />
+        <MainHeader.TitleLink onClick={pushToOpenSpace}>{name}</MainHeader.TitleLink>
+        <MainHeader.SubTitle
+          icon={ScheduleIcon}
+          label="Agenda"
+        />        
         <MainHeader.Buttons>
-          {!user && <ButtonSingIn onClick={() => setRedirectToLogin(true)} />}
+        {user ? (
+            <ButtonMyTalks amTheOrganizer={amTheOrganizer} />
+          ) : (
+            <ButtonSingIn onClick={() => setRedirectToLogin(true)} />
+          )}
         </MainHeader.Buttons>
       </MainHeader>
       <Slots talksOf={talksOf} sortedSlots={sortedSlots} />
