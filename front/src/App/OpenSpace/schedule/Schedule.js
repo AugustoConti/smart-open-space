@@ -12,7 +12,9 @@ import Spinner from '#shared/Spinner';
 import { useUser } from '#helpers/useAuth';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
 import { sortTimes } from '#helpers/time';
-import { Slots } from './Slots';
+import { DateSlots } from './DateSlots';
+import { Tab, Tabs } from 'grommet';
+import { compareAsc, format, isEqual } from 'date-fns';
 import { ButtonMyTalks } from '../buttons/ButtonMyTalks';
 
 const Schedule = () => {
@@ -20,7 +22,7 @@ const Schedule = () => {
   const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   const {
-    data: { id, name, slots, organizer } = {},
+    data: { id, name, slots, organizer, dates } = {},
     isPending,
     isRejected,
   } = useGetOpenSpace();
@@ -31,6 +33,7 @@ const Schedule = () => {
   if (isRejected) return <RedirectToRoot />;
 
   const sortedSlots = sortTimes(slots);
+  const sortedDates = dates.map((date) => new Date(...date)).sort(compareAsc);
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
   const amTheOrganizer = user && organizer.id === user.id;
@@ -48,10 +51,20 @@ const Schedule = () => {
           )}
         </MainHeader.Buttons>
       </MainHeader>
-      <Slots talksOf={talksOf} sortedSlots={sortedSlots} />
+      <Tabs>
+        {sortedDates.map((date) => (
+          <Tab title={format(date, 'yyyy-MM-dd')}>
+            <DateSlots talksOf={talksOf} sortedSlots={dateSlots(date, sortedSlots)} />
+          </Tab>
+        ))}
+      </Tabs>
       {redirectToLogin && <RedirectToLoginFromOpenSpace openSpaceId={id} />}
     </>
   );
 };
+
+function dateSlots(date, sortedSlots) {
+  return sortedSlots.filter((slot) => isEqual(new Date(...slot.date), date));
+}
 
 export default Schedule;

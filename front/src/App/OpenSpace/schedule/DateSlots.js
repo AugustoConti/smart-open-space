@@ -1,12 +1,12 @@
 import { Box } from 'grommet';
-import { numbersToTime, sortTimes } from '#helpers/time';
+import { numbersToTime } from '#helpers/time';
 import { Slot } from './Slot';
 import React from 'react';
 import HourHeader from '#shared/HourHeader';
 import { OtherSlot } from './OtherSlot';
 import PropTypes from 'prop-types';
 
-export const Slots = ({ talksOf, sortedSlots }) => {
+export const DateSlots = ({ talksOf, sortedSlots }) => {
   return (
     <Box margin={{ bottom: 'medium' }}>
       {[
@@ -21,7 +21,7 @@ export const Slots = ({ talksOf, sortedSlots }) => {
     </Box>
   );
 };
-Slots.prototype = {
+DateSlots.prototype = {
   talksOf: PropTypes.func.isRequired,
   sortedSlots: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };
