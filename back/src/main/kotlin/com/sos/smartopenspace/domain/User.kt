@@ -2,6 +2,8 @@ package com.sos.smartopenspace.domain
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.common.hash.Hashing
+import java.nio.charset.StandardCharsets
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -29,7 +31,7 @@ class User(
   // @field:NotEmpty(message = "Ingrese una contraseña")
   // @field:NotBlank(message = "Contraseña no puede ser vacía")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  val password: String = "",
+  var password: String = "",
 
   @field:Valid
   @JsonIgnore
@@ -65,5 +67,11 @@ class User(
   fun checkOwnershipOf(talk: Talk) {
       if (this != talk.speaker)
         throw UserNotOwnerOfTalkException()
+  }
+
+  fun securePassword() {
+    password = Hashing.sha256()
+      .hashString(password, StandardCharsets.UTF_8)
+      .toString();
   }
 }
