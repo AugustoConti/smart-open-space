@@ -11,7 +11,7 @@ import { usePushToOpenSpace } from '#helpers/routes';
 const pad = (n) => (n < 10 ? '0' : '') + n;
 const toTime = (time) => time.map(pad).join(':');
 
-const OpenSpace = ({ startingDate, endTime, id, name, startTime, urlImage }) => (
+const OpenSpace = ({ startDate, endTime, id, name, startTime, urlImage }) => (
   <Button fill onClick={usePushToOpenSpace(id)} plain>
     {({ hover }) => (
       <Card
@@ -35,7 +35,7 @@ const OpenSpace = ({ startingDate, endTime, id, name, startTime, urlImage }) => 
           <Title level="3">{name}</Title>
           <Detail
             icon={CalendarIcon}
-            text={new Date(startingDate).toLocaleDateString('es')}
+            text={new Date(startDate).toLocaleDateString('es')}
           />
           <Detail
             icon={ClockIcon}
@@ -47,7 +47,7 @@ const OpenSpace = ({ startingDate, endTime, id, name, startTime, urlImage }) => 
   </Button>
 );
 OpenSpace.propTypes = {
-  startingDate: PropTypes.arrayOf(PropTypes.number).isRequired,
+  startDate: PropTypes.arrayOf(PropTypes.number).isRequired,
   endTime: PropTypes.arrayOf(PropTypes.number).isRequired,
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,

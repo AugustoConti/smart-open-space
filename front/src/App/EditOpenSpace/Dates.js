@@ -17,7 +17,7 @@ const Dates = ({ value, onChange }) => {
       <RowBetween>
         <MyCalendar
           onChange={(event) => setDate({ date: event.target.value })}
-          placeholder="Nombre de sala"
+          placeholder="Fechas del Open Space"
           value={date.date}
         />
         <PlusButton

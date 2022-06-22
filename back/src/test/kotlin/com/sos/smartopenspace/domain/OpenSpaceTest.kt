@@ -183,44 +183,42 @@ class OpenSpaceTest {
         assertEquals(track.description, openSpace.tracks.first().description)
     }
     @Test
-    fun `an openSpace knows when starts`() {
-        val startingDate = LocalDate.now()
+    fun `an openSpace knows when it starts`() {
+        val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
-        val first_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), startingDate)
-        val end_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), endDate)
-        val openSpace = OpenSpace(
-            name = "os", rooms = emptySet(), slots = setOf(first_date_slot,end_date_slot),
-            talks = mutableSetOf()
-        )
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
 
-        assertEquals(startingDate, openSpace.startingDate())
+        assertEquals(startDate, openSpace.startDate())
     }
 
     @Test
-    fun `an openSpace knows when finishes`() {
-        val startingDate = LocalDate.now()
+    fun `an openSpace knows when it finishes`() {
+        val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
-        val first_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), startingDate)
-        val end_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), endDate)
-        val openSpace = OpenSpace(
-            name = "os", rooms = emptySet(), slots = setOf(first_date_slot,end_date_slot),
-            talks = mutableSetOf()
-        )
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
 
         assertEquals(endDate, openSpace.endDate())
     }
 
     @Test
     fun `an openSpace knows when is hold`() {
-        val startingDate = LocalDate.now()
+        val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
-        val first_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), startingDate)
-        val end_date_slot = TalkSlot(LocalTime.of(9,0),LocalTime.of(10,0), endDate)
+        val openSpace = openSpaceWithTwoDates(startDate, endDate)
+
+        assertEquals(setOf(startDate, endDate), openSpace.dates())
+    }
+
+    private fun openSpaceWithTwoDates(
+        startDate: LocalDate?,
+        endDate: LocalDate?
+    ): OpenSpace {
+        val first_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), startDate)
+        val end_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), endDate)
         val openSpace = OpenSpace(
-            name = "os", rooms = emptySet(), slots = setOf(first_date_slot,end_date_slot),
+            name = "os", rooms = emptySet(), slots = setOf(first_date_slot, end_date_slot),
             talks = mutableSetOf()
         )
-
-        assertEquals(setOf(startingDate, endDate), openSpace.dates())
+        return openSpace
     }
 }

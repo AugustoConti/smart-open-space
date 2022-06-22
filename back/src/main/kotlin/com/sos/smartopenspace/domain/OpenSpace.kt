@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 import javax.persistence.*
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank
@@ -209,23 +210,13 @@ class OpenSpace(
   }
 
   @JsonProperty
-  fun startingDate(): LocalDate? {
-    return slots.map { it.date }.reduce {
-      aDate,otherDate ->
-      if (aDate?.isBefore(otherDate) == true)
-        return aDate
-      return otherDate
-    }
+  fun startDate(): LocalDate? {
+    return Collections.min(dates())
   }
 
   @JsonProperty
   fun endDate(): LocalDate? {
-    return slots.map { it.date }.reduce {
-        aDate,otherDate ->
-      if (aDate?.isAfter(otherDate) == true)
-        return aDate
-      return otherDate
-    }
+    return Collections.max(dates())
   }
 
   @JsonProperty

@@ -1,7 +1,6 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.OpenSpace
-import com.sos.smartopenspace.domain.Slot
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.domain.Track
 import com.sos.smartopenspace.helpers.CreateTalkDTO
@@ -13,7 +12,6 @@ import com.sos.smartopenspace.websockets.QueueSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 
 class OpenSpaceNotFoundException : RuntimeException("OpenSpace no encontrado")
 class TalkNotFoundException : RuntimeException("Charla no encontrada")
@@ -32,7 +30,7 @@ class OpenSpaceService(
   private fun findUser(userID: Long) = userService.findById(userID)
 
   fun create(userID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace {
-    val slots = slotsForEachDate(openSpaceDTO)
+    val slots = openSpaceDTO.slotsWithDates()
     val openSpace = OpenSpace(
       name = openSpaceDTO.name,
       rooms = openSpaceDTO.rooms,
@@ -40,27 +38,8 @@ class OpenSpaceService(
       description = openSpaceDTO.description,
       tracks = openSpaceDTO.tracks
     )
-
-
     findUser(userID).addOpenSpace(openSpace)
     return openSpaceRepository.save(openSpace)
-  }
-
-  private fun slotsForEachDate(openSpaceDTO: OpenSpaceDTO): ArrayList<Slot> {
-    val slots = ArrayList<Slot>()
-    openSpaceDTO.slots.forEach { slot ->
-      slots.addAll(slotForEachDate(slot, openSpaceDTO.dates))
-      }
-    return slots
-  }
-
-  private fun slotForEachDate(
-    slot: Slot,
-    dates: Set<LocalDate>
-  ): List<Slot> {
-    return dates.map { date ->
-      slot.cloneWithDate(date)
-    }
   }
 
   @Transactional(readOnly = true)
