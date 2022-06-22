@@ -1,9 +1,9 @@
 package com.sos.smartopenspace.websockets
 
 import com.sos.smartopenspace.domain.OpenSpace
+import com.sos.smartopenspace.domain.OpenSpaceNotFoundException
 import com.sos.smartopenspace.domain.Talk
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.services.OpenSpaceNotFoundException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 

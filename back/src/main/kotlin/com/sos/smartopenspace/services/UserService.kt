@@ -1,12 +1,11 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.User
+import com.sos.smartopenspace.domain.UserNotFoundException
 import com.sos.smartopenspace.persistence.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
-class UserNotFoundException : RuntimeException("Usuario incorrecto")
 
 @Service
 @Transactional
