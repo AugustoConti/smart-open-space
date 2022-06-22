@@ -15,7 +15,6 @@ import { sortTimes } from '#helpers/time';
 import { DateSlots } from './DateSlots';
 import { Tab, Tabs } from 'grommet';
 import { compareAsc, format, isEqual } from 'date-fns';
-import { Slots } from './Slots';
 import { ButtonMyTalks } from '../buttons/ButtonMyTalks';
 
 const Schedule = () => {
