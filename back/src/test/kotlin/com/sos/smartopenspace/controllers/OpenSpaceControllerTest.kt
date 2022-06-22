@@ -67,7 +67,7 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].color").value(track_color))
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].name").value(track_name))
             .andExpect(MockMvcResultMatchers.jsonPath("$.tracks[0].description").value(track_description))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.startingDate").isNotEmpty)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.startDate").isNotEmpty)
             .andExpect(MockMvcResultMatchers.jsonPath("$.endDate").isNotEmpty)
             .andExpect(MockMvcResultMatchers.jsonPath("$.dates").isNotEmpty)
     }
