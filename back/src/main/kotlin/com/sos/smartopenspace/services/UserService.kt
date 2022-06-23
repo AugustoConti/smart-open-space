@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets
 @Transactional
 class UserService(private val userRepository: UserRepository) {
   fun create(user: User): User {
-    user.id = userRepository.findByEmail(user.email)?.id ?: 0
     user.securePassword()
     return userRepository.save(user)
   }
@@ -32,6 +31,4 @@ class UserService(private val userRepository: UserRepository) {
   @Transactional(readOnly = true)
   fun findById(id: Long) = userRepository.findByIdOrNull(id) ?: throw UserNotFoundException()
 
-  @Transactional(readOnly = true)
-  fun identify(email: String) = userRepository.findByEmail(email)
 }
