@@ -1,16 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 
-import { Box, Heading, Layer, Text } from 'grommet';
+import { Box, Heading, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import {
-  createTalkFor,
-  nextTalk,
-  useGetCurrentUserTalks,
-  useGetTalks,
-} from '#api/os-client';
+import { nextTalk, useGetCurrentUserTalks, useGetTalks } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
-import { identify, register } from '#api/user-client';
 import MyProps from '#helpers/MyProps';
 import { useUser } from '#helpers/useAuth';
 import {
@@ -21,9 +15,8 @@ import {
 } from '#helpers/routes';
 import ButtonLoading from '#shared/ButtonLoading';
 import Detail from '#shared/Detail';
-import { TalkIcon, UserIcon, ScheduleIcon } from '#shared/icons';
+import { TalkIcon, ScheduleIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
-import MyForm from '#shared/MyForm';
 import MyGrid from '#shared/MyGrid';
 import Row from '#shared/Row';
 import Spinner from '#shared/Spinner';
@@ -155,8 +148,6 @@ const MyTalks = () => {
   const pushToOS = usePushToOpenSpace();
   const pushToNewTalk = usePushToNewTalk();
   const user = useUser();
-  const [showQuerySpeaker, setShowQuerySpeaker] = useState(false);
-  const [speaker, setSpeaker] = useState();
   const {
     data: [openSpace, assignedSlots, currentUserTalks = []] = [],
     isPending,
@@ -182,20 +173,11 @@ const MyTalks = () => {
   const myEnqueuedTalk = () => queue.find(isMyTalk);
   const hasAnother = (idTalk) => !!myEnqueuedTalk() && myEnqueuedTalk().id !== idTalk;
   const place = () => queue.findIndex(isMyTalk);
-
-  const onCloseQuerySpeaker = () => {
-    setShowQuerySpeaker(false);
-    setSpeaker(null);
-  };
-
   const talks = (currentUserIsOrganizer ? allTalks : currentUserTalks)?.map((talk) =>
     talkToModel(talk, queue || [], assignedSlots, openSpace)
   );
   const canAddTalk = openSpace && isActiveCallForPapers && !openSpace.finishedQueue;
   const hasTalks = allTalks && currentUserTalks && talks.length > 0;
-
-  const shouldDisplayTalkForSpeakerButton = currentUserIsOrganizer && canAddTalk;
-
   const shouldDisplayEmptyTalkButton = !hasTalks && canAddTalk;
 
   const shouldDisplayAddTalkButton = hasTalks && canAddTalk;
@@ -225,13 +207,6 @@ const MyTalks = () => {
         <MainHeader.Buttons>
           {shouldDisplayAddTalkButton && (
             <MainHeader.ButtonNew label="Charla" key="newTalk" onClick={pushToNewTalk} />
-          )}
-          {shouldDisplayTalkForSpeakerButton && (
-            <MainHeader.ButtonNew
-              label="Charla para Orador"
-              key="newTalkSpeaker"
-              onClick={() => setShowQuerySpeaker(true)}
-            />
           )}
         </MainHeader.Buttons>
       </MainHeader>
@@ -268,64 +243,6 @@ const MyTalks = () => {
       )}
       {!isActiveCallForPapers && (
         <Detail text={'La convocatoria a propuestas se encuentra cerrada'} />
-      )}
-      {showQuerySpeaker && (
-        <Layer onEsc={onCloseQuerySpeaker} onClickOutside={onCloseQuerySpeaker}>
-          <Box pad="medium">
-            <Box margin={{ vertical: 'medium' }}>
-              {speaker ? (
-                <>
-                  <Title level="2" label="Nueva charla" />
-                  <Detail text={!speaker.id ? 'Orador no registrado' : speaker.name} />
-                </>
-              ) : (
-                <Title level="2" label="¿Para qué Orador?" />
-              )}
-            </Box>
-            {speaker ? (
-              <MyForm
-                onSecondary={onCloseQuerySpeaker}
-                onSubmit={({ value: { description, name, title } }) =>
-                  (speaker.id
-                    ? Promise.resolve(speaker.id)
-                    : register({ email: speaker, name }).then(({ id: speakerId }) =>
-                        Promise.resolve(speakerId)
-                      )
-                  )
-                    .then((speakerId) =>
-                      createTalkFor(speakerId, openSpace.id, {
-                        name: title,
-                        description,
-                      })
-                    )
-                    .then(() => reload())
-                    .then(() => {
-                      onCloseQuerySpeaker();
-                      return Promise.resolve();
-                    })
-                }
-              >
-                {!speaker.id && (
-                  <MyForm.Text icon={<UserIcon />} label="Nombre del orador" />
-                )}
-                <MyForm.Text label="Título" name="title" />
-                <MyForm.TextArea />
-              </MyForm>
-            ) : (
-              <MyForm
-                onSecondary={onCloseQuerySpeaker}
-                onSubmit={({ value: { email } }) =>
-                  identify(email).then((data) => {
-                    setSpeaker(data || email);
-                    return data;
-                  })
-                }
-              >
-                <MyForm.Email />
-              </MyForm>
-            )}
-          </Box>
-        </Layer>
       )}
     </>
   );
