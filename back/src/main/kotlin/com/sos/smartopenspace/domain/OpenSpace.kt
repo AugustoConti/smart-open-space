@@ -3,7 +3,6 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.Valid
@@ -87,7 +86,7 @@ class OpenSpace(
 
   @JsonProperty
   fun assignableSlots() = rooms.map { room ->
-    room to slots.filter { it.isAssignable() }.map { it.startTime }
+    room to slots.filter { it.isAssignable() }
   }.filter { it.second.isNotEmpty() }
 
   fun addTalk(talk: Talk): OpenSpace {
@@ -113,40 +112,42 @@ class OpenSpace(
     !(tracks.isEmpty() && track == null)
 
   fun containsTalk(talk: Talk) = talks.contains(talk)
+  fun containsSlot(slot: TalkSlot) = slots.contains(slot)
 
   private fun checkIsActiveCallForPapers() {
     if (!isActiveCallForPapers)
       throw CallForPapersClosedException()
   }
 
-  private fun isBusySlot(room: Room, time: LocalTime) = assignedSlots.any { it.startAt(time) && it.room == room }
+  private fun isBusySlot(room: Room, slot: Slot) = assignedSlots.any { it.startAt(slot.startTime) && it.hasDate(slot.date) && it.room == room }
 
   private fun checkTalkBelongs(talk: Talk) {
     if (!containsTalk(talk))
       throw TalkDoesntBelongException()
   }
-
-  private fun checkScheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User) {
-    checkTalkBelongs(talk)
-    assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
-    !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
-    isBusySlot(room, time) && throw BusySlotException()
+  private fun checkSlotBelongsToTheScheduleGrid(slot: TalkSlot) {
+    if (!containsSlot(slot))
+      throw SlotNotFoundException()
   }
 
-  private fun findTalkSlot(time: LocalTime) =
-    slots.find { it.startTime == time && it.isAssignable() } as TalkSlot? ?: throw SlotNotFoundException()
+  private fun checkScheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room) {
+    checkTalkBelongs(talk)
+    checkSlotBelongsToTheScheduleGrid(slot)
+    assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
+    !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
+    isBusySlot(room, slot) && throw BusySlotException()
+  }
 
-  fun scheduleTalk(talk: Talk, time: LocalTime, room: Room, user: User): AssignedSlot {
-    val slot = findTalkSlot(time)
-    checkScheduleTalk(talk, time, room, user)
+  fun scheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room): AssignedSlot {
+    checkScheduleTalk(talk, user, slot, room)
     val assignedSlot = AssignedSlot(slot, room, talk)
     assignedSlots.add(assignedSlot)
     toSchedule.remove(talk)
     return assignedSlot
   }
 
-  fun exchangeSlot(talk: Talk, time: LocalTime, room: Room) {
-    val slot = findTalkSlot(time)
+  fun exchangeSlot(talk: Talk, room: Room, slot: TalkSlot) {
+    checkSlotBelongsToTheScheduleGrid(slot)
     val current = assignedSlots.find { it.talk == talk } ?: throw TalkIsNotScheduledException()
     assignedSlots.find { it.room == room && it.slot == slot }?.moveTo(current.slot, current.room)
     current.moveTo(slot, room)
@@ -155,8 +156,8 @@ class OpenSpace(
   @JsonProperty
   fun freeSlots() = rooms.map { room ->
     room to slots.filter {
-      it.isAssignable() && !isBusySlot(room, it.startTime)
-    }.map { it.startTime }
+      it.isAssignable() && !isBusySlot(room, it)
+    }
   }.filter { it.second.isNotEmpty() }
 
   private fun checkIsOrganizer(user: User) = !isOrganizer(user) && throw NotTheOrganizerException()

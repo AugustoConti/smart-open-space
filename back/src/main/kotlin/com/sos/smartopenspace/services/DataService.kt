@@ -11,11 +11,15 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalTime
 
 @Service
 @Transactional
 class DataService(private val userRepository: UserRepository) {
+
+  private val date = LocalDate.now()
+
   @EventListener
   fun appReady(event: ApplicationReadyEvent) {
     if (userRepository.count() > 0) return
@@ -57,12 +61,12 @@ class DataService(private val userRepository: UserRepository) {
       "CPI-Conf",
       setOf(room213, room60, room37b),
       setOf(
-        OtherSlot(LocalTime.parse("14:00"), LocalTime.parse("14:30"), "Marketplace"),
-        TalkSlot(LocalTime.parse("14:30"), LocalTime.parse("15:00")),
-        TalkSlot(LocalTime.parse("15:00"), LocalTime.parse("16:00")),
-        OtherSlot(LocalTime.parse("16:00"), LocalTime.parse("16:15"), "Break"),
-        TalkSlot(LocalTime.parse("16:15"), LocalTime.parse("17:00")),
-        TalkSlot(LocalTime.parse("17:00"), LocalTime.parse("18:00"))
+        OtherSlot(LocalTime.parse("14:00"), LocalTime.parse("14:30"), "Marketplace", date),
+        TalkSlot(LocalTime.parse("14:30"), LocalTime.parse("15:00"), date),
+        TalkSlot(LocalTime.parse("15:00"), LocalTime.parse("16:00"), date),
+        OtherSlot(LocalTime.parse("16:00"), LocalTime.parse("16:15"), "Break", date),
+        TalkSlot(LocalTime.parse("16:15"), LocalTime.parse("17:00"), date),
+        TalkSlot(LocalTime.parse("17:00"), LocalTime.parse("18:00"), date)
       ),
       mutableSetOf(winter, agileMeetings, dessAgil, proy, desSinJefe, cuis, api, dessDeberia, js),
       "http://www.unq.edu.ar/images/logo_unqui.png"
@@ -142,18 +146,8 @@ class DataService(private val userRepository: UserRepository) {
     testear.enqueue()
     front.enqueue()
     master.enqueue()
-
-    schedule(cpi, api, LocalTime.parse("15:00"), room60)
-    schedule(cpi, dessAgil, LocalTime.parse("15:00"), room213)
-    schedule(cpi, js, LocalTime.parse("17:00"), room60)
     desSinJefe.enqueue()
     cuis.enqueue()
     dessDeberia.enqueue()
-  }
-
-  private fun schedule(openSpace: OpenSpace, talk: Talk, time: LocalTime, room: Room) {
-    talk.enqueue()
-    openSpace.nextTalk(openSpace.organizer)
-    talk.schedule(time, room, openSpace.organizer)
   }
 }

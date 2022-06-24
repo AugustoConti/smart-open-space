@@ -1,15 +1,9 @@
 package com.sos.smartopenspace.controllers
 
 import com.jayway.jsonpath.JsonPath
-import com.sos.smartopenspace.aUser
-import com.sos.smartopenspace.anOpenSpace
-import com.sos.smartopenspace.anOpenSpaceWith
+import com.sos.smartopenspace.*
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.generateTalkBody
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.persistence.RoomRepository
-import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.persistence.UserRepository
+import com.sos.smartopenspace.persistence.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -19,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalTime
 
 @SpringBootTest
@@ -27,164 +22,194 @@ import java.time.LocalTime
 @Transactional
 class TalkControllerTest {
 
-    @Autowired
-    lateinit var mockMvc: MockMvc
+  @Autowired
+  lateinit var slotRepository: SlotRepository
+
+  @Autowired
+  lateinit var mockMvc: MockMvc
 
 
-    @Autowired
-    lateinit var userRepository: UserRepository
-    @Autowired
-    lateinit var openSpaceRepository: OpenSpaceRepository
-    @Autowired
-    lateinit var talkRepository: TalkRepository
-    @Autowired
-    lateinit var roomRepository: RoomRepository
+  @Autowired
+  lateinit var userRepository: UserRepository
 
-    @Test
-    fun `schedule a talk returns an ok status response`() {
-        val organizer = anySavedUser()
-        val talk = anySavedTalk()
-        val room = anySavedRoom()
-        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
-        val time = LocalTime.parse("09:00")
+  @Autowired
+  lateinit var openSpaceRepository: OpenSpaceRepository
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${room.id}/${time}")
-        ).andExpect(MockMvcResultMatchers.status().isOk)
+  @Autowired
+  lateinit var talkRepository: TalkRepository
 
-    }
+  @Autowired
+  lateinit var roomRepository: RoomRepository
 
-    @Test
-    fun `when a talk cannot be scheduled it should return a bad request response`() {
-        val organizer = anySavedUser()
-        val talk = anySavedTalk()
-        val speaker = aSavedUserWithTalk(talk)
-        val room = anySavedRoom()
-        val time = LocalTime.parse("09:00")
-        openSpaceRepository.save(anOpenSpaceWith(talk, organizer, room))
+  @Test
+  fun `schedule a talk returns an ok status response`() {
+    val organizer = anySavedUser()
+    val talk = anySavedTalk()
+    val room = anySavedRoom()
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer))
+    val slot = openSpace.slots.first()
 
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${room.id}/${time}")
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${slot.id}/${room.id}")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
 
-    @Test
-    fun `Asking for an specific talk returns an ok status`() {
-        val organizer = anySavedUser()
-        val talk = anySavedTalk()
-        val openSpace = anySavedOpenSpace()
-        organizer.addOpenSpace(openSpace)
-        aSavedUserWithTalk(talk)
+  }
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/talk/${talk.id}")
-        ).andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(talk.id))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(talk.name))
-    }
+  @Test
+  fun `when a talk cannot be scheduled it should return a bad request response`() {
+    val organizer = anySavedUser()
+    val talk = anySavedTalk()
+    val speaker = aSavedUserWithTalk(talk)
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer))
+    val slot = openSpace.slots.first()
+    val room = anySavedRoom()
 
-    @Test
-    fun `Asking for a talk that not exist returns a bad request`() {
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/talk/77777")
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/schedule/${speaker.id}/${talk.id}/${slot.id}/${room.id}")
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
+
+  @Test
+  fun `exchange a talk returns an ok status response`() {
+    val organizer = anySavedUser()
+    val talk = anySavedTalk()
+    val room = anySavedRoom()
+    val aSlot = aSavedSlot()
+    val otherSlot = otherSavedSlot()
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer, setOf(aSlot, otherSlot)))
+    openSpace.scheduleTalk(talk, organizer, aSlot as TalkSlot, room)
+
+    mockMvc.perform(
+            MockMvcRequestBuilders.put("/talk/exchange/${talk.id}/${otherSlot.id}/${room.id}")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+
+  }
+
+  @Test
+  fun `Asking for an specific talk returns an ok status`() {
+    val organizer = anySavedUser()
+    val talk = anySavedTalk()
+    val openSpace = anySavedOpenSpace()
+    organizer.addOpenSpace(openSpace)
+    aSavedUserWithTalk(talk)
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.get("/talk/${talk.id}")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+      .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(talk.id))
+      .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(talk.name))
+  }
+
+  @Test
+  fun `Asking for a talk that not exist returns a bad request`() {
+    mockMvc.perform(
+      MockMvcRequestBuilders.get("/talk/77777")
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
 
 
-    @Test
-    fun `can update a talk correctly`() {
-        val user = userRepository.save(aUser())
-        val anOpenSpace = anOpenSpace()
-        user.addOpenSpace(anOpenSpace)
-        anOpenSpace.toggleCallForPapers(user)
-        openSpaceRepository.save(anOpenSpace)
+  @Test
+  fun `can update a talk correctly`() {
+    val user = userRepository.save(aUser())
+    val anOpenSpace = anOpenSpace()
+    user.addOpenSpace(anOpenSpace)
+    anOpenSpace.toggleCallForPapers(user)
+    openSpaceRepository.save(anOpenSpace)
 
-        val aTalk = Talk("a talk")
-        anOpenSpace.addTalk(aTalk)
-        user.addTalk(aTalk)
-        talkRepository.save(aTalk)
+    val aTalk = Talk("a talk")
+    anOpenSpace.addTalk(aTalk)
+    user.addTalk(aTalk)
+    talkRepository.save(aTalk)
 
-        val changedDescription = "a different description"
-        val entityResponse = mockMvc.perform(
-            MockMvcRequestBuilders.put("/talk/${aTalk.id}/user/${user.id}")
-                .contentType("application/json")
-                .content(generateTalkBody(description = changedDescription))
-        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+    val changedDescription = "a different description"
+    val entityResponse = mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/${aTalk.id}/user/${user.id}")
+        .contentType("application/json")
+        .content(generateTalkBody(description = changedDescription))
+    ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
 
-        val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
+    val talkId = JsonPath.read<Int>(entityResponse.contentAsString, "$.id")
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
-        )
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
-            .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value(changedDescription))
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+    )
+      .andExpect(MockMvcResultMatchers.status().isOk)
+      .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(talkId))
+      .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value(changedDescription))
+  }
 
-    @Test
-    fun `updating an inexistent talk returns a bad request status`() {
-        val user = userRepository.save(aUser())
-        val anOpenSpace = anOpenSpace()
-        user.addOpenSpace(anOpenSpace)
-        anOpenSpace.toggleCallForPapers(user)
-        openSpaceRepository.save(anOpenSpace)
-        val inexistentTalkId = 789
+  @Test
+  fun `updating an inexistent talk returns a bad request status`() {
+    val user = userRepository.save(aUser())
+    val anOpenSpace = anOpenSpace()
+    user.addOpenSpace(anOpenSpace)
+    anOpenSpace.toggleCallForPapers(user)
+    openSpaceRepository.save(anOpenSpace)
+    val inexistentTalkId = 789
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.put("/talk/${inexistentTalkId}/user/${user.id}")
-                .contentType("application/json")
-                .content(generateTalkBody())
-        ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/${inexistentTalkId}/user/${user.id}")
+        .contentType("application/json")
+        .content(generateTalkBody())
+    ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
+  }
 
-    @Test
-    fun `a talk voted by user return an ok status response`() {
-        val aUser = anySavedUser()
-        val talk = anySavedTalk()
-        aUser.addTalk(talk)
+  @Test
+  fun `a talk voted by user returns an ok status response`() {
+    val aUser = anySavedUser()
+    val talk = anySavedTalk()
+    aUser.addTalk(talk)
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/vote")
-        ).andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(1))
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/vote")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+      .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(1))
+  }
 
-    @Test
-    fun `a talk unvoted by a user returns an ok status response`() {
-        val aUser = anySavedUser()
-        val talk = anySavedTalk()
-        aUser.addTalk(talk)
-        talk.addVoteBy(aUser)
-        talkRepository.save(talk)
+  @Test
+  fun `a talk unvoted by a user returns an ok status response`() {
+    val aUser = anySavedUser()
+    val talk = anySavedTalk()
+    aUser.addTalk(talk)
+    talk.addVoteBy(aUser)
+    talkRepository.save(talk)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/unvote")
-        ).andExpect(MockMvcResultMatchers.status().isOk)
-            .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(0))
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/unvote")
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+      .andExpect(MockMvcResultMatchers.jsonPath("$.votes").value(0))
+  }
 
-    @Test
-    fun `a talk cannot be unvoted by a user that didnt vote it returns a bad request`() {
-        val aUser = anySavedUser()
-        val talk = anySavedTalk()
-        aUser.addTalk(talk)
-        talkRepository.save(talk)
+  @Test
+  fun `a talk cannot be unvoted by a user that didnt vote it returns a bad request`() {
+    val aUser = anySavedUser()
+    val talk = anySavedTalk()
+    aUser.addTalk(talk)
+    talkRepository.save(talk)
 
-        mockMvc.perform(
-            MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/unvote")
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
-    }
+    mockMvc.perform(
+      MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/unvote")
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
 
-    private fun anySavedRoom() = roomRepository.save(Room("Sala"))
+  private fun anySavedRoom() = roomRepository.save(Room("Sala"))
 
-    private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
+  private fun anySavedTalk() = talkRepository.save(Talk("Charla"))
 
-    private fun anySavedUser() = userRepository.save(aUser())
+  private fun anySavedUser() = userRepository.save(aUser())
 
-    private fun anySavedOpenSpace() = openSpaceRepository.save(anOpenSpace())
+  private fun anySavedOpenSpace() = openSpaceRepository.save(anOpenSpace())
 
-    private fun aSavedUserWithTalk(talk: Talk) =
-            userRepository.save(aUser(mutableSetOf(), mutableSetOf(talk)))
+  private fun aSavedUserWithTalk(talk: Talk) =
+    userRepository.save(aUser(mutableSetOf(), mutableSetOf(talk)))
+
+  private fun aSavedSlot(): Slot {
+    return slotRepository.save(TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()))
+  }
+
+  private fun otherSavedSlot(): Slot {
+    return slotRepository.save(TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:00"), LocalDate.now()))
+  }
 
 }

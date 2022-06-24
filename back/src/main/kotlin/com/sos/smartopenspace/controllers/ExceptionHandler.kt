@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class ExceptionHandler {
 
 
-    @ExceptionHandler(TalkIsNotForScheduledException::class, NotTheOrganizerException::class, TalkNotFoundException::class, UserDidntVoteThisTalkException::class)
+    @ExceptionHandler(
+            TalkIsNotForScheduledException::class,
+            NotTheOrganizerException::class,
+            TalkNotFoundException::class,
+            UserDidntVoteThisTalkException::class)
     fun badRequestHandler(exception: Exception) : ResponseEntity<BadRequestException> {
         return ResponseEntity(BadRequestException(exception.message), HttpStatus.BAD_REQUEST)
     }

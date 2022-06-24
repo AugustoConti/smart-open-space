@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Box, Layer } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { ClockIcon, HomeIcon } from '#shared/icons';
+import { CalendarIcon, ClockIcon, HomeIcon } from '#shared/icons';
 import Detail from '#shared/Detail';
 import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
+import { Room } from '../../model/room';
+import { compareAsc } from 'date-fns';
+import { numbersToTime, toDate } from '#helpers/time';
+import { getLocaleDateString } from '#helpers/GetLocaleDateString';
 
-const pad = (n) => (n < 10 ? '0' : '') + n;
-const toTime = (time) => time.map(pad).join(':');
-const sortTimes = (times) =>
-  times.sort(([h1, m1], [h2, m2]) => (h1 < h2 || (h1 === h2 && m1 < m2) ? -1 : 1));
+const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
+  const [value, setValue] = useState({
+    room: new Room([]),
+  });
 
-const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
-  const [freeHours, setFreeHours] = useState([]);
+  const noRoomSelected = !value.room.id;
+  const noDateSelected = !value.date;
+  const sortedDates = dates.map((date) => toDate(date)).sort(compareAsc);
+  const hasOneDate = dates.length === 1;
+
+  useEffect(() => {
+    if (hasOneDate) setValue({ ...value, date: toDate(dates[0]) });
+  }, [dates, value.room]);
 
   return (
     <Layer onEsc={onExit} onClickOutside={onExit}>
@@ -23,23 +33,43 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
           <Title level="2">{title}</Title>
           <Detail size="large" text={name} textAlign="center" />
         </Box>
-        <MyForm onSecondary={onExit} onSubmit={onSubmit}>
+        <MyForm onSecondary={onExit} onSubmit={onSubmit} value={value}>
           <MyForm.Select
             icon={<HomeIcon />}
             label="Sala"
             name="room"
-            options={freeSlots.map((p) => p.first)}
+            options={rooms}
             labelKey="name"
-            onChange={({ selected }) => {
-              setFreeHours(sortTimes(freeSlots[selected].second).map(toTime));
+            onChange={({ selected: selectedIndex }) => {
+              setValue({
+                room: rooms[selectedIndex],
+              });
             }}
           />
+          {!hasOneDate && (
+            <MyForm.Select
+              icon={<CalendarIcon />}
+              disabled={noRoomSelected}
+              label="Fecha"
+              name="date"
+              options={sortedDates.map((date) => getLocaleDateString(date))}
+              onChange={({ selected: selectedIndex }) =>
+                setValue({ ...value, date: toDate(dates[selectedIndex]) })
+              }
+            />
+          )}
           <MyForm.Select
             icon={<ClockIcon />}
+            disabled={(noDateSelected && !hasOneDate) || noRoomSelected}
             label="Horario"
-            emptySearchMessage="No hay horarios disponibles para esta sala"
-            name="time"
-            options={freeHours}
+            emptySearchMessage="No hay horarios disponibles para esta sala en esa fecha"
+            name="slotId"
+            labelKey="startTime"
+            valueKey="id"
+            options={value.room.slotsAt(value.date).map((slot) => ({
+              ...slot,
+              startTime: numbersToTime(slot.startTime),
+            }))}
           />
         </MyForm>
       </Box>
@@ -47,7 +77,7 @@ const SelectSlot = ({ freeSlots, name, onExit, onSubmit, title }) => {
   );
 };
 SelectSlot.propTypes = {
-  freeSlots: PropTypes.arrayOf(
+  rooms: PropTypes.arrayOf(
     PropTypes.shape({
       second: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
     }).isRequired

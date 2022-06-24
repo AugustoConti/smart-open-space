@@ -17,6 +17,7 @@ import {
   usePushToOpenSpace,
   usePushToSchedule,
 } from '#helpers/routes';
+import { Room } from '../../model/room';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -51,11 +52,12 @@ EditButton.propTypes = {
 const Talk = ({
   talk,
   activeQueue,
-  assignableSlots,
-  freeSlots,
+  roomsWithAssignableSlots,
+  roomsWithFreeSlots,
   hasAnother,
   onEnqueue,
   currentUserIsOrganizer,
+  dates,
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
@@ -64,12 +66,11 @@ const Talk = ({
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
+  const onSubmitSchedule = ({ value: { slotId, room } }) =>
+    scheduleTalk(talk.id, user.id, slotId, room.id).then(pushToSchedule);
 
-  const onSubmitSchedule = ({ value: { time, room } }) =>
-    scheduleTalk(talk.id, room.id, time, user.id).then(pushToSchedule);
-
-  const onSubmitExchange = ({ value: { time, room } }) =>
-    exchangeTalk(talk.id, room.id, time).then(pushToOpenSpace);
+  const onSubmitExchange = ({ value: { slotId, room } }) =>
+    exchangeTalk(talk.id, slotId, room.id).then(pushToOpenSpace);
 
   const color = talk.colorForTalkManagement();
 
@@ -126,10 +127,11 @@ const Talk = ({
           <EditButton color={color} onClick={pushToEditTalk} />
         )}
       </Grid>
-      {openSchedule && freeSlots && (
+      {openSchedule && roomsWithFreeSlots && (
         <SelectSlot
-          freeSlots={freeSlots}
+          rooms={roomsWithFreeSlots}
           name={talk.name}
+          dates={dates}
           onExit={() => setOpenSchedule(false)}
           onSubmit={onSubmitSchedule}
           title="Agendate!"
@@ -137,8 +139,9 @@ const Talk = ({
       )}
       {openExchange && (
         <SelectSlot
-          freeSlots={assignableSlots}
+          rooms={roomsWithAssignableSlots}
           name={talk.name}
+          dates={dates}
           onExit={() => setOpenExchange(false)}
           onSubmit={onSubmitExchange}
           title="Mover a:"
@@ -149,8 +152,8 @@ const Talk = ({
 };
 Talk.propTypes = {
   activeQueue: PropTypes.bool.isRequired,
-  assignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
-  freeSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  roomsWithAssignableSlots: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  roomsWithFreeSlots: PropTypes.arrayOf(PropTypes.shape(Room).isRequired).isRequired,
   hasAnother: PropTypes.bool.isRequired,
   onEnqueue: PropTypes.func.isRequired,
 };
