@@ -9,7 +9,8 @@ import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 import { Room } from '../../model/room';
 import { compareAsc } from 'date-fns';
-import { toDate, numbersToTime } from '#helpers/time';
+import { numbersToTime, toDate } from '#helpers/time';
+import { getLocaleDateString } from '#helpers/GetLocaleDateString';
 
 const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
   const [value, setValue] = useState({
@@ -51,7 +52,7 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
               disabled={noRoomSelected}
               label="Fecha"
               name="date"
-              options={sortedDates.map((date) => date.toLocaleDateString('es'))}
+              options={sortedDates.map((date) => getLocaleDateString(date))}
               onChange={({ selected: selectedIndex }) =>
                 setValue({ ...value, date: toDate(dates[selectedIndex]) })
               }

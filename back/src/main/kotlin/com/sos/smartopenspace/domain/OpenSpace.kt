@@ -3,7 +3,6 @@ package com.sos.smartopenspace.domain
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDate
-import java.time.LocalTime
 import java.util.*
 import javax.persistence.*
 import javax.validation.Valid
@@ -120,20 +119,20 @@ class OpenSpace(
       throw CallForPapersClosedException()
   }
 
-  private fun isBusySlot(room: Room, slot: Slot) = assignedSlots.any { it.startAt(slot.startTime) && it.hasDateOf(slot.date) && it.room == room }
+  private fun isBusySlot(room: Room, slot: Slot) = assignedSlots.any { it.startAt(slot.startTime) && it.hasDate(slot.date) && it.room == room }
 
   private fun checkTalkBelongs(talk: Talk) {
     if (!containsTalk(talk))
       throw TalkDoesntBelongException()
   }
-  private fun checkSlotBelongs(slot: TalkSlot) {
+  private fun checkSlotBelongsToTheScheduleGrid(slot: TalkSlot) {
     if (!containsSlot(slot))
       throw SlotNotFoundException()
   }
 
   private fun checkScheduleTalk(talk: Talk, user: User, slot: TalkSlot, room: Room) {
     checkTalkBelongs(talk)
-    checkSlotBelongs(slot)
+    checkSlotBelongsToTheScheduleGrid(slot)
     assignedSlots.any { it.talk == talk } && throw TalkAlreadyAssignedException()
     !toSchedule.contains(talk) && !isOrganizer(user) && throw TalkIsNotForScheduledException()
     isBusySlot(room, slot) && throw BusySlotException()
@@ -148,7 +147,7 @@ class OpenSpace(
   }
 
   fun exchangeSlot(talk: Talk, room: Room, slot: TalkSlot) {
-    checkSlotBelongs(slot)
+    checkSlotBelongsToTheScheduleGrid(slot)
     val current = assignedSlots.find { it.talk == talk } ?: throw TalkIsNotScheduledException()
     assignedSlots.find { it.room == room && it.slot == slot }?.moveTo(current.slot, current.room)
     current.moveTo(slot, room)

@@ -65,7 +65,7 @@ class AssignedSlot(
     this.room = room
   }
 
-  fun hasDateOf(date: LocalDate?): Boolean {
+  fun hasDate(date: LocalDate?): Boolean {
     return slot.date == date
   }
 }

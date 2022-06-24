@@ -156,7 +156,7 @@ class TalkControllerTest {
   }
 
   @Test
-  fun `a talk voted by user return an ok status response`() {
+  fun `a talk voted by user returns an ok status response`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk()
     aUser.addTalk(talk)
