@@ -57,11 +57,12 @@ fun anOpenSpaceWith(
         talk: Talk,
         organizer: User,
         slots: Set<Slot> = setOf(
-            TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()),
-            TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45"), LocalDate.now()) ,
-            TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"), LocalDate.now()))
+                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now()),
+                TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:45"), LocalDate.now()),
+                TalkSlot(LocalTime.parse("10:45"), LocalTime.parse("11:00"), LocalDate.now())),
+        rooms: Set<Room> = setOf(Room("Sala"))
 ): OpenSpace {
-    val openSpace = anOpenSpace(talks = mutableSetOf(talk), slots = slots)
+    val openSpace = anOpenSpace(talks = mutableSetOf(talk), slots = slots, rooms = rooms)
     organizer.addOpenSpace(openSpace)
     return openSpace
 }
