@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.controllers
 
+import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.UserRepository
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -42,12 +44,15 @@ class UserControllerTest {
     val name = "Fran"
     val userInformation = anUserCreationBody(email = email, password = password, name = name)
 
-    mockMvc.perform(
+    val response = mockMvc.perform(
       MockMvcRequestBuilders.post("/user")
         .contentType("application/json")
         .content(userInformation)
     ).andExpect(MockMvcResultMatchers.status().isOk)
-    assertNotNull(repoUser.findByEmail(email))
+     .andReturn().response
+
+    val id = JsonPath.read<Int>(response.contentAsString, "$.id").toLong()
+    assertNotNull(repoUser.findByIdOrNull(id))
   }
 
   @Test

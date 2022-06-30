@@ -10,17 +10,11 @@ const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const [user, setUser] = useLocalStorage(localStorageKey, null);
 
-  useEffect(() => {
-    const { email = '', id = '-1', name = '' } = user || {};
-    LogRocket.identify(id, { name, email });
-  }, [user]);
 
-  const handleUserResponse = (u) => {
-    setUser(u);
-    return u;
+  const handleUserResponse = (user) => {
+    setUser(user);
+    return user;
   };
-
-  const identify = (email) => userClient.identify(email).then(handleUserResponse);
 
   const login = (userData) => userClient.login(userData).then(handleUserResponse);
 
@@ -31,12 +25,7 @@ const AuthProvider = (props) => {
     return Promise.resolve();
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, identify, login, logout, register }}
-      {...props}
-    />
-  );
+  return <AuthContext.Provider value={{ user, login, logout, register }} {...props} />;
 };
 
 const useAuth = () => {
