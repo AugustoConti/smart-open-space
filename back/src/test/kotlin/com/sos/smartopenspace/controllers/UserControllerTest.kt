@@ -1,9 +1,9 @@
 package com.sos.smartopenspace.controllers
 
-import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
+import com.sos.smartopenspace.services.UserService
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,6 +32,9 @@ class UserControllerTest {
   @Autowired
   lateinit var repoOpenSpace: OpenSpaceRepository
 
+  @Autowired
+  lateinit var userService: UserService
+
   @Test
   fun `user registration returns ok status response`() {
     val email = "email@gmail.com"
@@ -51,12 +54,8 @@ class UserControllerTest {
   fun `user login returns ok status response`() {
     val email = "email@gmail.com"
     val password = "password"
-    val userInformation = anUserCreationBody(email = email, password = password, name = "Fran")
-    mockMvc.perform(
-      MockMvcRequestBuilders.post("/user")
-        .contentType("application/json")
-        .content(userInformation)
-    )
+    userService.create(User(email= email, name = "Fran", password = password))
+
     val userLoginInformation = """
           {
                 "email": "${email}",
@@ -74,12 +73,8 @@ class UserControllerTest {
     fun `user login returns bad request status response`() {
         val email = "email@gmail.com"
         val password = "password"
-        val userInformation = anUserCreationBody(email = email, password = password, name = "Fran")
-        mockMvc.perform(
-            MockMvcRequestBuilders.post("/user")
-                .contentType("application/json")
-                .content(userInformation)
-        )
+        userService.create(User(email= email, name = "Fran", password = password))
+
         val userLoginInformation = """
           {
                 "email": "${email}",
