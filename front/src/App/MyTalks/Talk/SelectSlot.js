@@ -54,7 +54,7 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
               name="date"
               options={sortedDates.map((date) => getLocaleDateString(date))}
               onChange={({ selected: selectedIndex }) =>
-                setValue({ ...value, date: toDate(dates[selectedIndex]) })
+                setValue({ ...value, date: sortedDates[selectedIndex] })
               }
             />
           )}

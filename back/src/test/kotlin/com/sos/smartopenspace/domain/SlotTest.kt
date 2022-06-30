@@ -12,10 +12,11 @@ class SlotTest {
   private val talk2 = Talk("talk2")
   private val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
   private val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("09:45"), LocalDate.now())
+  private val secondDaySlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now().plusDays(1))
 
   private fun anyUser(talk: Talk) = User("augusto@sos.sos", "Augusto", "Augusto", mutableSetOf(), mutableSetOf(talk))
 
-  private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, slots: Set<Slot> = setOf(aSlot, otherSlot)): OpenSpace {
+  private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, slots: Set<Slot> = setOf(aSlot, otherSlot, secondDaySlot)): OpenSpace {
     val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1), slots = slots)
     val organizer = User("augusto@sos.sos", "augusto", "Augusto", mutableSetOf(openSpace))
     openSpace.activeQueue(organizer)
@@ -136,6 +137,16 @@ class SlotTest {
   }
 
   @Test
+  fun `Cambiar charla de slot a uno vacio en otra fecha`() {
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1))
+    openSpace.scheduleTalk(talk1, openSpace.organizer, aSlot, room1)
+    openSpace.exchangeSlot(talk1, room1, secondDaySlot)
+    val freeSlots = openSpace.freeSlots()
+    assertTrue(slotDate(freeSlots).contains(aSlot.date))
+    assertFalse(slotDate(freeSlots).contains(secondDaySlot.date))
+  }
+
+  @Test
   fun `Cambiar charla de slot a uno ocupado`() {
     val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2), setOf(aSlot, otherSlot))
     openSpace.scheduleTalk(talk1, openSpace.organizer, aSlot, room1)
@@ -143,6 +154,16 @@ class SlotTest {
     openSpace.exchangeSlot(talk1, room1, otherSlot)
     assertEquals(talk1, openSpace.assignedSlots.find { it.room == room1 && it.startAt(LocalTime.parse("09:30")) }?.talk)
     assertEquals(talk2, openSpace.assignedSlots.find { it.room == room1 && it.startAt(LocalTime.parse("09:00")) }?.talk)
+  }
+
+  @Test
+  fun `Cambiar charla de slot a uno ocupado en otra fecha`() {
+    val openSpace = anyOpenSpaceWithActiveQueued(setOf(talk1, talk2), setOf(aSlot, otherSlot, secondDaySlot))
+    openSpace.scheduleTalk(talk1, openSpace.organizer, aSlot, room1)
+    openSpace.scheduleTalk(talk2, openSpace.organizer, secondDaySlot, room1)
+    openSpace.exchangeSlot(talk1, room1, secondDaySlot)
+    assertEquals(talk1, openSpace.assignedSlots.find { it.room == room1 && it.hasDate(secondDaySlot.date) }?.talk)
+    assertEquals(talk2, openSpace.assignedSlots.find { it.room == room1 && it.hasDate(aSlot.date) }?.talk)
   }
 
   @Test
@@ -164,5 +185,8 @@ class SlotTest {
 
   private fun slotStartTimes(freeSlots: List<Pair<Room, List<Slot>>>) =
     freeSlots[0].second.map { it.startTime }
+
+  private fun slotDate(freeSlots: List<Pair<Room, List<Slot>>>) =
+          freeSlots[0].second.map { it.date }
 
 }

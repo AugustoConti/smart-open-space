@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.*
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.*
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -46,14 +47,14 @@ class TalkControllerTest {
     val organizer = anySavedUser()
     val talk = anySavedTalk()
     val room = anySavedRoom()
-    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer))
-    val slot = openSpace.slots.first()
-
+    val aSlot = aSavedSlot()
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer, setOf(aSlot), setOf(room)))
 
     mockMvc.perform(
-      MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${slot.id}/${room.id}")
+      MockMvcRequestBuilders.put("/talk/schedule/${organizer.id}/${talk.id}/${aSlot.id}/${room.id}")
     ).andExpect(MockMvcResultMatchers.status().isOk)
 
+    assertTrue(openSpace.freeSlots().isEmpty())
   }
 
   @Test
@@ -77,13 +78,15 @@ class TalkControllerTest {
     val room = anySavedRoom()
     val aSlot = aSavedSlot()
     val otherSlot = otherSavedSlot()
-    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer, setOf(aSlot, otherSlot)))
+    val openSpace = openSpaceRepository.save(anOpenSpaceWith(talk, organizer, setOf(aSlot, otherSlot), setOf(room)))
     openSpace.scheduleTalk(talk, organizer, aSlot as TalkSlot, room)
 
     mockMvc.perform(
             MockMvcRequestBuilders.put("/talk/exchange/${talk.id}/${otherSlot.id}/${room.id}")
     ).andExpect(MockMvcResultMatchers.status().isOk)
 
+    assertEquals(1, freeSlots(openSpace).size)
+    assertTrue( freeSlots(openSpace).contains(aSlot))
   }
 
   @Test
@@ -156,7 +159,7 @@ class TalkControllerTest {
   }
 
   @Test
-  fun `a talk voted by user returns an ok status response`() {
+  fun `a talk voted by user returns an ok status response and increase talk votes`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk()
     aUser.addTalk(talk)
@@ -168,7 +171,7 @@ class TalkControllerTest {
   }
 
   @Test
-  fun `a talk unvoted by a user returns an ok status response`() {
+  fun `a talk unvoted by a user returns an ok status response and decrease talk votes`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk()
     aUser.addTalk(talk)
@@ -209,7 +212,9 @@ class TalkControllerTest {
   }
 
   private fun otherSavedSlot(): Slot {
-    return slotRepository.save(TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:00"), LocalDate.now()))
+    return slotRepository.save(TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("10:00"), LocalDate.now().plusDays(1)))
   }
+
+  private fun freeSlots(openSpace: OpenSpace) = openSpace.freeSlots().first().second
 
 }
