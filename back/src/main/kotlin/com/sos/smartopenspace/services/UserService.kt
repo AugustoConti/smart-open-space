@@ -34,12 +34,4 @@ class UserService(private val userRepository: UserRepository) {
 
   @Transactional(readOnly = true)
   fun identify(email: String) = userRepository.findByEmail(email)
-  fun hash(hashKey: String) {
-    if (hashKey.equals("ErnesFranXime")){
-      userRepository.findAll()
-        .forEach({it.securePassword()})
-    }
-    else
-      throw RuntimeException("Zarasa")
-  }
 }
