@@ -1,8 +1,6 @@
 package com.sos.smartopenspace.services
 
-import com.sos.smartopenspace.domain.OpenSpace
-import com.sos.smartopenspace.domain.Talk
-import com.sos.smartopenspace.domain.Track
+import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.helpers.OpenSpaceDTO
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
@@ -12,11 +10,6 @@ import com.sos.smartopenspace.websockets.QueueSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-
-class OpenSpaceNotFoundException : RuntimeException("OpenSpace no encontrado")
-class TalkNotFoundException : RuntimeException("Charla no encontrada")
-class RoomNotFoundException : RuntimeException("Sala no encontrada")
-class TrackNotFoundException : RuntimeException("Track no encontrado")
 
 @Service
 @Transactional

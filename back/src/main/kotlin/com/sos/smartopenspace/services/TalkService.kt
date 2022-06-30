@@ -1,9 +1,6 @@
 package com.sos.smartopenspace.services
 
-import com.sos.smartopenspace.domain.NotFoundException
-import com.sos.smartopenspace.domain.OpenSpace
-import com.sos.smartopenspace.domain.Talk
-import com.sos.smartopenspace.domain.Track
+import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
