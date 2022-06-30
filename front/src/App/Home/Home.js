@@ -10,8 +10,6 @@ import { RedirectToLogin, usePushToNewOS } from '#helpers/routes';
 
 import EmptyOpenSpaces from './EmptyOpenSpaces';
 import OpenSpace from './OpenSpace';
-import { Button } from 'grommet';
-import { post } from '#api/api-client';
 
 const Home = () => {
   const pushToNewOS = usePushToNewOS();
@@ -22,10 +20,6 @@ const Home = () => {
       <MainHeader>
         <MainHeader.Title icon={OpenSpaceIcon} label="Mis Open Spaces" />
         <MainHeader.Buttons>
-          {
-            //Esto Es para hashear la BD, luego lo borramos en otro PR
-          }
-          <Button label={'Hashear'} onClick={() => post('user/hash/ErnesFranXime')} />
           {openSpaces && openSpaces.length > 0 && (
             <MainHeader.ButtonNew onClick={pushToNewOS} />
           )}
