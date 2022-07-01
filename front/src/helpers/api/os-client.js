@@ -33,7 +33,8 @@ const getAllOpenSpaces = () =>
   );
 const useGetAllOpenSpaces = () => useAsync({ promiseFn: getAllOpenSpaces });
 
-const getOpenSpace = ({ osId: openSpaceId }) => get(`openSpace/${openSpaceId}`);
+const getOpenSpace = ({ osId: openSpaceId }) =>
+  get(`openSpace/${openSpaceId}`).then((openSpaceDTO) => new OpenSpace(openSpaceDTO));
 const useGetOpenSpace = () => useAsync({ promiseFn: getOpenSpace, osId: useParams().id });
 
 const getTalk = ({ talkId }) => get(`talk/${talkId}`);
