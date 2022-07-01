@@ -9,7 +9,7 @@ import MyForm from '#shared/MyForm';
 import Title from '#shared/Title';
 import { Room } from '../../model/room';
 import { compareAsc } from 'date-fns';
-import { numbersToTime, toDate } from '#helpers/time';
+import { numbersToTime } from '#helpers/time';
 import { getLocaleDateString } from '#helpers/GetLocaleDateString';
 
 const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
@@ -19,11 +19,11 @@ const SelectSlot = ({ rooms, dates, name, onExit, onSubmit, title }) => {
 
   const noRoomSelected = !value.room.id;
   const noDateSelected = !value.date;
-  const sortedDates = dates.map((date) => toDate(date)).sort(compareAsc);
+  const sortedDates = dates.sort(compareAsc);
   const hasOneDate = dates.length === 1;
 
   useEffect(() => {
-    if (hasOneDate) setValue({ ...value, date: toDate(dates[0]) });
+    if (hasOneDate) setValue({ ...value, date: dates[0] });
   }, [dates, value.room]);
 
   return (

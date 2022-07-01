@@ -11,4 +11,4 @@ export const sortTimes = (times) =>
     compareTime([hour1, minute1], [hour2, minute2])
   );
 
-export const toDate = ([year, month, day]) => new Date(year, month, day);
+export const toDate = ([year, month, day]) => new Date(year, month - 1, day);
