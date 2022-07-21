@@ -34,7 +34,7 @@ describe('a room', () => {
       slotOnJanuary202210am,
     ]);
 
-    const slots = room.slotsAt(new Date(2022, 1, 1));
+    const slots = room.slotsAt(new Date(2022, 0, 1));
 
     expect(slots.length).toBe(2);
     expect(slots[0]).toBe(slotOnJanuary202210am);
