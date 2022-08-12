@@ -28,10 +28,9 @@ class User(
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
 
-  // @field:NotEmpty(message = "Ingrese una contraseña")
-  // @field:NotBlank(message = "Contraseña no puede ser vacía")
+  @field:NotEmpty(message = "Ingrese una contraseña")
+  @field:NotBlank(message = "Contraseña no puede ser vacía")
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @JsonIgnore
   var password: String = "",
 
   @field:Valid
