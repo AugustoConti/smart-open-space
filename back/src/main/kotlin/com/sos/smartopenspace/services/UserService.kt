@@ -14,18 +14,22 @@ import java.nio.charset.StandardCharsets
 @Transactional
 class UserService(private val userRepository: UserRepository) {
   fun create(user: User): User {
+    val otherUser = userRepository.findByEmail(user.email)
+    if (otherUser != null && otherUser.password == hash("")) user.id = otherUser.id
     user.securePassword()
     return userRepository.save(user)
   }
 
   @Transactional(readOnly = true)
   fun auth(email: String, password: String):User{
-    val hashedPassword = Hashing.sha256()
-      .hashString(password, StandardCharsets.UTF_8)
-      .toString()
+    val hashedPassword = hash(password)
 
     return userRepository.findByEmailAndPassword(email, hashedPassword) ?: throw UserNotFoundException()
   }
+
+  private fun hash(password: String) = Hashing.sha256()
+    .hashString(password, StandardCharsets.UTF_8)
+    .toString()
 
 
   @Transactional(readOnly = true)
