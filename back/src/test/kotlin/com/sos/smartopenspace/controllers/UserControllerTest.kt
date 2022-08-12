@@ -57,9 +57,16 @@ class UserControllerTest {
 
   @Test
   fun `user login returns ok status response`() {
-    val email = "email@gmail.com"
-    val password = "password"
-    userService.create(User(email= email, name = "Fran", password = password))
+      val email = "email@gmail.com"
+      val password = "password"
+      val name = "Fran"
+      val userInformation = anUserCreationBody(email = email, password = password, name = name)
+
+      mockMvc.perform(
+              MockMvcRequestBuilders.post("/user")
+                      .contentType("application/json")
+                      .content(userInformation)
+      )
 
     val userLoginInformation = """
           {
