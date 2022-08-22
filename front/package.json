@@ -74,6 +74,7 @@
     "grommet": "^2.11.3",
     "grommet-icons": "^4.4.0",
     "logrocket": "^1.0.7",
+    "pluralize": "^8.0.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-async": "^10.0.1",

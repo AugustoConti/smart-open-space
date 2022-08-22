@@ -7,6 +7,7 @@ import { useUser } from '#helpers/useAuth';
 import { PlusHeartIcon } from '#shared/PlusHeartIcon';
 import Detail from '#shared/Detail';
 import { CrossHeartIcon } from '#shared/CrossHeartIcon';
+import pluralize from 'pluralize';
 
 export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
   const currentUser = useUser();
@@ -30,7 +31,7 @@ export const Vote = ({ talk: { id, votingUsers, votes }, reloadTalks }) => {
           onClick={() => unvoteTalk(id).then(() => reloadTalks())}
         />
       )}
-      <Detail>{votes} votos</Detail>
+      <Detail>{pluralize('voto', votes, true)}</Detail>
     </RowBetween>
   );
 };
