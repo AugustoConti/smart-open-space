@@ -15,7 +15,9 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
       <Row justify="end">
         <Button icon={<FormCloseIcon />} onClick={onClose} plain />
       </Row>
-      <Title level="2">{title}</Title>
+      <Title level="2" truncate={false}>
+        {title}
+      </Title>
       <Detail icon={UserIcon} text={speaker} />
       {info && <Detail color="dark-1" text={info} />}
       {meetingLink && (
@@ -62,10 +64,8 @@ const Talk = ({
     <>
       <Card borderColor={color} height="250px" margin="xsmall" gap="small">
         {children}
+        <Title>{name}</Title>
         <Box gap="medium">
-          <Box overflow="hidden">
-            <Title>{name}</Title>
-          </Box>
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
           {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
