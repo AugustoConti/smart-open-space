@@ -96,7 +96,7 @@ class DataService(private val userRepository: UserRepository) {
       "Prácticas Técnicas - 4° edición",
       setOf(roja, amarilla, verde, naranja),
       (19..21).map {
-        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
+        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0), LocalDate.now())
       }.toSet(),
       mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter),
       "https://secure.meetupstatic.com/photos/event/7/1/a/f/highres_482189103.jpeg"
@@ -107,7 +107,7 @@ class DataService(private val userRepository: UserRepository) {
       "OS 1",
       setOf(Room("Sala 1")),
       (19..21).map {
-        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0))
+        TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0), LocalDate.now())
       }.toSet(),
       mutableSetOf(charla1)
     )
