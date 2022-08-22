@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Anchor, Box, Button, Layer } from 'grommet';
+import { Anchor, Box, Button, Layer, Markdown } from 'grommet';
 import PropTypes from 'prop-types';
 
 import Card from '#shared/Card';
@@ -17,7 +17,11 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
       </Row>
       <Title level="2">{title}</Title>
       <Detail icon={UserIcon} text={speaker} />
-      {info && <Detail color="dark-1" text={info} />}
+      {info && (
+        <Markdown components={{ p: (props) => <Detail color="dark-1" {...props} /> }}>
+          {info}
+        </Markdown>
+      )}
       {meetingLink && (
         <Anchor
           icon={<LinkIcon />}
