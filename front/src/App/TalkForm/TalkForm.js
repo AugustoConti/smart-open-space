@@ -28,6 +28,7 @@ export const TalkForm = ({
           value={initialValues.name}
         />
         <MyForm.TextArea
+          style={{ fontFamily: 'monospace' }}
           placeholder="Describí tu charla con mas detalle. Podés usar Markdown"
           value={initialValues.description ? initialValues.description : ''}
         />
