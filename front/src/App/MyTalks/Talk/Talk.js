@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Grid, Text } from 'grommet';
+import { Box, Button, Grid, Markdown, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
 import { enqueueTalk, exchangeTalk, scheduleTalk } from '#api/os-client';
@@ -80,7 +80,12 @@ const Talk = ({
     <Card borderColor={color}>
       <Box>
         <Title>{talk.name}</Title>
-        <Detail size="small" text={talk.description} truncate />
+        <Markdown
+          align="center"
+          components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
+        >
+          {talk.description}
+        </Markdown>
         {currentUserIsOrganizer && (
           <>
             <Detail icon={UserIcon} text={talk.speaker.name} />

@@ -28,7 +28,8 @@ export const TalkForm = ({
           value={initialValues.name}
         />
         <MyForm.TextArea
-          placeholder="Describí tu charla con mas detalle..."
+          style={{ fontFamily: 'monospace' }}
+          placeholder="Describí tu charla con mas detalle. Podés usar Markdown"
           value={initialValues.description ? initialValues.description : ''}
         />
         <MyForm.Link
