@@ -66,7 +66,7 @@ const Talk = ({
   let shouldDisplayMoreInfo = description || meetingLink;
   return (
     <>
-      <Card borderColor={color} height="250px" margin="xsmall" gap="small">
+      <Card borderColor={color} margin="xsmall" gap="small">
         {children}
         <Title>{name}</Title>
         <Box gap="medium">

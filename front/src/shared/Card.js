@@ -12,6 +12,7 @@ const Card = ({ borderColor, borderSide = 'top', children, ...props }) => (
     elevation="small"
     pad="medium"
     round
+    justify="between"
     {...props}
   >
     {children}
