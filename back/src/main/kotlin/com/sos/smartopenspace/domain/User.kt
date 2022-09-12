@@ -74,4 +74,9 @@ class User(
       .hashString(password, StandardCharsets.UTF_8)
       .toString();
   }
+
+    fun removeTalk(talk: Talk) {
+      checkOwnershipOf(talk)
+      talks.remove(talk)
+    }
 }

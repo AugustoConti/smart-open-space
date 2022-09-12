@@ -137,6 +137,39 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    fun `deleting a valid talk return an ok status response `() {
+        val user = repoUser.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        repoOpenSpace.save(anOpenSpace)
+
+        val aTalk = Talk("a talk")
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        repoTalk.save(aTalk)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/openSpace/${anOpenSpace.id}/talk/${aTalk.id}/user/${user.id}/")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/openSpace/talks/${user.id}/${anOpenSpace.id}")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+
+    }
+
+
+        @Test
     fun `start a call for papers returns an ok status response and the modified Open Space`() {
         val user = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
@@ -176,6 +209,14 @@ class OpenSpaceControllerTest {
             "os", setOf(Room("1")), setOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
             )
+        )
+    }
+
+    private fun createTalk(user: User, anOpenSpace: OpenSpace, aMeetingLink: String) {
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
+                        .contentType("application/json")
+                        .content(generateTalkBody(aMeeting = aMeetingLink))
         )
     }
 
@@ -219,6 +260,15 @@ class OpenSpaceControllerTest {
                 "name": "a talk",
                 "meetingLink": "$aMeeting",
                 "trackId": ${track.id}
+            }
+        """.trimIndent()
+    }
+
+    private fun generateTalkBody(aMeeting: String): String {
+        return """
+            {
+                "name": "a talk",
+                "meetingLink": "$aMeeting"
             }
         """.trimIndent()
     }

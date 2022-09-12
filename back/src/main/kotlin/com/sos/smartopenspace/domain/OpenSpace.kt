@@ -224,6 +224,11 @@ class OpenSpace(
   fun dates(): Set<LocalDate?> {
     return slots.map { it.date }.toSet()
   }
+
+  fun removeTalk(talk: Talk) {
+    assignedSlots.removeIf { it.talk == talk }
+    talks.remove(talk)
+  }
 }
 
 
