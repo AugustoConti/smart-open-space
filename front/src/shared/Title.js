@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import MyProps from '#helpers/MyProps';
 
 const Title = ({ children, label, ...props }) => (
-  <Heading level="4" textAlign="center" truncate {...props}>
+  <Heading margin="none" level="4" textAlign="center" {...props}>
     {label}
     {children}
   </Heading>

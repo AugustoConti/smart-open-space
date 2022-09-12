@@ -77,22 +77,20 @@ const Talk = ({
   const shouldDisplayEditTalkButton = talk.speaker.id === user.id;
 
   return (
-    <Card borderColor={color}>
-      <Box>
-        <Title>{talk.name}</Title>
-        <Markdown
-          align="center"
-          components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
-        >
-          {talk.description}
-        </Markdown>
-        {currentUserIsOrganizer && (
-          <>
-            <Detail icon={UserIcon} text={talk.speaker.name} />
-            <Detail size="small" text={talk.speaker.email} />
-          </>
-        )}
-      </Box>
+    <Card borderColor={color} gap="small">
+      <Title>{talk.name}</Title>
+      <Markdown
+        align="center"
+        components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
+      >
+        {talk.description}
+      </Markdown>
+      {currentUserIsOrganizer && (
+        <>
+          <Detail icon={UserIcon} text={talk.speaker.name} />
+          <Detail size="small" text={talk.speaker.email} />
+        </>
+      )}
       <Grid gap={'xsmall'}>
         {talk.isAssigned() ? (
           <Box direction="row" justify="evenly">
