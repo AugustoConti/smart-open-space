@@ -5,19 +5,16 @@ import Slider from 'react-slick';
 import MyProps from '#helpers/MyProps';
 
 const sliderSettings = {
-  centerMode: true,
-  arrows: false,
+  arrows: true,
   dots: false,
-  infinite: true,
-  speed: 50,
+  infinite: false,
+  speed: 500,
   slidesToShow: 3,
-  slidesToScroll: 1,
-  focusOnSelect: true,
-  adaptiveHeight: true,
+  slidesToScroll: 3,
   responsive: [
     {
       breakpoint: 960,
-      settings: { slidesToShow: 1, slidesToScroll: 1 },
+      settings: { slidesToShow: 2, slidesToScroll: 2 },
     },
     {
       breakpoint: 600,
