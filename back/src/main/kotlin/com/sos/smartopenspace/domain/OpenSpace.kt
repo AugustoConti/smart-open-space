@@ -227,6 +227,7 @@ class OpenSpace(
 
   fun removeTalk(talk: Talk) {
     assignedSlots.removeIf { it.talk == talk }
+    queue.remove(talk)
     talks.remove(talk)
   }
 }
