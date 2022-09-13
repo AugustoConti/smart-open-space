@@ -17,7 +17,6 @@ const EditTalk = () => {
 
   if (isTalkPending) return <Spinner />;
   if (!user || isRejected || isTalkRejected) return <RedirectToRoot />;
-  if (openSpace && openSpace.finishedQueue) return <RedirectToRoot />;
 
   const subtitle = isPending ? <TinySpinner /> : openSpace.name;
   const onSubmit = ({ value: { name, description, meetingLink, trackId } }) => {
