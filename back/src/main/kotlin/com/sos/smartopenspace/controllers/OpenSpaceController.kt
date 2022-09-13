@@ -16,7 +16,7 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   fun createTalk(@PathVariable userID: Long, @PathVariable osID: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =
     openSpaceService.createTalk(userID, osID, createTalkDTO)
 
-  @DeleteMapping("{openSpaceID}/talk/{talkID}/user/{userID}/")
+  @DeleteMapping("/{openSpaceID}/talk/{talkID}/user/{userID}")
   fun deleteTalk(@PathVariable userID: Long, @PathVariable openSpaceID: Long, @PathVariable talkID: Long) =
           openSpaceService.deleteTalk(talkID, openSpaceID, userID)
 

@@ -225,10 +225,12 @@ class OpenSpace(
     return slots.map { it.date }.toSet()
   }
 
-  fun removeTalk(talk: Talk) {
-    assignedSlots.removeIf { it.talk == talk }
+  fun removeTalk(talk: Talk): AssignedSlot? {
+    var assignedSlot = assignedSlots.find { it.talk == talk }
+    assignedSlots.remove(assignedSlot)
     queue.remove(talk)
     talks.remove(talk)
+    return assignedSlot
   }
 }
 
