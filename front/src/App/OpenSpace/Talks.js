@@ -3,14 +3,17 @@ import React from 'react';
 import Slider from 'react-slick';
 
 import MyProps from '#helpers/MyProps';
+import { NextIcon, PreviousIcon } from '#shared/icons';
 
 const sliderSettings = {
+  centerMode: true,
   arrows: true,
   dots: false,
-  infinite: false,
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 3,
+  nextArrow: <NextIcon />,
+  prevArrow: <PreviousIcon />,
   responsive: [
     {
       breakpoint: 960,
@@ -23,7 +26,11 @@ const sliderSettings = {
   ],
 };
 
-const Talks = ({ children }) => <Slider {...sliderSettings}>{children}</Slider>;
+const Talks = ({ children }) => (
+  <Slider {...sliderSettings} infinite={children.length > 3}>
+    {children}
+  </Slider>
+);
 Talks.propTypes = { children: MyProps.children.isRequired };
 
 export default Talks;
