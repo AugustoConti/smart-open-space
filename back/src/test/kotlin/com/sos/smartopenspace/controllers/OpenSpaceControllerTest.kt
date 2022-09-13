@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath
 import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.aUser
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.generateTalkBody
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
@@ -140,36 +139,35 @@ class OpenSpaceControllerTest {
     fun `deleting a valid talk return an ok status response `() {
         val user = repoUser.save(aUser())
         val anOpenSpace = anOpenSpace()
-        user.addOpenSpace(anOpenSpace)
-        anOpenSpace.toggleCallForPapers(user)
-        repoOpenSpace.save(anOpenSpace)
-
         val aTalk = Talk("a talk")
-        anOpenSpace.addTalk(aTalk)
-        user.addTalk(aTalk)
-        repoTalk.save(aTalk)
+        createTalkFor(user, anOpenSpace, aTalk)
 
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/openSpace/${anOpenSpace.id}/talk/${aTalk.id}/user/${user.id}/")
         )
                 .andExpect(MockMvcResultMatchers.status().isOk)
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/openSpace/talks/${anOpenSpace.id}")
-        )
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/openSpace/talks/${user.id}/${anOpenSpace.id}")
-        )
-                .andExpect(MockMvcResultMatchers.status().isOk)
-                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
+        assertThatThereAreNoTalksInTheOpenSpace(anOpenSpace)
+        assertThatTheUserHasNoTalks(user, anOpenSpace)
+        assertThatTheBodyIsEmpty("/openSpace/assignedSlots/${anOpenSpace.id}")
 
     }
 
+    @Test
+    fun `deleting a valid talk with an invalid user return an bad request response `() {
+        val user = repoUser.save(aUser())
+        val otherUser = repoUser.save(aUser())
+        val anOpenSpace = anOpenSpace()
+        val aTalk = Talk("a talk")
+        createTalkFor(user, anOpenSpace, aTalk)
 
-        @Test
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/openSpace/${anOpenSpace.id}/talk/${aTalk.id}/user/${otherUser.id}/")
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
     fun `start a call for papers returns an ok status response and the modified Open Space`() {
         val user = repoUser.save(aUser())
         val anOpenSpace = repoOpenSpace.save(anyOpenSpaceWith(user))
@@ -218,6 +216,33 @@ class OpenSpaceControllerTest {
                         .contentType("application/json")
                         .content(generateTalkBody(aMeeting = aMeetingLink))
         )
+    }
+
+    private fun createTalkFor(user: User, anOpenSpace: OpenSpace, aTalk: Talk) {
+        user.addOpenSpace(anOpenSpace)
+        anOpenSpace.toggleCallForPapers(user)
+        repoOpenSpace.save(anOpenSpace)
+        anOpenSpace.addTalk(aTalk)
+        user.addTalk(aTalk)
+        repoTalk.save(aTalk)
+    }
+
+    private fun assertThatTheUserHasNoTalks(user: User, anOpenSpace: OpenSpace) {
+        val path = "/openSpace/talks/${user.id}/${anOpenSpace.id}"
+        assertThatTheBodyIsEmpty(path)
+    }
+
+    private fun assertThatThereAreNoTalksInTheOpenSpace(anOpenSpace: OpenSpace) {
+        val path = "/openSpace/talks/${anOpenSpace.id}"
+        assertThatTheBodyIsEmpty(path)
+    }
+
+    private fun assertThatTheBodyIsEmpty(path: String) {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get(path)
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.jsonPath("$").isEmpty)
     }
 
     private fun anOpenSpaceCreationBody(

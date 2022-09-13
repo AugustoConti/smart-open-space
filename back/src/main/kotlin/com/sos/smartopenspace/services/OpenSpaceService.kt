@@ -106,13 +106,18 @@ class OpenSpaceService(
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
     val talk = findTalk(talkID)
+    user.checkOwnershipOf(talk)
 
-    val assignedSlot = openSpace.removeTalk(talk)
+    unschedule(openSpace, talk)
     user.removeTalk(talk)
+    talkRepository.delete(talk)
+    return talk
+  }
+
+  private fun unschedule(openSpace: OpenSpace, talk: Talk) {
+    val assignedSlot = openSpace.removeTalk(talk)
     if (assignedSlot != null) {
       assignedSlotRepository.delete(assignedSlot)
-    }
-    talkRepository.deleteById(talk.id)
-    return talk
+      }
   }
 }

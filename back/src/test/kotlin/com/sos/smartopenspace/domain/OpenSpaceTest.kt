@@ -211,16 +211,13 @@ class OpenSpaceTest {
     }
 
     @Test
-    fun `an openSpace remove talk when it is schedule talk`() {
+    fun `an openSpace remove a talk when scheduled`() {
         val organizer = anyUser()
         val aTalk = Talk("Talk")
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
         val aRoom = Room("Sala")
         val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
-        openSpace.toggleCallForPapers(organizer)
-        openSpace.addTalk(aTalk)
-        organizer.addTalk(aTalk)
-        openSpace.scheduleTalk(aTalk, organizer, aSlot, aRoom)
+        createAndScheduleTalk(openSpace, organizer, aTalk, aSlot, aRoom)
 
         openSpace.removeTalk(aTalk)
 
@@ -228,23 +225,33 @@ class OpenSpaceTest {
     }
 
     @Test
-    fun `an openSpace remove talk when it is enqueue talk`() {
+    fun `an openSpace remove a talk when queued`() {
         val organizer = anyUser()
         val aTalk = Talk("Talk")
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
         val aRoom = Room("Sala")
         val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
-        openSpace.toggleCallForPapers(organizer)
-        openSpace.addTalk(aTalk)
-        organizer.addTalk(aTalk)
-        openSpace.activeQueue(organizer)
-        openSpace.enqueueTalk(aTalk)
+        createAndEnqueueTalk(openSpace, organizer, aTalk)
 
         openSpace.removeTalk(aTalk)
 
         assertTrue(openSpace.queue.isEmpty())
     }
 
+    private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.activeQueue(organizer)
+        openSpace.enqueueTalk(aTalk)
+    }
+
+    private fun createAndScheduleTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk, aSlot: TalkSlot, aRoom: Room) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.scheduleTalk(aTalk, organizer, aSlot, aRoom)
+    }
 
     private fun openSpaceWithTwoDates(
         startDate: LocalDate?,
