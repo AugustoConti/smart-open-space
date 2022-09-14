@@ -31,7 +31,7 @@ class OpenSpace(
 
   @JsonIgnore
   @field:Valid
-  @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
+  @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL], orphanRemoval = true)
   val talks: MutableSet<Talk> = mutableSetOf(),
 
   @field:Column(length = 1000)
@@ -57,7 +57,7 @@ class OpenSpace(
   lateinit var organizer: User
 
   @JsonIgnore
-  @OneToMany(cascade = [CascadeType.ALL])
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
   @JoinColumn(name = "open_space_id")
   val assignedSlots: MutableSet<AssignedSlot> = mutableSetOf()
 
@@ -225,12 +225,11 @@ class OpenSpace(
     return slots.map { it.date }.toSet()
   }
 
-  fun removeTalk(talk: Talk): AssignedSlot? {
-    var assignedSlot = assignedSlots.find { it.talk == talk }
-    assignedSlots.remove(assignedSlot)
+  fun removeTalk(talk: Talk) {
+    assignedSlots.removeIf { it.talk.id == talk.id }
     queue.remove(talk)
+    toSchedule.remove(talk)
     talks.remove(talk)
-    return assignedSlot
   }
 }
 

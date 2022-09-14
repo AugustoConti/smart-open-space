@@ -3,7 +3,6 @@ package com.sos.smartopenspace.services
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.helpers.OpenSpaceDTO
-import com.sos.smartopenspace.persistence.AssignedSlotRepository
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.TrackRepository
@@ -19,7 +18,6 @@ class OpenSpaceService(
   private val talkRepository: TalkRepository,
   private val trackRepository: TrackRepository,
   private val userService: UserService,
-  private val assignedSlotRepository: AssignedSlotRepository,
   private val queueSocket: QueueSocket
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
@@ -102,22 +100,16 @@ class OpenSpaceService(
     return track
   }
 
-  fun deleteTalk(talkID: Long, openSpaceID: Long, userID: Long): Talk {
+  @Transactional
+  fun deleteTalk(talkID: Long, openSpaceID: Long, userID: Long) {
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
     val talk = findTalk(talkID)
     user.checkOwnershipOf(talk)
 
-    unschedule(openSpace, talk)
+    openSpace.removeTalk(talk)
     user.removeTalk(talk)
     talkRepository.delete(talk)
-    return talk
   }
 
-  private fun unschedule(openSpace: OpenSpace, talk: Talk) {
-    val assignedSlot = openSpace.removeTalk(talk)
-    if (assignedSlot != null) {
-      assignedSlotRepository.delete(assignedSlot)
-      }
-  }
 }
