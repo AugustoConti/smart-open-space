@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Grid, Markdown, Text } from 'grommet';
+import { Box, Button, Grid, Layer, Markdown, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
 import {
@@ -14,7 +14,7 @@ import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { DeleteIcon, EditIcon, TransactionIcon, TrashIcon, UserIcon } from "#shared/icons";
+import { DeleteIcon, EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
@@ -66,10 +66,11 @@ const Talk = ({
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
   const pushToEditTalk = usePushToEditTalk(talk.id);
-  const { data: openSpace, isPending, isRejected } = useGetOpenSpace();
+  const { data: openSpace } = useGetOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState();
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
   const onSubmitSchedule = ({ value: { slotId, room } }) =>
     scheduleTalk(talk.id, user.id, slotId, room.id).then(pushToSchedule);
@@ -140,7 +141,7 @@ const Talk = ({
               icon={<DeleteIcon />}
               color={color}
               label="Eliminar"
-              onClick={() => deleteTalk(openSpace.id, talk.id).then(reloadTalks)}
+              onClick={() => setShowDeleteModal(true)}
             />
           </>
         )}
@@ -164,6 +165,26 @@ const Talk = ({
           onSubmit={onSubmitExchange}
           title="Mover a:"
         />
+      )}
+      {showDeleteModal && (
+        <Layer
+          onEsc={() => setShowDeleteModal(false)}
+          onClickOutside={() => setShowDeleteModal(false)}
+        >
+          <Box pad="medium" gap="medium">
+            <Text>¿Estás seguro que querés eliminar esta charla?</Text>
+            <Box justify="around" direction="row" pad="small">
+              <Button
+                label="Si"
+                onClick={() => {
+                  deleteTalk(openSpace.id, talk.id).then(reloadTalks);
+                  setShowDeleteModal(false);
+                }}
+              />
+              <Button label="No" onClick={() => setShowDeleteModal(false)} />
+            </Box>
+          </Box>
+        </Layer>
       )}
     </Card>
   );
