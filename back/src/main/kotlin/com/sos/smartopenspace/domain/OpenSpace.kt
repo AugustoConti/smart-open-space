@@ -233,15 +233,15 @@ class OpenSpace(
   }
 
   fun hasTalksToScheduled(): Boolean {
-    return toSchedule.isEmpty()
+    return toSchedule.isNotEmpty()
   }
 
   fun hasQueuedTalks(): Boolean {
-    return queue.isEmpty()
+    return queue.isNotEmpty()
   }
 
   fun hasAssignedSlots(): Boolean {
-    return assignedSlots.isEmpty()
+    return assignedSlots.isNotEmpty()
   }
 }
 
