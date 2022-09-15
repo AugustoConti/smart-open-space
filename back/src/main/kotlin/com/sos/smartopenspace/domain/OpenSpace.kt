@@ -31,7 +31,7 @@ class OpenSpace(
 
   @JsonIgnore
   @field:Valid
-  @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL], orphanRemoval = true)
+  @OneToMany(mappedBy = "openSpace", cascade = [CascadeType.ALL])
   val talks: MutableSet<Talk> = mutableSetOf(),
 
   @field:Column(length = 1000)

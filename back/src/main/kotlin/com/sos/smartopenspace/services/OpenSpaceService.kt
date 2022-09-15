@@ -101,7 +101,7 @@ class OpenSpaceService(
   }
 
   @Transactional
-  fun deleteTalk(talkID: Long, openSpaceID: Long, userID: Long) {
+  fun deleteTalk(talkID: Long, openSpaceID: Long, userID: Long): Talk {
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
     val talk = findTalk(talkID)
@@ -110,6 +110,7 @@ class OpenSpaceService(
     openSpace.removeTalk(talk)
     user.removeTalk(talk)
     talkRepository.delete(talk)
+    return talk
   }
 
 }
