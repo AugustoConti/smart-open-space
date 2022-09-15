@@ -238,12 +238,35 @@ class OpenSpaceTest {
         assertTrue(openSpace.queue.isEmpty())
     }
 
+    @Test
+    fun `an openSpace remove a talk that is to be scheduled`() {
+        val organizer = anyUser()
+        val aTalk = Talk("Talk")
+        val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
+        val aRoom = Room("Sala")
+        val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
+        createATalkThatIsToBeScheduled(openSpace, organizer, aTalk)
+
+        openSpace.removeTalk(aTalk)
+
+        assertTrue(openSpace.toSchedule.isEmpty())
+    }
+
     private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
         openSpace.toggleCallForPapers(organizer)
         openSpace.addTalk(aTalk)
         organizer.addTalk(aTalk)
         openSpace.activeQueue(organizer)
         openSpace.enqueueTalk(aTalk)
+    }
+
+    private fun createATalkThatIsToBeScheduled(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.activeQueue(organizer)
+        openSpace.enqueueTalk(aTalk)
+        openSpace.nextTalk(organizer)
     }
 
     private fun createAndScheduleTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk, aSlot: TalkSlot, aRoom: Room) {
