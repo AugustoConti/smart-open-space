@@ -66,20 +66,22 @@ class User(
     openSpaces.remove(openSpace)
   }
 
-  fun checkOwnershipOf(talk: Talk) {
-      if (this != talk.speaker)
-        throw UserNotOwnerOfTalkException()
-  }
-
   fun checkOwnershipOf(openSpace: OpenSpace) {
     if (this != openSpace.organizer)
       throw UserNotOwnerOfOpenSpaceException()
   }
 
+  fun checkOwnershipOf(talk: Talk) {
+    if (!isOwnerOf(talk))
+      throw UserNotOwnerOfTalkException()
+  }
+
+  fun isOwnerOf(talk: Talk) = this == talk.speaker
+
   fun securePassword() {
     password = Hashing.sha256()
       .hashString(password, StandardCharsets.UTF_8)
-      .toString();
+      .toString()
   }
 
   fun removeTalk(talk: Talk) {
