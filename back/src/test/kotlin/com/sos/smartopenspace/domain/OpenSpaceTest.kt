@@ -221,7 +221,7 @@ class OpenSpaceTest {
 
         openSpace.removeTalk(aTalk)
 
-        assertTrue(openSpace.assignedSlots.isEmpty())
+        assertTrue(openSpace.hasAssignedSlots())
     }
 
     @Test
@@ -235,7 +235,7 @@ class OpenSpaceTest {
 
         openSpace.removeTalk(aTalk)
 
-        assertTrue(openSpace.queue.isEmpty())
+        assertTrue(openSpace.hasQueuedTalks())
     }
 
     @Test
@@ -249,7 +249,7 @@ class OpenSpaceTest {
 
         openSpace.removeTalk(aTalk)
 
-        assertTrue(openSpace.toSchedule.isEmpty())
+        assertTrue(openSpace.hasTalksToScheduled())
     }
 
     private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {

@@ -231,6 +231,18 @@ class OpenSpace(
     toSchedule.remove(talk)
     talks.remove(talk)
   }
+
+  fun hasTalksToScheduled(): Boolean {
+    return toSchedule.isEmpty()
+  }
+
+  fun hasQueuedTalks(): Boolean {
+    return queue.isEmpty()
+  }
+
+  fun hasAssignedSlots(): Boolean {
+    return assignedSlots.isEmpty()
+  }
 }
 
 
