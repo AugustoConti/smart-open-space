@@ -105,10 +105,10 @@ class TalkControllerTest {
   }
 
   @Test
-  fun `Asking for a talk that not exist returns a bad request`() {
+  fun `Asking for a talk that not exist returns a not found`() {
     mockMvc.perform(
       MockMvcRequestBuilders.get("/talk/77777")
-    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+    ).andExpect(MockMvcResultMatchers.status().isNotFound)
   }
 
 

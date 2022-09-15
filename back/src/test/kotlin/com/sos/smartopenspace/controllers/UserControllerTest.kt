@@ -82,7 +82,7 @@ class UserControllerTest {
   }
 
     @Test
-    fun `user login returns bad request status response`() {
+    fun `user login returns not found status response`() {
         val email = "email@gmail.com"
         val password = "password"
         userService.create(User(email= email, name = "Fran", password = password))
@@ -97,7 +97,7 @@ class UserControllerTest {
             MockMvcRequestBuilders.post("/user/auth")
                 .contentType("application/json")
                 .content(userLoginInformation)
-        ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
     }
 
   private fun anUserCreationBody(email: String, password: String, name: String): String {
