@@ -225,7 +225,7 @@ class OpenSpaceTest {
     }
 
     @Test
-    fun `an openSpace remove a talk when queued`() {
+    fun `an openSpace removes a talk when queued`() {
         val organizer = anyUser()
         val aTalk = Talk("Talk")
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
