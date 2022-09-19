@@ -15,8 +15,6 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
-class UserNotOwnerOfTalkException : RuntimeException("El usuario no es el dueño de la charla")
-
 @Entity(name = "Users")
 class User(
   @field:NotEmpty(message = "Ingrese un email")
@@ -74,4 +72,8 @@ class User(
       .hashString(password, StandardCharsets.UTF_8)
       .toString();
   }
+
+    fun removeTalk(talk: Talk) {
+      talks.remove(talk)
+    }
 }

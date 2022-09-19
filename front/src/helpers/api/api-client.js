@@ -24,5 +24,6 @@ const doFetch = (method) => async (endpoint, body) => {
 const get = doFetch('GET');
 const put = doFetch('PUT');
 const post = doFetch('POST');
+const remove = doFetch('DELETE');
 
-export { get, put, post };
+export { get, put, post, remove };

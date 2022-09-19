@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Grid, Markdown, Text } from 'grommet';
+import { Box, Button, Grid, Layer, Markdown, Text } from 'grommet';
 import PropTypes from 'prop-types';
 
-import { enqueueTalk, exchangeTalk, scheduleTalk } from '#api/os-client';
+import {
+  enqueueTalk,
+  exchangeTalk,
+  scheduleTalk,
+  deleteTalk,
+  useGetOpenSpace,
+} from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
+import { DeleteIcon, EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
 
 import SelectSlot from './SelectSlot';
@@ -29,18 +35,16 @@ const Badge = ({ color, text }) => (
 Badge.propTypes = { color: PropTypes.string, text: PropTypes.string };
 
 const ButtonAction = (props) => (
-  <ButtonLoading alignSelf="center" margin={{ top: 'medium' }} {...props} />
+  <ButtonLoading alignSelf="center" margin={{ top: 'small' }} {...props} />
 );
 
 function EditButton(props) {
   return (
-    <Button
+    <ButtonAction
       icon={<EditIcon />}
-      alignSelf="center"
       color={props.color}
       label="Editar"
       onClick={props.onClick}
-      primary
     />
   );
 }
@@ -55,16 +59,18 @@ const Talk = ({
   roomsWithAssignableSlots,
   roomsWithFreeSlots,
   hasAnother,
-  onEnqueue,
+  onEnqueue: reloadTalks,
   currentUserIsOrganizer,
   dates,
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
   const pushToEditTalk = usePushToEditTalk(talk.id);
+  const { data: openSpace } = useGetOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
   const [openExchange, setOpenExchange] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState();
   const shouldDisplayScheduleTalkButton = currentUserIsOrganizer || talk.isToSchedule();
   const onSubmitSchedule = ({ value: { slotId, room } }) =>
     scheduleTalk(talk.id, user.id, slotId, room.id).then(pushToSchedule);
@@ -122,12 +128,20 @@ const Talk = ({
               color={color}
               disabled={!currentUserIsOrganizer && hasAnother}
               label="Encolar"
-              onClick={() => enqueueTalk(talk.id).then(onEnqueue)}
+              onClick={() => enqueueTalk(talk.id).then(reloadTalks)}
             />
           )
         )}
         {shouldDisplayEditTalkButton && (
-          <EditButton color={color} onClick={pushToEditTalk} />
+          <>
+            <EditButton color={color} onClick={pushToEditTalk} />
+            <ButtonAction
+              icon={<DeleteIcon />}
+              color={color}
+              label="Eliminar"
+              onClick={() => setShowDeleteModal(true)}
+            />
+          </>
         )}
       </Grid>
       {openSchedule && roomsWithFreeSlots && (
@@ -149,6 +163,26 @@ const Talk = ({
           onSubmit={onSubmitExchange}
           title="Mover a:"
         />
+      )}
+      {showDeleteModal && (
+        <Layer
+          onEsc={() => setShowDeleteModal(false)}
+          onClickOutside={() => setShowDeleteModal(false)}
+        >
+          <Box pad="medium" gap="medium">
+            <Text>¿Estás seguro que querés eliminar esta charla?</Text>
+            <Box justify="around" direction="row" pad="small">
+              <Button
+                label="Si"
+                onClick={() => {
+                  deleteTalk(openSpace.id, talk.id).then(reloadTalks);
+                  setShowDeleteModal(false);
+                }}
+              />
+              <Button label="No" onClick={() => setShowDeleteModal(false)} />
+            </Box>
+          </Box>
+        </Layer>
       )}
     </Card>
   );

@@ -57,7 +57,7 @@ class OpenSpace(
   lateinit var organizer: User
 
   @JsonIgnore
-  @OneToMany(cascade = [CascadeType.ALL])
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
   @JoinColumn(name = "open_space_id")
   val assignedSlots: MutableSet<AssignedSlot> = mutableSetOf()
 
@@ -223,6 +223,25 @@ class OpenSpace(
   @JsonProperty
   fun dates(): Set<LocalDate?> {
     return slots.map { it.date }.toSet()
+  }
+
+  fun removeTalk(talk: Talk) {
+    assignedSlots.removeIf { it.talk.id == talk.id }
+    queue.remove(talk)
+    toSchedule.remove(talk)
+    talks.remove(talk)
+  }
+
+  fun hasTalksToScheduled(): Boolean {
+    return toSchedule.isNotEmpty()
+  }
+
+  fun hasQueuedTalks(): Boolean {
+    return queue.isNotEmpty()
+  }
+
+  fun hasAssignedSlots(): Boolean {
+    return assignedSlots.isNotEmpty()
   }
 }
 

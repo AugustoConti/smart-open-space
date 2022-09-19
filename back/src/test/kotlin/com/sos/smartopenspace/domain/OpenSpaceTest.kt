@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.domain
 
 import com.sos.smartopenspace.anOpenSpace
+import com.sos.smartopenspace.anOpenSpaceWith
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -207,6 +208,72 @@ class OpenSpaceTest {
         val openSpace = openSpaceWithTwoDates(startDate, endDate)
 
         assertEquals(setOf(startDate, endDate), openSpace.dates())
+    }
+
+    @Test
+    fun `an openSpace removes a talk when scheduled`() {
+        val organizer = anyUser()
+        val aTalk = Talk("Talk")
+        val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
+        val aRoom = Room("Sala")
+        val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
+        createAndScheduleTalk(openSpace, organizer, aTalk, aSlot, aRoom)
+
+        openSpace.removeTalk(aTalk)
+
+        assertFalse(openSpace.hasAssignedSlots())
+    }
+
+    @Test
+    fun `an openSpace removes a talk when queued`() {
+        val organizer = anyUser()
+        val aTalk = Talk("Talk")
+        val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
+        val aRoom = Room("Sala")
+        val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
+        createAndEnqueueTalk(openSpace, organizer, aTalk)
+
+        openSpace.removeTalk(aTalk)
+
+        assertFalse(openSpace.hasQueuedTalks())
+    }
+
+    @Test
+    fun `an openSpace removes a talk that is to be scheduled`() {
+        val organizer = anyUser()
+        val aTalk = Talk("Talk")
+        val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
+        val aRoom = Room("Sala")
+        val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
+        createATalkThatIsToBeScheduled(openSpace, organizer, aTalk)
+
+        openSpace.removeTalk(aTalk)
+
+        assertFalse(openSpace.hasTalksToScheduled())
+    }
+
+    private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.activeQueue(organizer)
+        openSpace.enqueueTalk(aTalk)
+    }
+
+    private fun createATalkThatIsToBeScheduled(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.activeQueue(organizer)
+        openSpace.enqueueTalk(aTalk)
+        openSpace.nextTalk(organizer)
+    }
+
+    private fun createAndScheduleTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk, aSlot: TalkSlot, aRoom: Room) {
+        openSpace.toggleCallForPapers(organizer)
+        openSpace.addTalk(aTalk)
+        organizer.addTalk(aTalk)
+        openSpace.scheduleTalk(aTalk, organizer, aSlot, aRoom)
     }
 
     private fun openSpaceWithTwoDates(

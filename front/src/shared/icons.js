@@ -31,6 +31,7 @@ import {
   FormPreviousLink,
   Edit,
   Favorite,
+  Trash
 } from 'grommet-icons';
 
 export {
@@ -56,6 +57,7 @@ export {
   DocumentText as TextAreaIcon,
   Transaction as TransactionIcon,
   FormTrash as TrashIcon,
+  Trash as DeleteIcon,
   User as UserIcon,
   UserAdd as UserAddIcon,
   Video as VideoIcon,

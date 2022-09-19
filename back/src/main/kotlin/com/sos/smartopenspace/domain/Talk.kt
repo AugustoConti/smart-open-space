@@ -24,11 +24,11 @@ class Talk(
   var meetingLink: URL? = null,
 
   @field:Valid
-  @ManyToOne(cascade = [CascadeType.ALL])
+  @ManyToOne
   var track: Track? = null
 ) {
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "vote",
           joinColumns = [JoinColumn(name = "talk_id", referencedColumnName = "id")],
           inverseJoinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")])

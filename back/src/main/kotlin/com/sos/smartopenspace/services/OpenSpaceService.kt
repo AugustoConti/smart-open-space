@@ -99,4 +99,18 @@ class OpenSpaceService(
     }
     return track
   }
+
+  @Transactional
+  fun deleteTalk(talkID: Long, openSpaceID: Long, userID: Long): Talk {
+    val openSpace = findById(openSpaceID)
+    val user = findUser(userID)
+    val talk = findTalk(talkID)
+    user.checkOwnershipOf(talk)
+
+    openSpace.removeTalk(talk)
+    user.removeTalk(talk)
+    talkRepository.delete(talk)
+    return talk
+  }
+
 }

@@ -1,7 +1,7 @@
 import { useAsync } from 'react-async';
 import { useParams } from 'react-router-dom';
 
-import { get, post, put } from './api-client';
+import { get, post, put, remove } from './api-client';
 import { getUser } from '../useAuth';
 import { OpenSpace } from '../../App/model/openSpace';
 
@@ -12,11 +12,17 @@ const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData
 const createTalkFor = (userId, openSpaceId, talkData) =>
   post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
 
+const deleteTalkFor = (id, openSpaceId, talkID) =>
+  remove(`openSpace/${openSpaceId}/talk/${talkID}/user/${id}`);
+
 const editTalkOf = (userId, openSpaceId, talkId, talkData) =>
   put(`talk/${talkId}/user/${userId}`, talkData);
 
 const createTalk = (openSpaceId, talkData) =>
   withUser(({ id }) => createTalkFor(id, openSpaceId, talkData));
+
+const deleteTalk = (openSpaceId, talkID) =>
+  withUser(({ id }) => deleteTalkFor(id, openSpaceId, talkID));
 
 const editTalk = (openSpaceId, talkId, talkData) =>
   withUser(({ id }) => editTalkOf(id, openSpaceId, talkId, talkData));
@@ -94,4 +100,5 @@ export {
   useGetTalk,
   editTalk,
   unvoteTalk,
+  deleteTalk,
 };
