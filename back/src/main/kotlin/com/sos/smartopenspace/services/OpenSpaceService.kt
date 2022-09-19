@@ -157,7 +157,6 @@ class OpenSpaceService(
     user.checkOwnershipOf(talk)
 
     openSpace.removeTalk(talk)
-    user.removeTalk(talk)
     talkRepository.delete(talk)
     return talk
   }

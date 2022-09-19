@@ -61,8 +61,4 @@ class User(
       .hashString(password, StandardCharsets.UTF_8)
       .toString()
   }
-
-  fun removeTalk(talk: Talk) {
-    talks.remove(talk)
-  }
 }

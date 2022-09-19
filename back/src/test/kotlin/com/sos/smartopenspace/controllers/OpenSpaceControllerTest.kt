@@ -166,7 +166,7 @@ class OpenSpaceControllerTest {
     fun `deleting a valid talk return an ok status response `() {
         val user = repoUser.save(aUser())
         val anOpenSpace = createOpenSpaceFor(user)
-        val aTalk = Talk("a talk")
+        val aTalk = Talk("a talk", speaker = user)
         createTalkFor(user, anOpenSpace, aTalk)
 
         mockMvc.perform(
@@ -185,7 +185,7 @@ class OpenSpaceControllerTest {
         val user = repoUser.save(aUser())
         val otherUser = repoUser.save(aUser())
         val anOpenSpace = createOpenSpaceFor(user)
-        val aTalk = Talk("a talk")
+        val aTalk = Talk("a talk", speaker = user)
         createTalkFor(user, anOpenSpace, aTalk)
 
         mockMvc.perform(
@@ -356,7 +356,6 @@ class OpenSpaceControllerTest {
     private fun createTalkFor(user: User, anOpenSpace: OpenSpace, aTalk: Talk) {
         anOpenSpace.toggleCallForPapers(user)
         anOpenSpace.addTalk(aTalk)
-        user.addTalk(aTalk)
         repoTalk.save(aTalk)
     }
 
