@@ -13,6 +13,9 @@
     "url": "https://github.com/AugustoConti/smart-open-space.git",
     "directory": "front"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
