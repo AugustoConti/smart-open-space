@@ -100,7 +100,6 @@ const EnqueuedTalkCurrent = ({ description, onFinish, title }) => (
       <Title>{title}</Title>
       <Detail color="dark-2" text={description} truncate />
     </>
-    <ButtonLoading color="status-critical" label="Terminé" onClick={onFinish} primary />
   </EnqueuedTalkCard>
 );
 EnqueuedTalkCurrent.propTypes = {
