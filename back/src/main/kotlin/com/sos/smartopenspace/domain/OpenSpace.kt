@@ -14,7 +14,7 @@ import javax.validation.constraints.Size
 class OpenSpace(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
-  val name: String,
+  var name: String,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
@@ -242,6 +242,10 @@ class OpenSpace(
 
   fun hasAssignedSlots(): Boolean {
     return assignedSlots.isNotEmpty()
+  }
+
+  fun update(name: String) {
+    this.name = name
   }
 }
 

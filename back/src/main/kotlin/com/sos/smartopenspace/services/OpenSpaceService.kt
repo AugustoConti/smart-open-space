@@ -35,6 +35,15 @@ class OpenSpaceService(
     return openSpaceRepository.save(openSpace)
   }
 
+  fun update(openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
+    val openSpace = openSpaceRepository.findByIdOrNull(openSpaceID)
+    openSpace?.let {
+      it.update(openSpaceDTO.name)
+      return openSpace
+    }
+    return null
+  }
+
   @Transactional(readOnly = true)
   fun findAllByUser(userID: Long) = findUser(userID).openSpaces.toList()
 
