@@ -19,7 +19,7 @@ class OpenSpaceServiceTest {
     fun `returns null if the open space is not found`() {
         val openSpaceService = OpenSpaceService(mock(OpenSpaceRepository::class.java), mock(TalkRepository::class.java), mock(TrackRepository::class.java), mock(UserService::class.java), mock(QueueSocket::class.java))
 
-        val result = openSpaceService.update(234, OpenSpaceDTO("a name", emptySet(), emptySet(), emptySet()))
+        val result = openSpaceService.update(12, 234, OpenSpaceDTO("a name", emptySet(), emptySet(), emptySet()))
 
         Assertions.assertNull(result)
     }

@@ -243,7 +243,8 @@ class OpenSpace(
     return assignedSlots.isNotEmpty()
   }
 
-  fun update(name: String) {
+  fun update(user: User, name: String) {
+    checkIsOrganizer(user)
     this.name = name
   }
 }

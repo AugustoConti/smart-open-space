@@ -35,10 +35,11 @@ class OpenSpaceService(
     return openSpaceRepository.save(openSpace)
   }
 
-  fun update(openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
+  fun update(userID: Long, openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
     val openSpace = openSpaceRepository.findByIdOrNull(openSpaceID)
+    val user = userService.findById(userID)
     openSpace?.let {
-      it.update(openSpaceDTO.name)
+      it.update(user, openSpaceDTO.name)
       return openSpace
     }
     return null

@@ -83,7 +83,7 @@ class OpenSpaceRepositoryTest {
     fun `the name of an open space can be modified and it is updated successfully`() {
         val openSpace = anOpenSpace();
         repoOpenSpace.save(openSpace)
-        openSpace.update(name = "A new name")
+        openSpace.update(openSpace.organizer, name = "A new name")
         val updatedOpenSpace = repoOpenSpace.findById(openSpace.id).get()
         assertEquals("A new name", updatedOpenSpace.name)
     }
