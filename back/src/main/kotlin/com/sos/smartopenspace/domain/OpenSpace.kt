@@ -18,7 +18,6 @@ class OpenSpace(
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
   val rooms: Set<Room>,
