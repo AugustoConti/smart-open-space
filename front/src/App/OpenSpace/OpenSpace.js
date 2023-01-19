@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from 'grommet';
+import { Box, Button } from 'grommet';
 
 import { activateQueue, finishQueue, useGetOpenSpace } from '#api/os-client';
 import { useQueue } from '#api/sockets-client';
@@ -8,8 +8,9 @@ import {
   RedirectToLoginFromOpenSpace,
   RedirectToRoot,
   usePushToSchedule,
+  usePushToEditOS,
 } from '#helpers/routes';
-import { ScheduleIcon } from '#shared/icons';
+import { EditIcon, ScheduleIcon } from '#shared/icons';
 import MainHeader from '#shared/MainHeader';
 import Spinner from '#shared/Spinner';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
@@ -44,6 +45,7 @@ const OpenSpace = () => {
   } = useGetOpenSpace();
   const queue = useQueue();
   const pushToSchedule = usePushToSchedule(id);
+  const pushToEditOS = usePushToEditOS(id);
 
   if (isPending) return <Spinner />;
   if (isRejected) return <RedirectToRoot />;
@@ -82,6 +84,14 @@ const OpenSpace = () => {
         <MainHeader.Tracks tracks={tracks} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}
         <MainHeader.Buttons>
+          {amTheOrganizer && (
+            <Button
+              icon={<EditIcon />}
+              color="accent-4"
+              label="Editar"
+              onClick={pushToEditOS}
+            />
+          )}
           {amTheOrganizer && (
             <ButtonToSwitchCallForPapers
               openSpaceID={id}

@@ -9,6 +9,7 @@ const toLogin = '/login';
 const toRegister = '/register';
 const toNewOS = '/new';
 const useToOS = (id) => `/os/${useID(id)}`;
+const useToEditOS = (id) => `/os/${useID(id)}/edit`;
 const useToMyTalks = (id) => `/os/${useID(id)}/myTalks`;
 const useToNewTalk = (id) => `/newTalk/${useID(id)}`;
 const useToProjector = (id) => `/os/${useID(id)}/projector`;
@@ -38,5 +39,7 @@ export const usePushToProjector = (id) => pushTo(useHistory(), useToProjector(id
 export const usePushToSchedule = (id) => pushTo(useHistory(), useToSchedule(id));
 export const usePushToEditTalk = (talkId, openSpaceId) =>
   pushTo(useHistory(), useToEditTalk(talkId, openSpaceId));
+export const usePushToEditOS = (openSpaceId) =>
+  pushTo(useHistory(), useToEditOS(openSpaceId));
 
 export const useInRegister = () => useLocation().pathname === toRegister;

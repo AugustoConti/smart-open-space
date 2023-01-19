@@ -8,6 +8,8 @@ import { OpenSpace } from '../../App/model/openSpace';
 const withUser = (fn) => fn(getUser());
 
 const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData));
+const updateOS = (openSpaceId, osData) =>
+  withUser(({ id }) => put(`openSpace/${openSpaceId}/user/${id}`, osData));
 
 const createTalkFor = (userId, openSpaceId, talkData) =>
   post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
@@ -84,6 +86,7 @@ const useGetCurrentUserTalks = () =>
 export {
   activateQueue,
   createOS,
+  updateOS,
   createTalk,
   createTalkFor,
   enqueueTalk,
