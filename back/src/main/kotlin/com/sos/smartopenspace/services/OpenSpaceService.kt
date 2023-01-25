@@ -36,13 +36,10 @@ class OpenSpaceService(
   }
 
   fun update(userID: Long, openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
-    val openSpace = openSpaceRepository.findByIdOrNull(openSpaceID)
-    val user = userService.findById(userID)
-    openSpace?.let {
-      it.update(user, openSpaceDTO.name)
-      return openSpace
-    }
-    return null
+    val openSpace = findById(openSpaceID)
+    val user = findUser(userID)
+    openSpace.update(user, openSpaceDTO.name)
+    return openSpace
   }
 
   @Transactional(readOnly = true)
