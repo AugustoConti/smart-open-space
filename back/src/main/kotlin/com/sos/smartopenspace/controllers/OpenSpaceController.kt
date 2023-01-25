@@ -15,6 +15,9 @@ class OpenSpaceController(private val openSpaceService: OpenSpaceService) {
   @PutMapping("/{openSpaceID}/user/{userID}")
   fun updateOpenSpace(@PathVariable openSpaceID: Long, @PathVariable userID: Long, @Valid @RequestBody openSpace: OpenSpaceDTO) =
     openSpaceService.update(userID, openSpaceID, openSpace)
+    
+  @DeleteMapping("/{openSpaceID}/user/{userID}")
+  fun delete(@PathVariable userID: Long, @PathVariable openSpaceID: Long) = openSpaceService.delete(userID, openSpaceID)
 
   @PostMapping("/talk/{userID}/{osID}")
   fun createTalk(@PathVariable userID: Long, @PathVariable osID: Long, @Valid @RequestBody createTalkDTO: CreateTalkDTO) =

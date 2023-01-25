@@ -21,6 +21,7 @@ class CallForPapersClosedException : UnprocessableEntityException("La convocator
 class NotValidTrackForOpenSpaceException : BadRequestException("El track de la charla no pertenece a este open space")
 class UserDidntVoteThisTalkException : BadRequestException("Este usuario no voto esta charla")
 class UserNotOwnerOfTalkException : BadRequestException("El usuario no es el dueño de la charla")
+class UserNotOwnerOfOpenSpaceException : BadRequestException("El usuario no es el dueño del openspace")
 class OpenSpaceNotFoundException : NotFoundException("OpenSpace no encontrado")
 class TalkNotFoundException : NotFoundException("Charla no encontrada")
 class RoomNotFoundException : NotFoundException("Sala no encontrada")

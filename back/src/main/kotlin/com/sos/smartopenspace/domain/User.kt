@@ -62,9 +62,18 @@ class User(
     return this
   }
 
+  fun removeOpenSpace(openSpace: OpenSpace) {
+    openSpaces.remove(openSpace)
+  }
+
   fun checkOwnershipOf(talk: Talk) {
       if (this != talk.speaker)
         throw UserNotOwnerOfTalkException()
+  }
+
+  fun checkOwnershipOf(openSpace: OpenSpace) {
+    if (this != openSpace.organizer)
+      throw UserNotOwnerOfOpenSpaceException()
   }
 
   fun securePassword() {
@@ -73,7 +82,7 @@ class User(
       .toString();
   }
 
-    fun removeTalk(talk: Talk) {
-      talks.remove(talk)
-    }
+  fun removeTalk(talk: Talk) {
+    talks.remove(talk)
+  }
 }

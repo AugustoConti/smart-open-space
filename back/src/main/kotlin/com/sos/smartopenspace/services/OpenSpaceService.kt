@@ -21,6 +21,7 @@ class OpenSpaceService(
   private val queueSocket: QueueSocket
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
+  private fun findOpenSpace(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
 
   fun create(userID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace {
     val slots = openSpaceDTO.slotsWithDates()
@@ -40,6 +41,19 @@ class OpenSpaceService(
     val user = findUser(userID)
     openSpace.update(user, openSpaceDTO.name)
     return openSpace
+  }
+  
+  @Transactional
+  fun delete(userID: Long, openSpaceID: Long): Long {
+    val user = findUser(userID);
+    val openSpace = findOpenSpace(openSpaceID);
+
+    user.checkOwnershipOf(openSpace);
+
+    user.removeOpenSpace(openSpace);
+    openSpaceRepository.delete(openSpace);
+
+    return openSpace.id;
   }
 
   @Transactional(readOnly = true)
