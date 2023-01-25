@@ -18,7 +18,7 @@ const ButtonAction = (props) => (
 
 const OpenSpace = ({ deleteOS, startDate, endTime, id, name, startTime, urlImage }) => {
   const [showDeleteModal, setShowDeleteModal] = React.useState();
-  const PushToOpenSpace = () => usePushToOpenSpace(id);
+  const PushToOpenSpace = usePushToOpenSpace(id);
 
   return (
     <Button fill plain>
