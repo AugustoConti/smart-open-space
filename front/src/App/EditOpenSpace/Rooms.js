@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 
 import { DownIcon, UpIcon } from '#shared/icons';
-import { Box, TextInput, Button, Collapsible } from 'grommet';
+import { Box, TextInput, Button, Collapsible, Text } from 'grommet';
 import PropTypes from 'prop-types';
 import RowBetween from '#shared/RowBetween';
 import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 import { PlusButton } from '#shared/PlusButton';
-import MyForm from '#shared/MyForm';
+import { validateUrl } from '#helpers/validateUrl';
 
 const Rooms = ({ value, onChange }) => {
   const initialValue = { name: '', link: '' };
   const [room, setRoom] = useState(initialValue);
   const [isOpen, setIsOpen] = useState(false);
+  const [invalidUrl, setInvalidUrl] = useState(false);
   const hasNoRoomName = room.name.trim().length < 1;
+
+  const updateUrl = (link) => {
+    setRoom({ ...room, link });
+    setInvalidUrl(validateUrl(link));
+  };
 
   return (
     <Box>
@@ -31,15 +37,16 @@ const Rooms = ({ value, onChange }) => {
             />
           </RowBetween>
           <Box>
-            <MyForm.Link
-              label="Link"
+            <TextInput
+              onChange={(event) => updateUrl(event.target.value)}
               placeholder="Link a la sala virtual (meet/zoom)"
               value={room.link}
             />
+            {invalidUrl && <Text color={'Red'}>{invalidUrl}</Text>}
           </Box>
         </Box>
         <PlusButton
-          conditionToDisable={hasNoRoomName}
+          conditionToDisable={hasNoRoomName || !!invalidUrl}
           onChange={onChange}
           value={value}
           item={room}
