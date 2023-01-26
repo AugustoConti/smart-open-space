@@ -11,6 +11,8 @@ const createOS = (osData) => withUser(({ id }) => post(`openSpace/${id}`, osData
 const updateOS = (openSpaceId, osData) =>
   withUser(({ id }) => put(`openSpace/${openSpaceId}/user/${id}`, osData));
 
+const deleteOS = (osID) => withUser(({ id }) => remove(`openSpace/${osID}/user/${id}`));
+
 const createTalkFor = (userId, openSpaceId, talkData) =>
   post(`openSpace/talk/${userId}/${openSpaceId}`, talkData);
 
@@ -87,6 +89,7 @@ export {
   activateQueue,
   createOS,
   updateOS,
+  deleteOS,
   createTalk,
   createTalkFor,
   enqueueTalk,

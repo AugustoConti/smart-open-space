@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useGetAllOpenSpaces } from '#api/os-client';
 import { useUser } from '#helpers/useAuth';
@@ -10,10 +10,19 @@ import { RedirectToLogin, usePushToNewOS } from '#helpers/routes';
 
 import EmptyOpenSpaces from './EmptyOpenSpaces';
 import OpenSpace from './OpenSpace';
+import { deleteOS } from '#api/os-client';
 
 const Home = () => {
   const pushToNewOS = usePushToNewOS();
-  const { data: openSpaces, isPending } = useGetAllOpenSpaces();
+  const deleteOpenSpace = (osID) =>
+    deleteOS(osID).then(() => {
+      reload();
+    });
+
+  const { data: openSpaces, isPending, reload: reloadOpenSpaces } = useGetAllOpenSpaces();
+  const reload = useCallback(() => {
+    reloadOpenSpaces();
+  }, [reloadOpenSpaces]);
 
   return (
     <>
@@ -32,7 +41,7 @@ const Home = () => {
       ) : (
         <MyGrid>
           {openSpaces.map((os) => (
-            <OpenSpace key={os.id} {...os} />
+            <OpenSpace deleteOS={() => deleteOpenSpace(os.id)} key={os.id} {...os} />
           ))}
         </MyGrid>
       )}

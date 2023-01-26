@@ -41,6 +41,19 @@ class OpenSpaceService(
     openSpace.update(user, openSpaceDTO.name)
     return openSpace
   }
+  
+  @Transactional
+  fun delete(userID: Long, openSpaceID: Long): Long {
+    val user = findUser(userID);
+    val openSpace = findById(openSpaceID);
+
+    user.checkOwnershipOf(openSpace);
+
+    user.removeOpenSpace(openSpace);
+    openSpaceRepository.delete(openSpace);
+
+    return openSpace.id;
+  }
 
   @Transactional(readOnly = true)
   fun findAllByUser(userID: Long) = findUser(userID).openSpaces.toList()
