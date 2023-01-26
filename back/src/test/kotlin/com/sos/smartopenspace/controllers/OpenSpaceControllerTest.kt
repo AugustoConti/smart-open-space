@@ -7,6 +7,7 @@ import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -210,6 +211,68 @@ class OpenSpaceControllerTest {
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
+    @Test
+    fun `can update an open space name`() {
+        val organizer = repoUser.save(aUser())
+        val anOpenSpace = createOpenSpaceFor(organizer)
+
+        val changedName = "a different name for the open space"
+        val description = "W".repeat(1000)
+
+        val openSpaceBody = anOpenSpaceCreationBody(
+            description = description,
+            name = changedName
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${organizer.id}")
+                .contentType("application/json")
+                .content(openSpaceBody)
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+
+        val changedOpenSpace = repoOpenSpace.findById(anOpenSpace.id).get()
+        assertEquals(changedName, changedOpenSpace.name)
+    }
+
+    @Test
+    fun `updating an invalid open space throws a not found response`() {
+        val organizer = repoUser.save(aUser())
+
+        val changedName = "a different name for the open space"
+        val description = "W".repeat(1000)
+
+        val openSpaceBody = anOpenSpaceCreationBody(
+            description = description,
+            name = changedName
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/543/user/${organizer.id}")
+                .contentType("application/json")
+                .content(openSpaceBody)
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
+    }
+
+    @Test
+    fun `updating an invalid user throws a not found response`() {
+        val organizer = repoUser.save(aUser())
+        val anOpenSpace = createOpenSpaceFor(organizer)
+
+        val changedName = "a different name for the open space"
+        val description = "W".repeat(1000)
+
+        val openSpaceBody = anOpenSpaceCreationBody(
+            description = description,
+            name = changedName
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/555")
+                .contentType("application/json")
+                .content(openSpaceBody)
+        ).andExpect(MockMvcResultMatchers.status().isNotFound)
+    }
+
     private fun anyOpenSpaceWith(organizer: User, tracks: Set<Track>? = null): OpenSpace {
         val openSpace: OpenSpace = if (tracks == null) {
             anOpenSpace()
@@ -263,12 +326,13 @@ class OpenSpaceControllerTest {
 
     private fun anOpenSpaceCreationBody(
         description: String,
-        track: Track = Track(name = "a track", color = "#FFFFFFF")
+        name: String = "asd",
+        track: Track = Track(name = "a track", color = "#FFFFFF")
     ): String {
         return """
 {
     "dates": ["2022-05-11T03:00:00.000Z"],
-    "name": "asd",
+    "name": "${name}",
     "description": "${description}",
     "rooms": [{"name": "a"}],
     "slots": [

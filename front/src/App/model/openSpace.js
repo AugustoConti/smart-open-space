@@ -18,6 +18,7 @@ export class OpenSpace {
     pendingQueue,
     queueState,
     slots,
+    rooms,
     startDate,
     startTime,
     toSchedule,
@@ -38,6 +39,7 @@ export class OpenSpace {
     this.pendingQueue = pendingQueue;
     this.queueState = queueState;
     this.slots = slots;
+    this.rooms = rooms;
     this.startTime = startTime;
     this.toSchedule = toSchedule;
     this.tracks = tracks;

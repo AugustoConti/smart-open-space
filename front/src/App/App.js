@@ -17,6 +17,7 @@ import ErrorBoundary from './ErrorBoundary';
 import Schedule from './OpenSpace/schedule/Schedule';
 
 import { EditTalk, NewTalk } from './TalkForm';
+import NewOpenSpace from './EditOpenSpace/NewOpenSpace';
 
 const Routes = () => (
   <Switch>
@@ -24,7 +25,8 @@ const Routes = () => (
     <Route path="/os/:id/myTalks" exact component={MyTalks} />
     <Route path="/newTalk/:id" exact component={NewTalk} />
     <Route path="/os/:id/editTalk/:talkId" exact component={EditTalk} />
-    <Route path={['/new', '/edit/:id']} exact component={EditOpenSpace} />
+    <Route path="/new" exact component={NewOpenSpace} />
+    <Route path="/os/:id/edit" exact component={EditOpenSpace} />
     <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />
     <Route path={['/login', '/register']} exact component={Login} />

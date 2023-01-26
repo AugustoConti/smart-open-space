@@ -14,11 +14,10 @@ import javax.validation.constraints.Size
 class OpenSpace(
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
-  val name: String,
+  var name: String,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos una sala")
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
   val rooms: Set<Room>,
@@ -242,6 +241,11 @@ class OpenSpace(
 
   fun hasAssignedSlots(): Boolean {
     return assignedSlots.isNotEmpty()
+  }
+
+  fun update(user: User, name: String) {
+    checkIsOrganizer(user)
+    this.name = name
   }
 }
 

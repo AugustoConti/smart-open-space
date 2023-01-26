@@ -252,6 +252,17 @@ class OpenSpaceTest {
         assertFalse(openSpace.hasTalksToScheduled())
     }
 
+    @Test
+    fun `a user that is not the organizer cant update the open space`() {
+        val aUser = anyUser()
+        val organizer = anyUser()
+        val openSpace = anyOpenSpaceWith(organizer)
+
+        assertThrows<NotTheOrganizerException> {
+            openSpace.update(aUser, "a new name")
+        }
+    }
+
     private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
         openSpace.toggleCallForPapers(organizer)
         openSpace.addTalk(aTalk)

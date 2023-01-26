@@ -3,6 +3,7 @@ package com.sos.smartopenspace.repositories
 import com.sos.smartopenspace.anOpenSpace
 import com.sos.smartopenspace.domain.Track
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -76,5 +77,14 @@ class OpenSpaceRepositoryTest {
             repoOpenSpace.save(openSpace)
             entityManager.flush()
         }
+    }
+
+    @Test
+    fun `the name of an open space can be modified and it is updated successfully`() {
+        val openSpace = anOpenSpace();
+        repoOpenSpace.save(openSpace)
+        openSpace.update(openSpace.organizer, name = "A new name")
+        val updatedOpenSpace = repoOpenSpace.findById(openSpace.id).get()
+        assertEquals("A new name", updatedOpenSpace.name)
     }
 }
