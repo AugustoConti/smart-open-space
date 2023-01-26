@@ -19,7 +19,7 @@ const EditOpenSpace = () => {
 
   const onSubmit = ({ value: { name } }) => {
     openSpace.name = name;
-    updateOS(openSpace.id, openSpace).then(pushToRoot());
+    updateOS(openSpace.id, openSpace).then(pushToRoot);
   };
 
   return (
