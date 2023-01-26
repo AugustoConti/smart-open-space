@@ -73,6 +73,31 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    fun `deleting an OpenSpace returns an ok status response`() {
+        val user = repoUser.save(aUser())
+        val anOpenSpace = createOpenSpaceFor(user)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/openSpace/${anOpenSpace.id}/user/${user.id}/")
+        )
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        assertThatTheUserHasNoOpenSpaces(user)
+    }
+
+    @Test
+    fun `deleting an OpenSpace with an invalid user returns a bad request response`() {
+        val user = repoUser.save(aUser())
+        val otherUser = repoUser.save(aUser())
+        val anOpenSpace = createOpenSpaceFor(user)
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/openSpace/${anOpenSpace.id}/user/${otherUser.id}/")
+        )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
     fun `creating an invalid OpenSpace returns a bad request response`() {
         val user = repoUser.save(aUser())
         val openSpaceBody = anOpenSpaceCreationBody("W".repeat(1001))
@@ -291,12 +316,9 @@ class OpenSpaceControllerTest {
         )
     }
 
-    private fun createTalk(user: User, anOpenSpace: OpenSpace, aMeetingLink: String) {
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/openSpace/talk/${user.id}/${anOpenSpace.id}")
-                        .contentType("application/json")
-                        .content(generateTalkBody(aMeeting = aMeetingLink))
-        )
+    private fun assertThatTheUserHasNoOpenSpaces(user: User) {
+        val path = "/openSpace/user/${user.id}"
+        assertThatTheBodyIsEmpty(path)
     }
 
     private fun createTalkFor(user: User, anOpenSpace: OpenSpace, aTalk: Talk) {
