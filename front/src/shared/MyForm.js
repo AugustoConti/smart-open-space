@@ -79,6 +79,16 @@ const MyFieldPassword = (props) => (
   />
 );
 
+const MyFieldConfirmPassword = (props) => (
+  <MyField
+    icon={<PasswordIcon />}
+    label="Confirmar contraseña"
+    name="confirmPassword"
+    type="password"
+    {...props}
+  />
+);
+
 const MyFieldSelect = (props) => (
   <MyField
     label="Elegir"
@@ -145,6 +155,7 @@ MyForm.TextAreaWithCharacterCounter = MyFieldTextAreaWithCounter;
 MyForm.Email = MyFieldEmail;
 MyForm.Field = MyField;
 MyForm.Password = MyFieldPassword;
+MyForm.ConfirmPassword = MyFieldConfirmPassword;
 MyForm.Select = MyFieldSelect;
 MyForm.Link = LinkField;
 
