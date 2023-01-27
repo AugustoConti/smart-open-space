@@ -55,6 +55,16 @@ const ButtonMoreInfo = ({ onClick }) => (
 );
 ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
+const ButtonGoToLink = ({ onClick }) => (
+  <Button
+    alignSelf="center"
+    color="accent-4"
+    label="Ir a reunion"
+    onClick={onClick}
+    primary
+  />
+);
+
 const Talk = ({
   talk: { description, name, speaker, meetingLink, track },
   room,
@@ -64,6 +74,7 @@ const Talk = ({
 
   const color = track ? track.color : 'accent-3';
   let shouldDisplayMoreInfo = description || meetingLink;
+  const talkLink = meetingLink || room?.link;
   return (
     <>
       <Card borderColor={color} margin="xsmall" gap="small">
@@ -73,6 +84,7 @@ const Talk = ({
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
           {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+          {talkLink && <ButtonGoToLink onClick={() => window.open(talkLink, '_blank')} />}
         </Box>
       </Card>
       {open && (

@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.domain
 
+import java.net.URL
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -15,6 +16,9 @@ class Room(
 
   @Column(columnDefinition="VarChar")
   val description: String = "",
+
+  @Column(columnDefinition="VarChar")
+  var link: URL? = null,
 
   @Id @GeneratedValue
   val id: Long = 0
