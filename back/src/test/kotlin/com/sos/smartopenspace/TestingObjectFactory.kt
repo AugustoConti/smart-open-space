@@ -21,11 +21,11 @@ fun anOpenSpace(
 ): OpenSpace {
     return OpenSpace(
       name = name,
-      rooms = rooms,
-      slots = slots,
+      rooms = rooms.toMutableSet(),
+      slots = slots.toMutableSet(),
       talks = talks,
       description = description,
-      tracks = tracks
+      tracks = tracks.toMutableSet()
     )
 }
 

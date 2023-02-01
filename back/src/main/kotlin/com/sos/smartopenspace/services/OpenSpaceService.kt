@@ -21,11 +21,10 @@ class OpenSpaceService(
   private fun findUser(userID: Long) = userService.findById(userID)
 
   fun create(userID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace {
-    val slots = openSpaceDTO.slotsWithDates()
     val openSpace = OpenSpace(
       name = openSpaceDTO.name,
       rooms = openSpaceDTO.rooms.toMutableSet(),
-      slots = slots.toMutableSet(),
+      slots = openSpaceDTO.slots.toMutableSet(),
       description = openSpaceDTO.description,
       tracks = openSpaceDTO.tracks.toMutableSet()
     )

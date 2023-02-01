@@ -12,7 +12,7 @@ class OpenSpaceTest {
 
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
         OpenSpace(
-            "os", emptySet(), setOf(
+            "os", emptySet<Room>().toMutableSet(), mutableSetOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
                 TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
                 TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
@@ -32,9 +32,8 @@ class OpenSpaceTest {
     @Test
     fun `an open space is created with necessary fields and contains them`() {
         val nameOpenSpace = "os"
-        val date = LocalDate.now()
         val openSpace = OpenSpace(
-            nameOpenSpace, emptySet(), emptySet()
+            nameOpenSpace, emptySet<Room>().toMutableSet(), emptySet<Slot>().toMutableSet()
         )
 
         assertEquals(openSpace.name, nameOpenSpace)
@@ -43,10 +42,9 @@ class OpenSpaceTest {
     @Test
     fun `an open space is created with description and contains it`() {
         val nameOpenSpace = "os"
-        val date = LocalDate.now()
         val description = "A description"
         val openSpace = OpenSpace(
-            nameOpenSpace, emptySet(), emptySet(),
+            nameOpenSpace, emptySet<Room>().toMutableSet(), emptySet<Slot>().toMutableSet(),
             mutableSetOf(), description
         )
 
@@ -174,8 +172,8 @@ class OpenSpaceTest {
     fun `an open space is created with a track`() {
         val track = Track(name = "track", color = "#FFFFFF")
         val openSpace = OpenSpace(
-            name = "os", rooms = emptySet(), slots = emptySet(),
-            talks = mutableSetOf(), tracks = setOf(track)
+            name = "os", rooms = emptySet<Room>().toMutableSet(), slots = emptySet<Slot>().toMutableSet(),
+            talks = mutableSetOf(), tracks = mutableSetOf(track)
         )
 
         assertEquals(1, openSpace.tracks.size)
@@ -259,7 +257,7 @@ class OpenSpaceTest {
         val openSpace = anyOpenSpaceWith(organizer)
 
         assertThrows<NotTheOrganizerException> {
-            openSpace.update(aUser, "a new name")
+            openSpace.update(aUser, "a new name", "")
         }
     }
 
@@ -294,7 +292,7 @@ class OpenSpaceTest {
         val first_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), startDate)
         val end_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), endDate)
         val openSpace = OpenSpace(
-            name = "os", rooms = emptySet(), slots = setOf(first_date_slot, end_date_slot),
+            name = "os", rooms = emptySet<Room>().toMutableSet(), slots = mutableSetOf(first_date_slot, end_date_slot),
             talks = mutableSetOf()
         )
         return openSpace
