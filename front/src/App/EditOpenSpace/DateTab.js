@@ -40,7 +40,7 @@ CloseSlot.propTypes = {
   time: PropTypes.string.isRequired,
 };
 
-export const DateTab = ({ value, addSlot, date, onChange }) => {
+export const DateTab = ({ value, addSlot, removeSlot, date }) => {
   const lastEnd = value.length > 0 ? value.slice(-1)[0].endTime : undefined;
 
   return (
@@ -51,11 +51,7 @@ export const DateTab = ({ value, addSlot, date, onChange }) => {
           key={startTime}
           start={startTime}
           text={type === TALK_SLOT ? 'Charla' : description}
-          onRemove={
-            i === value.length - 1
-              ? () => onChange({ target: { value: value.slice(0, -1) } })
-              : null
-          }
+          onRemove={i === value.length - 1 ? () => removeSlot(date, lastEnd) : null}
         />
       ))}
       {value.length > 0 && <CloseSlot time={lastEnd} />}

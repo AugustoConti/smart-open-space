@@ -28,6 +28,13 @@ const TimeSelector = ({ onChange, onNewSlot, value, dates }) => {
       });
     });
 
+  const removeSlot = (date, lastEnd) =>
+    onChange({
+      target: {
+        value: value.filter((slot) => !byDate(date)(slot) || slot.endTime != lastEnd),
+      },
+    });
+
   return (
     <Box>
       <Tabs>
@@ -38,7 +45,7 @@ const TimeSelector = ({ onChange, onNewSlot, value, dates }) => {
               value={value.filter(byDate(date))}
               addSlot={addSlot}
               date={date}
-              onChange={onChange}
+              removeSlot={removeSlot}
             />
           </Tab>
         ))}
