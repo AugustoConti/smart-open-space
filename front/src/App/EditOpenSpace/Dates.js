@@ -8,31 +8,31 @@ import MyCalendar from './MyCalendar';
 import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 
 const Dates = ({ value, onChange }) => {
-  const initialValue = { date: '' };
-  const [date, setDate] = useState(initialValue);
-  const isDateEmpty = date.date.trim().length < 1;
-  const isDateIncluded = value.some((eachDate) => eachDate.date === date.date);
+  const initialDate = '';
+  const [date, setDate] = useState(initialDate);
+  const isDateEmpty = date.trim().length < 1;
+  const isDateIncluded = value.some((eachDate) => eachDate === date);
   return (
     <Box pad="small">
       <RowBetween>
         <MyCalendar
-          onChange={(event) => setDate({ date: event.target.value })}
+          onChange={(event) => setDate(event.target.value)}
           placeholder="Fechas del Open Space"
-          value={date.date}
+          value={date}
         />
         <PlusButton
           conditionToDisable={isDateEmpty || isDateIncluded}
-          item={date}
+          item={new Date(date)}
           setItem={setDate}
           value={value}
-          initialItem={initialValue}
+          initialItem={date}
           onChange={onChange}
         />
       </RowBetween>
       <ListWithRemoveButton
         items={value}
         onChange={onChange}
-        displayName={(item) => new Date(item.date).toLocaleDateString('es')}
+        displayName={(item) => new Date(item).toLocaleDateString('es')}
       />
     </Box>
   );

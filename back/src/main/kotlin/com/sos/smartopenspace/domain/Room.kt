@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
 @Entity
-class Room(
+class Room (
   @field:NotEmpty(message = "Ingrese un nombre")
   @field:NotBlank(message = "Nombre no puede ser vacío")
   val name: String,
@@ -21,5 +21,5 @@ class Room(
   var link: URL? = null,
 
   @Id @GeneratedValue
-  val id: Long = 0
-)
+  override val id: Long = 0
+) : OpenSpaceItemCollection()

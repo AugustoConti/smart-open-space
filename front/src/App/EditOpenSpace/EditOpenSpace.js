@@ -7,19 +7,36 @@ import { RedirectToRoot, usePushToRoot } from '#helpers/routes';
 import { OpenSpaceForm } from './OpenSpaceForm';
 import Spinner from '#shared/Spinner';
 
+function formatTime(timeArray) {
+  let hour = timeArray[0].toString().padStart(2, '0');
+  let minute = timeArray[1].toString().padStart(2, '0');
+  return `${hour}:${minute}`;
+}
+
 const EditOpenSpace = () => {
   const history = useHistory();
   const user = useUser();
   const pushToRoot = usePushToRoot();
 
   const { data: openSpace, isPending } = useGetOpenSpace();
-  if (isPending) return <Spinner />;
+  if (isPending) {
+    return <Spinner />;
+  } else {
+    openSpace.slots.sort(
+      (slotA, slotB) =>
+        slotA.startTime[0] - slotB.startTime[0] || slotA.startTime[1] - slotB.startTime[1]
+    );
+    openSpace.slots.forEach((slot) => {
+      slot.startTime = formatTime(slot.startTime);
+      slot.endTime = formatTime(slot.endTime);
+    });
+  }
 
   if (!user) return <RedirectToRoot />;
 
-  const onSubmit = ({ value: { name } }) => {
-    openSpace.name = name;
-    updateOS(openSpace.id, openSpace).then(pushToRoot);
+  const onSubmit = ({ value }) => {
+    const editedOpenSpace = { ...openSpace, ...value };
+    updateOS(openSpace.id, editedOpenSpace).then(pushToRoot);
   };
 
   return (

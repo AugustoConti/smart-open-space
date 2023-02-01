@@ -59,8 +59,8 @@ class DataService(private val userRepository: UserRepository) {
     val room37b = Room("Aula 37b")
     val cpi = OpenSpace(
       "CPI-Conf",
-      setOf(room213, room60, room37b),
-      setOf(
+      mutableSetOf(room213, room60, room37b),
+      mutableSetOf(
         OtherSlot(LocalTime.parse("14:00"), LocalTime.parse("14:30"), "Marketplace", date),
         TalkSlot(LocalTime.parse("14:30"), LocalTime.parse("15:00"), date),
         TalkSlot(LocalTime.parse("15:00"), LocalTime.parse("16:00"), date),
@@ -94,10 +94,10 @@ class DataService(private val userRepository: UserRepository) {
 
     val practicas = OpenSpace(
       "Prácticas Técnicas - 4° edición",
-      setOf(roja, amarilla, verde, naranja),
+      mutableSetOf(roja, amarilla, verde, naranja),
       (19..21).map {
         TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0), LocalDate.now())
-      }.toSet(),
+      }.toMutableSet(),
       mutableSetOf(master, front, judo, testear, contrato, appLenta, troika, flutter),
       "https://secure.meetupstatic.com/photos/event/7/1/a/f/highres_482189103.jpeg"
     )
@@ -105,10 +105,10 @@ class DataService(private val userRepository: UserRepository) {
     val charla1 = Talk("Charla 1")
     val os1 = OpenSpace(
       "OS 1",
-      setOf(Room("Sala 1")),
+      mutableSetOf(Room("Sala 1")),
       (19..21).map {
         TalkSlot(LocalTime.of(it, 0), LocalTime.of(it + 1, 0), LocalDate.now())
-      }.toSet(),
+      }.toMutableSet(),
       mutableSetOf(charla1)
     )
 

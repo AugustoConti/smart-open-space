@@ -1,5 +1,4 @@
 package com.sos.smartopenspace.domain
-
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import com.fasterxml.jackson.annotation.JsonTypeInfo
@@ -19,13 +18,14 @@ import javax.persistence.OneToOne
 @Entity
 abstract class Slot(
   val startTime: LocalTime,
+
   val endTime: LocalTime,
 
   val date: LocalDate? = null,
   @Id
   @GeneratedValue
-  val id: Long = 0
-) {
+  override val id: Long = 0
+) : OpenSpaceItemCollection() {
   abstract fun isAssignable(): Boolean
   abstract fun cloneWithDate(date: LocalDate): Slot
 }

@@ -3,9 +3,7 @@ package com.sos.smartopenspace.services
 import com.sos.smartopenspace.domain.*
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.helpers.OpenSpaceDTO
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
-import com.sos.smartopenspace.persistence.TalkRepository
-import com.sos.smartopenspace.persistence.TrackRepository
+import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -26,33 +24,44 @@ class OpenSpaceService(
     val slots = openSpaceDTO.slotsWithDates()
     val openSpace = OpenSpace(
       name = openSpaceDTO.name,
-      rooms = openSpaceDTO.rooms,
-      slots = slots.toSet(),
+      rooms = openSpaceDTO.rooms.toMutableSet(),
+      slots = slots.toMutableSet(),
       description = openSpaceDTO.description,
-      tracks = openSpaceDTO.tracks
+      tracks = openSpaceDTO.tracks.toMutableSet()
     )
     findUser(userID).addOpenSpace(openSpace)
     return openSpaceRepository.save(openSpace)
   }
 
+  @Transactional
   fun update(userID: Long, openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
-    openSpace.update(user, openSpaceDTO.name)
+
+    openSpace.updateRooms(openSpaceDTO.rooms)
+    openSpace.updateSlots(openSpaceDTO.slots)
+    openSpace.updateTracks(openSpaceDTO.tracks)
+
+    openSpace.update(
+      user,
+      name = openSpaceDTO.name,
+      description = openSpaceDTO.description
+    )
+
     return openSpace
   }
   
   @Transactional
   fun delete(userID: Long, openSpaceID: Long): Long {
-    val user = findUser(userID);
-    val openSpace = findById(openSpaceID);
+    val user = findUser(userID)
+    val openSpace = findById(openSpaceID)
 
-    user.checkOwnershipOf(openSpace);
+    user.checkOwnershipOf(openSpace)
 
-    user.removeOpenSpace(openSpace);
-    openSpaceRepository.delete(openSpace);
+    user.removeOpenSpace(openSpace)
+    openSpaceRepository.delete(openSpace)
 
-    return openSpace.id;
+    return openSpace.id
   }
 
   @Transactional(readOnly = true)

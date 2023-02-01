@@ -126,6 +126,7 @@ export const OpenSpaceForm = ({
   isNewOpenSpace,
 }) => {
   const [showInputSlot, setShowInputSlot] = useState(null);
+  const [avaialbleDates, setAvailableDates] = useState(initialValues.dates || []);
 
   function isRepeated(tracks, track) {
     return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
@@ -156,73 +157,65 @@ export const OpenSpaceForm = ({
       </MainHeader>
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text placeholder="¿Como se va a llamar?" value={initialValues.name} />
-        {isNewOpenSpace && (
-          <MyForm.TextAreaWithCharacterCounter
-            placeholder="Añade una descripcion."
-            maxLength={1000}
-            value={initialValues.description}
-          />
-        )}
-        {isNewOpenSpace && (
+        <MyForm.TextAreaWithCharacterCounter
+          placeholder="Añade una descripcion."
+          maxLength={1000}
+          value={initialValues.description}
+        />
+        <MyForm.Field
+          component={Tracks}
+          icon={<TracksIcon />}
+          label="Tracks"
+          name="tracks"
+          validate={(tracks) => {
+            if (hasTracksWithRepeatedName(tracks))
+              return 'No puede haber dos tracks con el mismo nombre';
+          }}
+          value={initialValues.tracks || []}
+        />
+        <MyForm.Field
+          component={Rooms}
+          icon={<HomeIcon />}
+          label="Salas"
+          name="rooms"
+          validate={(rooms) => {
+            if (hasRooms(rooms)) {
+              return 'Ingresa al menos una sala';
+            }
+          }}
+          value={initialValues.rooms || []}
+        />
+        <Box direction="row">
           <MyForm.Field
-            component={Tracks}
-            icon={<TracksIcon />}
-            label="Tracks"
-            name="tracks"
-            validate={(tracks) => {
-              if (hasTracksWithRepeatedName(tracks))
-                return 'No puede haber dos tracks con el mismo nombre';
-            }}
-            value={initialValues.tracks || []}
-          />
-        )}
-        {isNewOpenSpace && (
-          <MyForm.Field
-            component={Rooms}
-            icon={<HomeIcon />}
-            label="Salas"
-            name="rooms"
-            validate={(rooms) => {
-              if (hasRooms(rooms)) {
-                return 'Ingresa al menos una sala';
+            component={Dates}
+            icon={<CalendarIcon />}
+            label="Fecha"
+            name="dates"
+            validate={(dates) => {
+              if (hasDates(dates)) {
+                return 'Ingresa al menos una fecha';
               }
             }}
-            value={initialValues.rooms || []}
+            onChange={(event) => setAvailableDates(event.target.value)}
+            value={initialValues.dates || []}
           />
-        )}
-        {isNewOpenSpace && (
-          <Box direction="row">
-            <MyForm.Field
-              component={Dates}
-              icon={<CalendarIcon />}
-              label="Fecha"
-              name="dates"
-              validate={(dates) => {
-                if (hasDates(dates)) {
-                  return 'Ingresa al menos una fecha';
-                }
-              }}
-              value={initialValues.dates || []}
-            />
-          </Box>
-        )}
-        {isNewOpenSpace && (
-          <MyForm.Field
-            component={TimeSelector}
-            icon={<ClockIcon />}
-            label="Grilla Horaria"
-            name="slots"
-            onNewSlot={(type, start, onSubmitSlot) => {
-              setShowInputSlot({ onSubmitSlot, start, type });
-            }}
-            validate={(times) => {
-              if (hasSlots(times)) {
-                return 'Ingresa al menos un slot';
-              }
-            }}
-            value={initialValues.slots}
-          />
-        )}
+        </Box>
+        <MyForm.Field
+          component={TimeSelector}
+          icon={<ClockIcon />}
+          label="Grilla Horaria"
+          name="slots"
+          onNewSlot={(type, start, onSubmitSlot) => {
+            setShowInputSlot({ onSubmitSlot, start, type });
+          }}
+          validate={(times) => {
+            if (hasSlots(times)) {
+              return 'Ingresa al menos un slot';
+            }
+          }}
+          dates={avaialbleDates}
+          value={initialValues.slots}
+        />
       </MyForm>
       {showInputSlot !== null && (
         <InputSlot
