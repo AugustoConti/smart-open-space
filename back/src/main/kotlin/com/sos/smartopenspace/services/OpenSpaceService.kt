@@ -40,6 +40,7 @@ class OpenSpaceService(
     openSpace.updateRooms(openSpaceDTO.rooms)
     openSpace.updateSlots(openSpaceDTO.slots)
     openSpace.updateTracks(openSpaceDTO.tracks)
+    openSpace.removeInvalidAssignedSlots()
 
     openSpace.update(
       user,

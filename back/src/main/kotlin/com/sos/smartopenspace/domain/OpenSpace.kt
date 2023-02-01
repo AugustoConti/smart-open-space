@@ -271,6 +271,11 @@ class OpenSpace(
     return deletedItems
   }
 
+  fun removeInvalidAssignedSlots() {
+    val existingRoomIds =this.rooms.map { it.id }
+    val existingSlotIds =this.slots.map { it.id }
+    this.assignedSlots.removeIf { !existingRoomIds.contains(it.room.id) || !existingSlotIds.contains(it.slot.id) }
+  }
 }
 
 enum class QueueState {
