@@ -12,7 +12,7 @@ class OpenSpaceTest {
 
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
         OpenSpace(
-            "os", emptySet<Room>().toMutableSet(), mutableSetOf(
+            "os", mutableSetOf(), mutableSetOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
                 TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
                 TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
@@ -33,7 +33,7 @@ class OpenSpaceTest {
     fun `an open space is created with necessary fields and contains them`() {
         val nameOpenSpace = "os"
         val openSpace = OpenSpace(
-            nameOpenSpace, emptySet<Room>().toMutableSet(), emptySet<Slot>().toMutableSet()
+            nameOpenSpace, mutableSetOf(), mutableSetOf()
         )
 
         assertEquals(openSpace.name, nameOpenSpace)
@@ -44,7 +44,7 @@ class OpenSpaceTest {
         val nameOpenSpace = "os"
         val description = "A description"
         val openSpace = OpenSpace(
-            nameOpenSpace, emptySet<Room>().toMutableSet(), emptySet<Slot>().toMutableSet(),
+            nameOpenSpace, mutableSetOf(), mutableSetOf(),
             mutableSetOf(), description
         )
 
@@ -172,7 +172,7 @@ class OpenSpaceTest {
     fun `an open space is created with a track`() {
         val track = Track(name = "track", color = "#FFFFFF")
         val openSpace = OpenSpace(
-            name = "os", rooms = emptySet<Room>().toMutableSet(), slots = emptySet<Slot>().toMutableSet(),
+            name = "os", rooms = mutableSetOf(), slots = mutableSetOf(),
             talks = mutableSetOf(), tracks = mutableSetOf(track)
         )
 
@@ -292,7 +292,7 @@ class OpenSpaceTest {
         val first_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), startDate)
         val end_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), endDate)
         val openSpace = OpenSpace(
-            name = "os", rooms = emptySet<Room>().toMutableSet(), slots = mutableSetOf(first_date_slot, end_date_slot),
+            name = "os", rooms = mutableSetOf(), slots = mutableSetOf(first_date_slot, end_date_slot),
             talks = mutableSetOf()
         )
         return openSpace

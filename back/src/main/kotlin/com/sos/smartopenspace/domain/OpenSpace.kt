@@ -20,7 +20,7 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese al menos una sala")
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  var rooms: MutableSet<Room>,
+  val rooms: MutableSet<Room>,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos un slot")
@@ -40,7 +40,7 @@ class OpenSpace(
   @field:Valid
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  val tracks: MutableSet<Track> = emptySet<Track>().toMutableSet(),
+  val tracks: MutableSet<Track> = mutableSetOf(),
 
   val urlImage: String = "",
 
@@ -272,8 +272,8 @@ class OpenSpace(
   }
 
   fun removeInvalidAssignedSlots() {
-    val existingRoomIds =this.rooms.map { it.id }
-    val existingSlotIds =this.slots.map { it.id }
+    val existingRoomIds = this.rooms.map { it.id }
+    val existingSlotIds = this.slots.map { it.id }
     this.assignedSlots.removeIf { !existingRoomIds.contains(it.room.id) || !existingSlotIds.contains(it.slot.id) }
   }
 }

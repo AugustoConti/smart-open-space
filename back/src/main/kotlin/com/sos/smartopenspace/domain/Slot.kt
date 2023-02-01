@@ -25,7 +25,7 @@ abstract class Slot(
   @Id
   @GeneratedValue
   override val id: Long = 0
-) : OpenSpaceItemCollection() {
+) : OpenSpaceItemCollection {
   abstract fun isAssignable(): Boolean
   abstract fun cloneWithDate(date: LocalDate): Slot
 }

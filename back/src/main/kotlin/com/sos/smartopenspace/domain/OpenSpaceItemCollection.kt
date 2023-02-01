@@ -1,5 +1,5 @@
 package com.sos.smartopenspace.domain
 
-abstract class OpenSpaceItemCollection {
-    abstract val id: Long
+interface OpenSpaceItemCollection {
+  val id: Long
 }

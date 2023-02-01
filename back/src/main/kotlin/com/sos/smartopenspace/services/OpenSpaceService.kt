@@ -32,7 +32,6 @@ class OpenSpaceService(
     return openSpaceRepository.save(openSpace)
   }
 
-  @Transactional
   fun update(userID: Long, openSpaceID: Long, openSpaceDTO: OpenSpaceDTO): OpenSpace? {
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
@@ -50,8 +49,7 @@ class OpenSpaceService(
 
     return openSpace
   }
-  
-  @Transactional
+
   fun delete(userID: Long, openSpaceID: Long): Long {
     val user = findUser(userID)
     val openSpace = findById(openSpaceID)
