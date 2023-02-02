@@ -1,8 +1,12 @@
 package com.sos.smartopenspace.repositories
 
+import com.sos.smartopenspace.aUser
 import com.sos.smartopenspace.anOpenSpace
+import com.sos.smartopenspace.domain.OpenSpace
 import com.sos.smartopenspace.domain.Track
+import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.persistence.OpenSpaceRepository
+import com.sos.smartopenspace.persistence.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -23,6 +27,9 @@ class OpenSpaceRepositoryTest {
 
     @Autowired
     lateinit var entityManager: EntityManager
+
+    @Autowired
+    lateinit var repoUser: UserRepository
 
     @Test
     fun `a track cannot be saved with description over 500 characters`() {
@@ -81,10 +88,18 @@ class OpenSpaceRepositoryTest {
 
     @Test
     fun `the name of an open space can be modified and it is updated successfully`() {
-        val openSpace = anOpenSpace();
+        val organizer = repoUser.save(aUser())
+        val openSpace = createOpenSpaceFor(organizer)
         repoOpenSpace.save(openSpace)
-        openSpace.update(openSpace.organizer, name = "A new name")
+        openSpace.update(openSpace.organizer, name = "A new name", description = "")
         val updatedOpenSpace = repoOpenSpace.findById(openSpace.id).get()
         assertEquals("A new name", updatedOpenSpace.name)
+    }
+
+    private fun createOpenSpaceFor(user: User): OpenSpace {
+        val anOpenSpace = anOpenSpace()
+        user.addOpenSpace(anOpenSpace)
+        repoOpenSpace.save(anOpenSpace)
+        return anOpenSpace
     }
 }

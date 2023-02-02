@@ -18,8 +18,8 @@ data class Track(
     val color: String,
     @Id
     @GeneratedValue
-    var id: Long = 0
-) {
+    override var id: Long = 0
+) : OpenSpaceItemCollection {
     @JsonIgnore
     @OneToMany(mappedBy = "track", cascade = [CascadeType.ALL])
     val talks: MutableSet<Talk> = mutableSetOf()

@@ -8,6 +8,7 @@ import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -260,6 +261,37 @@ class OpenSpaceControllerTest {
     }
 
     @Test
+    fun `can update open space collections`() {
+        val organizer = repoUser.save(aUser())
+        val anOpenSpace = createOpenSpaceFor(organizer)
+
+        val name = "a name"
+        val description = "W".repeat(1000)
+        val newTrack = Track(name = "new track", description = "W".repeat(500), color = "#FFFFFF")
+        val newRoom = Room("new room", description = "")
+
+        val openSpaceBody = anOpenSpaceCreationBody(
+            description = description,
+            name = name,
+            room = newRoom,
+            track = newTrack,
+            talkSlotStartTime = intArrayOf(9, 0),
+            talkSlotEndTime = intArrayOf(9, 30)
+        )
+
+        mockMvc.perform(
+            MockMvcRequestBuilders.put("/openSpace/${anOpenSpace.id}/user/${organizer.id}")
+                .contentType("application/json")
+                .content(openSpaceBody)
+        ).andExpect(MockMvcResultMatchers.status().isOk).andReturn().response
+
+        val changedOpenSpace = repoOpenSpace.findById(anOpenSpace.id).get()
+        assertTrue(changedOpenSpace.rooms.any { it.name == newRoom.name })
+        assertTrue(changedOpenSpace.tracks.any { it.name == newTrack.name })
+        assertTrue(changedOpenSpace.slots.any { it.startTime == LocalTime.parse("09:00") })
+    }
+
+    @Test
     fun `updating an invalid open space throws a not found response`() {
         val organizer = repoUser.save(aUser())
 
@@ -310,7 +342,7 @@ class OpenSpaceControllerTest {
 
     private fun anyOpenSpace(): OpenSpace {
         return OpenSpace(
-            "os", setOf(Room("1")), setOf(
+            "os", mutableSetOf(Room("1")), mutableSetOf(
                 TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
             )
         )
@@ -349,24 +381,28 @@ class OpenSpaceControllerTest {
     private fun anOpenSpaceCreationBody(
         description: String,
         name: String = "asd",
-        track: Track = Track(name = "a track", color = "#FFFFFF")
+        track: Track = Track(name = "a track", color = "#FFFFFF"),
+        room: Room = Room(name = "a room", description = ""),
+        talkSlotStartTime: IntArray = intArrayOf(0, 0),
+        talkSlotEndTime: IntArray = intArrayOf(0, 15)
     ): String {
         return """
 {
     "dates": ["2022-05-11T03:00:00.000Z"],
-    "name": "${name}",
-    "description": "${description}",
-    "rooms": [{"name": "a"}],
+    "name": "$name",
+    "description": "$description",
+    "rooms": [{"name": "${room.name}"}],
     "slots": [
         {
+            "date": [2022, 5, 11],
             "type": "TalkSlot",
             "endTime": [
-                0,
-                15
+                ${talkSlotEndTime[0]},
+                ${talkSlotEndTime[1]}
             ],
             "startTime": [
-                0,
-                0
+                ${talkSlotStartTime[0]},
+                ${talkSlotStartTime[1]}
             ]
         }
     ],

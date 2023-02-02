@@ -1,3 +1,5 @@
+import { isEqual } from 'date-fns';
+
 export const numberToTwoDigitNumber = (number) => (number < 10 ? '0' : '') + number;
 
 export const numbersToTime = (number) => number.map(numberToTwoDigitNumber).join(':');
@@ -12,3 +14,8 @@ export const sortTimes = (times) =>
   );
 
 export const toDate = ([year, month, day]) => new Date(year, month - 1, day);
+
+export const byDate = (date) => (slot) => isEqual(toDate(slot.date), date);
+
+export const getLastEndFromCollectionOfSlots = (slots) =>
+  slots.length > 0 ? slots.slice(-1)[0].endTime : undefined;

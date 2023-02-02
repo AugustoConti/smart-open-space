@@ -15,7 +15,7 @@ const NewOpenSpace = () => {
 
   const onSubmit = ({ value: { dates, name, description, rooms, slots, tracks } }) => {
     createOS({
-      dates: dates.map((date) => new Date(date.date)),
+      dates: dates.map((date) => new Date(date)),
       name,
       description,
       rooms,

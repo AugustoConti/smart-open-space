@@ -20,13 +20,13 @@ class OpenSpace(
   @field:NotEmpty(message = "Ingrese al menos una sala")
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  val rooms: Set<Room>,
+  val rooms: MutableSet<Room>,
 
   @field:Valid
   @field:NotEmpty(message = "Ingrese al menos un slot")
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  val slots: Set<Slot>,
+  val slots: MutableSet<Slot>,
 
   @JsonIgnore
   @field:Valid
@@ -35,12 +35,12 @@ class OpenSpace(
 
   @field:Column(length = 1000)
   @field:Size(min = 0, max = 1000)
-  val description: String = "",
+  var description: String = "",
 
   @field:Valid
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
-  val tracks: Set<Track> = emptySet(),
+  val tracks: MutableSet<Track> = mutableSetOf(),
 
   val urlImage: String = "",
 
@@ -243,12 +243,40 @@ class OpenSpace(
     return assignedSlots.isNotEmpty()
   }
 
-  fun update(user: User, name: String) {
+  fun update(user: User, name: String, description: String) {
     checkIsOrganizer(user)
     this.name = name
+    this.description = description
+  }
+
+  fun updateRooms(newRooms: Set<Room>) : List<Room> {
+    return this.updateCollection(newRooms, this.rooms)
+  }
+
+  fun updateSlots(newSlots: Set<Slot>) : List<Slot>{
+    return this.updateCollection(newSlots, this.slots)
+  }
+
+  fun updateTracks(newTracks: Set<Track>) : List<Track> {
+    return this.updateCollection(newTracks, this.tracks)
+  }
+  private fun <T : OpenSpaceItemCollection> updateCollection(items: Set<T>, currentItems:  MutableSet<T>) : List<T>  {
+    val newItems = items.filter { it.id.toInt() ==  0 }
+    val remainingItemIds = items.map { it.id }
+    val deletedItems = currentItems.filterNot { remainingItemIds.contains(it.id)}
+
+    currentItems.removeAll(deletedItems.toSet())
+    currentItems.addAll(newItems)
+
+    return deletedItems
+  }
+
+  fun removeInvalidAssignedSlots() {
+    val existingRoomIds = this.rooms.map { it.id }
+    val existingSlotIds = this.slots.map { it.id }
+    this.assignedSlots.removeIf { !existingRoomIds.contains(it.room.id) || !existingSlotIds.contains(it.slot.id) }
   }
 }
-
 
 enum class QueueState {
   PENDING,

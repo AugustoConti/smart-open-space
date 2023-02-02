@@ -11,7 +11,7 @@ import {
 import Spinner from '#shared/Spinner';
 import { useUser } from '#helpers/useAuth';
 import { ButtonSingIn } from '#shared/ButtonSingIn';
-import { sortTimes, toDate } from '#helpers/time';
+import { sortTimes, byDate } from '#helpers/time';
 import { DateSlots } from './DateSlots';
 import { Tab, Tabs } from 'grommet';
 import { compareAsc, format, isEqual } from 'date-fns';
@@ -38,7 +38,6 @@ const Schedule = () => {
   const talksOf = (slotId) =>
     slotsSchedule.filter((slotSchedule) => slotSchedule.slot.id === slotId);
   const amTheOrganizer = user && organizer.id === user.id;
-  const byDate = (date) => (slot) => isEqual(toDate(slot.date), date);
 
   return (
     <>

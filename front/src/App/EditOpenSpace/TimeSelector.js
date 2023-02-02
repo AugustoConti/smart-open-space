@@ -1,49 +1,12 @@
-import React from 'react';
-import { Box, Text, Button } from 'grommet';
+import React, { useEffect } from 'react';
+import { Box, Tabs, Tab } from 'grommet';
 import PropTypes from 'prop-types';
+import { format } from 'date-fns';
+import { DateTab } from './DateTab';
+import { byDate } from '#helpers/time';
 
-import ButtonNew from '#shared/ButtonNew';
-import HourHeader from '#shared/HourHeader';
-import { TrashIcon } from '#shared/icons';
-
-const TALK_SLOT = 'TalkSlot';
-const OTHER_SLOT = 'OtherSlot';
-
-const Slot = ({ color, onRemove, start, text }) => (
-  <>
-    <HourHeader hour={start} />
-    <Box
-      background={{ color, opacity: 'medium' }}
-      direction="row"
-      justify="center"
-      pad={onRemove ? 'small' : 'medium'}
-      round="small"
-    >
-      <Text alignSelf="center" color="dark-1">
-        {text}
-      </Text>
-      {onRemove && <Button icon={<TrashIcon color="neutral-4" />} onClick={onRemove} />}
-    </Box>
-  </>
-);
-Slot.propTypes = {
-  color: PropTypes.string.isRequired,
-  onRemove: PropTypes.func,
-  start: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-};
-
-const CloseSlot = ({ time }) => (
-  <Slot color="accent-1" key={`cierre-${time}`} start={time} text="Cierre" />
-);
-CloseSlot.propTypes = {
-  time: PropTypes.string.isRequired,
-};
-
-const TimeSelector = ({ onChange, onNewSlot, value }) => {
-  const lastEnd = value.length > 0 ? value.slice(-1)[0].endTime : undefined;
-
-  const addSlot = (type) =>
+const TimeSelector = ({ onChange, onNewSlot, value, dates, deletedDate }) => {
+  const addSlot = (type, date, lastEnd) =>
     onNewSlot(type, lastEnd, ({ value: { startTime, endTime, description } }) => {
       onChange({
         target: {
@@ -54,38 +17,41 @@ const TimeSelector = ({ onChange, onNewSlot, value }) => {
               startTime: lastEnd || startTime,
               endTime,
               description,
+              date: [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate()],
             },
           ],
         },
       });
     });
 
+  const removeSlot = (date, lastEnd) =>
+    onChange({
+      target: {
+        value: value.filter((slot) => !byDate(date)(slot) || slot.endTime != lastEnd),
+      },
+    });
+
+  useEffect(() => {
+    onChange({
+      target: { value: value.filter((slot) => !byDate(deletedDate)(slot)) },
+    });
+  }, [deletedDate]);
+
   return (
     <Box>
-      <Box>
-        {value.map(({ type, startTime, description }, i) => (
-          <Slot
-            color={type === TALK_SLOT ? 'brand' : 'accent-1'}
-            key={startTime}
-            start={startTime}
-            text={type === TALK_SLOT ? 'Charla' : description}
-            onRemove={
-              i === value.length - 1
-                ? () => onChange({ target: { value: value.slice(0, -1) } })
-                : null
-            }
-          />
+      <Tabs>
+        {dates.map((date) => (
+          <Tab title={format(date, 'yyyy-MM-dd')}>
+            <DateTab
+              key={date}
+              value={value.filter(byDate(date))}
+              addSlot={addSlot}
+              date={date}
+              removeSlot={removeSlot}
+            />
+          </Tab>
         ))}
-        {value.length > 0 && <CloseSlot time={lastEnd} />}
-      </Box>
-      <Box direction="row" margin={{ vertical: 'medium' }} justify="evenly">
-        <ButtonNew label="Slot de Charla" onClick={() => addSlot(TALK_SLOT)} />
-        <ButtonNew
-          label="Slot Miscelaneo"
-          color="accent-1"
-          onClick={() => addSlot(OTHER_SLOT)}
-        />
-      </Box>
+      </Tabs>
     </Box>
   );
 };
