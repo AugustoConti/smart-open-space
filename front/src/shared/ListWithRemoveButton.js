@@ -21,7 +21,12 @@ Item.propTypes = {
   itemName: PropTypes.string.isRequired,
 };
 
-const ListWithRemoveButton = ({ items, onChange, displayName = (item) => item.name }) => {
+const ListWithRemoveButton = ({
+  items,
+  onChange,
+  displayName = (item) => item.name,
+  onRemoveItem = (item) => {},
+}) => {
   return (
     <List>
       {items.map((item, itemIndex) => (
@@ -29,11 +34,12 @@ const ListWithRemoveButton = ({ items, onChange, displayName = (item) => item.na
           color={item.color}
           key={itemIndex}
           itemName={displayName(item)}
-          onRemove={() =>
+          onRemove={() => {
+            onRemoveItem(item);
             onChange({
               target: { value: items.filter((_, index) => index !== itemIndex) },
-            })
-          }
+            });
+          }}
         />
       ))}
     </List>

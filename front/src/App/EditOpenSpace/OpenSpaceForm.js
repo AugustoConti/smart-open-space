@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import Title from '#shared/Title';
 import Detail from '#shared/Detail';
 import Spinner from '#shared/Spinner';
+import { byDate } from '#helpers/time';
 
 const OTHER_SLOT = 'OtherSlot';
 
@@ -123,10 +124,10 @@ export const OpenSpaceForm = ({
   history,
   title,
   initialValues = emptyOpenSpace,
-  isNewOpenSpace,
 }) => {
   const [showInputSlot, setShowInputSlot] = useState(null);
   const [availableDates, setAvailableDates] = useState(initialValues.dates || []);
+  const [deletedDate, setDeletedDate] = useState();
 
   function isRepeated(tracks, track) {
     return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
@@ -196,6 +197,7 @@ export const OpenSpaceForm = ({
                 return 'Ingresa al menos una fecha';
               }
             }}
+            onRemoveItem={(date) => setDeletedDate(date)}
             onChange={(event) => setAvailableDates(event.target.value)}
             value={initialValues.dates || []}
           />
@@ -213,6 +215,7 @@ export const OpenSpaceForm = ({
               return 'Ingresa al menos un slot';
             }
           }}
+          deletedDate={deletedDate}
           dates={availableDates}
           value={initialValues.slots}
         />

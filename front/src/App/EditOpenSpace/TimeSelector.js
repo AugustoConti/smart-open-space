@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Tabs, Tab } from 'grommet';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import { DateTab } from './DateTab';
 import { byDate } from '#helpers/time';
 
-const TimeSelector = ({ onChange, onNewSlot, value, dates }) => {
+const TimeSelector = ({ onChange, onNewSlot, value, dates, deletedDate }) => {
   const addSlot = (type, date, lastEnd) =>
     onNewSlot(type, lastEnd, ({ value: { startTime, endTime, description } }) => {
       onChange({
@@ -30,6 +30,12 @@ const TimeSelector = ({ onChange, onNewSlot, value, dates }) => {
         value: value.filter((slot) => !byDate(date)(slot) || slot.endTime != lastEnd),
       },
     });
+
+  useEffect(() => {
+    onChange({
+      target: { value: value.filter((slot) => !byDate(deletedDate)(slot)) },
+    });
+  }, [deletedDate]);
 
   return (
     <Box>

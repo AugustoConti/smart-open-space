@@ -7,7 +7,7 @@ import { PlusButton } from '#shared/PlusButton';
 import MyCalendar from './MyCalendar';
 import ListWithRemoveButton from '#shared/ListWithRemoveButton';
 
-const Dates = ({ value, onChange }) => {
+const Dates = ({ value, onChange, onRemoveItem }) => {
   const initialDate = '';
   const [date, setDate] = useState(initialDate);
   const isDateEmpty = date.trim().length < 1;
@@ -33,6 +33,7 @@ const Dates = ({ value, onChange }) => {
         items={value}
         onChange={onChange}
         displayName={(item) => new Date(item).toLocaleDateString('es')}
+        onRemoveItem={onRemoveItem}
       />
     </Box>
   );
