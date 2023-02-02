@@ -3,7 +3,7 @@ import { Box, Text, Button } from 'grommet';
 import ButtonNew from '#shared/ButtonNew';
 import HourHeader from '#shared/HourHeader';
 import PropTypes from 'prop-types';
-
+import { getLastEndFromCollectionOfSlots } from '#helpers/time';
 import { TrashIcon } from '#shared/icons';
 
 const TALK_SLOT = 'TalkSlot';
@@ -41,7 +41,7 @@ CloseSlot.propTypes = {
 };
 
 export const DateTab = ({ value, addSlot, removeSlot, date }) => {
-  const lastEnd = value.length > 0 ? value.slice(-1)[0].endTime : undefined;
+  const lastEnd = getLastEndFromCollectionOfSlots(value);
 
   return (
     <>

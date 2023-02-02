@@ -2,12 +2,8 @@ import React from 'react';
 import { Box, Tabs, Tab } from 'grommet';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
-
-import { toDate } from '#helpers/time';
-import { isEqual } from 'date-fns';
 import { DateTab } from './DateTab';
-
-const byDate = (date) => (slot) => isEqual(toDate(slot.date), date);
+import { byDate } from '#helpers/time';
 
 const TimeSelector = ({ onChange, onNewSlot, value, dates }) => {
   const addSlot = (type, date, lastEnd) =>

@@ -48,7 +48,7 @@ const Tracks = ({ value, onChange }) => {
           </RowBetween>
           <Box>
             <TextAreaWithCharacterCounter
-              placeholder="Descripcion"
+              placeholder="Descripción"
               value={track.description}
               maxLength={500}
               onChange={(event) =>

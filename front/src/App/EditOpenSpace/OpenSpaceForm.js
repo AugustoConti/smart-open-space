@@ -126,7 +126,7 @@ export const OpenSpaceForm = ({
   isNewOpenSpace,
 }) => {
   const [showInputSlot, setShowInputSlot] = useState(null);
-  const [avaialbleDates, setAvailableDates] = useState(initialValues.dates || []);
+  const [availableDates, setAvailableDates] = useState(initialValues.dates || []);
 
   function isRepeated(tracks, track) {
     return tracks.filter((eachTrack) => eachTrack.name === track.name).length > 1;
@@ -158,7 +158,7 @@ export const OpenSpaceForm = ({
       <MyForm onSecondary={history.goBack} onSubmit={onSubmit}>
         <MyForm.Text placeholder="¿Como se va a llamar?" value={initialValues.name} />
         <MyForm.TextAreaWithCharacterCounter
-          placeholder="Añade una descripcion."
+          placeholder="Añade una descripción."
           maxLength={1000}
           value={initialValues.description}
         />
@@ -213,7 +213,7 @@ export const OpenSpaceForm = ({
               return 'Ingresa al menos un slot';
             }
           }}
-          dates={avaialbleDates}
+          dates={availableDates}
           value={initialValues.slots}
         />
       </MyForm>
