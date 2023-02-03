@@ -40,10 +40,6 @@ class User(
     return this
   }
 
-  fun removeOpenSpace(openSpace: OpenSpace) {
-    openSpaces.remove(openSpace)
-  }
-
   fun checkOwnershipOf(openSpace: OpenSpace) {
     if (this != openSpace.organizer)
       throw UserNotOwnerOfOpenSpaceException()
