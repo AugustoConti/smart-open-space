@@ -1,7 +1,6 @@
 package com.sos.smartopenspace
 
 import com.sos.smartopenspace.domain.*
-import com.sos.smartopenspace.persistence.OpenSpaceRepository
 import com.sos.smartopenspace.persistence.TalkRepository
 import com.sos.smartopenspace.persistence.UserRepository
 import java.time.LocalDate
@@ -29,16 +28,13 @@ fun anOpenSpace(
     )
 }
 
-fun aSavedTalk(talkRepository: TalkRepository, repoOpenSpace: OpenSpaceRepository, repoUser: UserRepository): Talk {
-    val openSpace = anOpenSpace()
-    repoOpenSpace.save(openSpace)
+fun aSavedTalk(talkRepository: TalkRepository, openSpace: OpenSpace, repoUser: UserRepository): Talk {
     val user = aUser()
     repoUser.save(user)
     user.addOpenSpace(openSpace)
     openSpace.toggleCallForPapers(user)
-    val aTalk = Talk("a name", description = "first description")
+    val aTalk = Talk("a name", description = "first description", speaker = user)
     openSpace.addTalk(aTalk)
-    user.addTalk(aTalk)
     talkRepository.save(aTalk)
     return aTalk
 }
@@ -67,5 +63,10 @@ fun anOpenSpaceWith(
     return openSpace
 }
 
-fun aUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
-        User("apprentices@sos.sos", "apprentices", "apprentices", openSpaces, talks)
+fun aUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf(), userEmail: String = "apprentices@sos.sos"): User {
+    val user =  User(userEmail, "apprentices", "apprentices")
+    talks.forEach { user.addTalk(it) }
+    openSpaces.forEach { user.addOpenSpace(it) }
+    return user
+}
+

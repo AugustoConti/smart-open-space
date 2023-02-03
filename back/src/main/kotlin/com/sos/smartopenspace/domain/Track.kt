@@ -1,8 +1,9 @@
 package com.sos.smartopenspace.domain
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.sos.smartopenspace.Validators.HexColor
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.Size
 
@@ -16,11 +17,8 @@ data class Track(
 
     @field:HexColor
     val color: String,
+    
     @Id
     @GeneratedValue
     override var id: Long = 0
-) : OpenSpaceItemCollection {
-    @JsonIgnore
-    @OneToMany(mappedBy = "track", cascade = [CascadeType.ALL])
-    val talks: MutableSet<Talk> = mutableSetOf()
-}
+) : OpenSpaceItemCollection 

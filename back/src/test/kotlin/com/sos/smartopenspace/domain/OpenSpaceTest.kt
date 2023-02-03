@@ -26,8 +26,13 @@ class OpenSpaceTest {
         return openSpace
     }
 
-    private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
-        User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
+    private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()): User {
+        val user = User("augusto@sos.sos", "augusto", "Augusto")
+        talks.forEach { user.addTalk(it) }
+        openSpaces.forEach { user.addOpenSpace(it) }
+        return user
+    }
+
 
     @Test
     fun `an open space is created with necessary fields and contains them`() {
@@ -83,9 +88,10 @@ class OpenSpaceTest {
     @Test
     fun `an open space cannot add a talk when call for papers is closed`() {
         val openSpace = anyOpenSpace()
+        val user = anyUser()
 
         assertThrows(CallForPapersClosedException::class.java) {
-            openSpace.addTalk(Talk("Talk"))
+            openSpace.addTalk(Talk("Talk", speaker = user))
         }
     }
 
@@ -94,7 +100,7 @@ class OpenSpaceTest {
         val organizer = anyUser()
         val openSpace = anyOpenSpaceWith(organizer)
         openSpace.toggleCallForPapers(organizer)
-        val talk = Talk("Talk")
+        val talk = Talk("Talk", speaker = organizer)
 
         openSpace.addTalk(talk)
 
@@ -107,7 +113,7 @@ class OpenSpaceTest {
         val openSpace = anyOpenSpaceWith(organizer)
         openSpace.toggleCallForPapers(organizer)
         val aTrack = Track(name = "track", color = "#FFFFFF")
-        val aTalk = Talk("Talk", track = aTrack)
+        val aTalk = Talk("Talk", track = aTrack, speaker = organizer)
 
         assertThrows<NotValidTrackForOpenSpaceException> {
             openSpace.addTalk(aTalk)
@@ -122,7 +128,7 @@ class OpenSpaceTest {
         val openSpace = anOpenSpace(tracks = setOf(aTrack))
         organizer.addOpenSpace(openSpace)
         openSpace.toggleCallForPapers(organizer)
-        val aTalk = Talk("Talk", track = anotherTrack)
+        val aTalk = Talk("Talk", track = anotherTrack, speaker = organizer)
 
         assertThrows<NotValidTrackForOpenSpaceException> {
             openSpace.addTalk(aTalk)
@@ -136,7 +142,7 @@ class OpenSpaceTest {
         val openSpace = anOpenSpace(tracks = setOf(aTrack))
         organizer.addOpenSpace(openSpace)
         openSpace.toggleCallForPapers(organizer)
-        val aTalk = Talk("Talk")
+        val aTalk = Talk("Talk", speaker = organizer)
 
         assertThrows<NotValidTrackForOpenSpaceException> {
             openSpace.addTalk(aTalk)
@@ -150,7 +156,7 @@ class OpenSpaceTest {
         val openSpace = anOpenSpace(tracks = setOf(aTrack))
         organizer.addOpenSpace(openSpace)
         openSpace.toggleCallForPapers(organizer)
-        val aTalk = Talk("Talk", track = aTrack)
+        val aTalk = Talk("Talk", track = aTrack, speaker = organizer)
 
         openSpace.addTalk(aTalk)
 
@@ -211,7 +217,7 @@ class OpenSpaceTest {
     @Test
     fun `an openSpace removes a talk when scheduled`() {
         val organizer = anyUser()
-        val aTalk = Talk("Talk")
+        val aTalk = Talk("Talk", speaker = organizer)
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
         val aRoom = Room("Sala")
         val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
@@ -225,7 +231,7 @@ class OpenSpaceTest {
     @Test
     fun `an openSpace removes a talk when queued`() {
         val organizer = anyUser()
-        val aTalk = Talk("Talk")
+        val aTalk = Talk("Talk", speaker = organizer)
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
         val aRoom = Room("Sala")
         val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))
@@ -239,7 +245,7 @@ class OpenSpaceTest {
     @Test
     fun `an openSpace removes a talk that is to be scheduled`() {
         val organizer = anyUser()
-        val aTalk = Talk("Talk")
+        val aTalk = Talk("Talk", speaker = organizer)
         val aSlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now())
         val aRoom = Room("Sala")
         val openSpace = anOpenSpaceWith(organizer = organizer, talk = aTalk, slots = setOf(aSlot), rooms = setOf(aRoom))

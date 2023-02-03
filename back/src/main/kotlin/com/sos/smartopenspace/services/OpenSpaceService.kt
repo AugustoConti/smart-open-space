@@ -5,6 +5,7 @@ import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.helpers.OpenSpaceDTO
 import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
+import org.springframework.data.jpa.domain.JpaSort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -56,14 +57,13 @@ class OpenSpaceService(
 
     user.checkOwnershipOf(openSpace)
 
-    user.removeOpenSpace(openSpace)
     openSpaceRepository.delete(openSpace)
 
     return openSpace.id
   }
 
   @Transactional(readOnly = true)
-  fun findAllByUser(userID: Long) = findUser(userID).openSpaces.toList()
+  fun findAllByUser(userID: Long) = openSpaceRepository.findAllByOrganizerId(userID)
 
   @Transactional(readOnly = true)
   fun findById(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
@@ -71,21 +71,29 @@ class OpenSpaceService(
   @Transactional(readOnly = true)
   fun findTrackById(id: Long) = trackRepository.findByIdOrNull(id) ?: throw TrackNotFoundException()
 
+  private fun findByTalk(talkID: Long) = openSpaceRepository.findFirstOpenSpaceByTalkId(talkID)
+  private fun findTalk(id: Long) = talkRepository.findByIdOrNull(id) ?: throw TalkNotFoundException()
+
+  @Transactional(readOnly = true)
+  fun findTalks(id: Long) = talkRepository.findAllByOpenSpaceIdOrderedByVotes(id).mapNotNull { it }
+
   fun createTalk(userID: Long, osID: Long, createTalkDTO: CreateTalkDTO): Talk {
-    val talk = createTalkFrom(createTalkDTO)
+    val user = findUser(userID)
+    val talk = createTalkFrom(createTalkDTO, user=user)
     findById(osID).addTalk(talk)
-    findUser(userID).addTalk(talk)
     return talk
   }
 
   @Transactional(readOnly = true)
-  fun findTalksByUser(userID: Long, osID: Long) = talkRepository.findAllBySpeakerIdAndOpenSpaceId(userID, osID)
+  fun findTalksOfUserInOpenSpace(userID: Long, openSpaceId: Long): List<Talk> {
+    val openSpace = findById(openSpaceId)
+    val user = findUser(userID)
+    return openSpace.getUserTalks(user)
+  }
 
   @Transactional(readOnly = true)
   fun findAssignedSlotsById(id: Long) = findById(id).assignedSlots.toList()
 
-  @Transactional(readOnly = true)
-  fun findTalks(id: Long) = findById(id).talks.toList().sortedByDescending { it.votes() }
 
   fun activateQueue(userID: Long, osID: Long) =
     findById(osID).activeQueue(findUser(userID))
@@ -93,15 +101,28 @@ class OpenSpaceService(
   fun finishQueue(userID: Long, osID: Long) =
     findById(osID).finishQueuing(findUser(userID))
 
-  private fun findTalk(id: Long) = talkRepository.findByIdOrNull(id) ?: throw TalkNotFoundException()
-
   fun enqueueTalk(userID: Long, talkID: Long): OpenSpace {
     val talk = findTalk(talkID)
-    (talk.speaker.id != userID && talk.openSpace.organizer.id != userID) && throw TalkNotFoundException()
-    val os = talk.enqueue()
-    queueSocket.sendFor(os)
-    return os
+    val openSpace = findByTalk(talkID)
+    checkPermissions(talk, userID, openSpace)
+    openSpace.enqueueTalk(talk)
+    queueSocket.sendFor(openSpace)
+    return openSpace
   }
+
+    private fun checkPermissions(
+        talk: Talk,
+        userID: Long,
+        openSpace: OpenSpace
+    ) {
+        (!userIsSpeakerOf(talk, userID) && userIsOrganizerOf(openSpace, userID)) && throw TalkNotFoundException()
+    }
+
+    private fun userIsOrganizerOf(openSpace: OpenSpace, userID: Long) =
+        openSpace.organizer.id != userID
+
+    private fun userIsSpeakerOf(talk: Talk, userID: Long) = talk.speaker.id == userID
+
 
   fun toggleCallForPapers(openSpaceId: Long, userID: Long): OpenSpace {
     val openSpace = findById(openSpaceId)
@@ -110,13 +131,14 @@ class OpenSpaceService(
     return openSpace
   }
 
-  private fun createTalkFrom(createTalkDTO: CreateTalkDTO): Talk {
+  private fun createTalkFrom(createTalkDTO: CreateTalkDTO, user: User): Talk {
     val track: Track? = findTrack(createTalkDTO.trackId)
     return Talk(
       name = createTalkDTO.name,
       description = createTalkDTO.description,
       meetingLink = createTalkDTO.meetingLink,
-      track = track
+      track = track,
+      speaker = user
     )
   }
 
@@ -135,7 +157,6 @@ class OpenSpaceService(
     user.checkOwnershipOf(talk)
 
     openSpace.removeTalk(talk)
-    user.removeTalk(talk)
     talkRepository.delete(talk)
     return talk
   }

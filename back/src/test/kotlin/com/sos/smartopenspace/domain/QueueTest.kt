@@ -6,10 +6,13 @@ import org.junit.jupiter.api.Test
 
 class QueueTest {
 
-  private fun anyUser(oss: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()) =
-    User("augusto@sos.sos", "augusto", "Augusto", oss, talks)
-
-  private fun anyTalk() = Talk("Talk1")
+  private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()): User {
+    val user = User("augusto@sos.sos", "augusto", "Augusto")
+    talks.forEach { user.addTalk(it) }
+    openSpaces.forEach { user.addOpenSpace(it) }
+    return user
+  }
+  private fun anyTalk(user: User) = Talk("Talk1", speaker = user)
 
   private fun anyOSWithActiveQueue(talks: MutableSet<Talk> = mutableSetOf()): OpenSpace {
     val os = anOpenSpace(talks = talks)
@@ -54,15 +57,17 @@ class QueueTest {
 
   @Test
   fun `Encolar una charla`() {
-    val talk = anyTalk()
+    val user = anyUser()
+    val talk = anyTalk(user)
     val os = anyOSWithActiveQueue(mutableSetOf(talk))
-    talk.enqueue()
+    os.enqueueTalk(talk)
     assertEquals(talk, os.currentTalk())
   }
 
   @Test
   fun `No puedo encolar una charla que no pertenece al os`() {
-    val talk = anyTalk()
+    val user = anyUser()
+    val talk = anyTalk(user)
     val os = anyOSWithActiveQueue()
     assertThrows(TalkDoesntBelongException::class.java) {
       os.enqueueTalk(talk)
@@ -71,112 +76,117 @@ class QueueTest {
 
   @Test
   fun `No puedo encolar la misma charla 2 veces`() {
-    val talk = anyTalk()
-    anyOSWithActiveQueue(mutableSetOf(talk))
-    talk.enqueue()
+    val user = anyUser()
+    val talk = anyTalk(user)
+    val os = anyOSWithActiveQueue(mutableSetOf(talk))
+    os.enqueueTalk(talk)
     assertThrows(TalkAlreadyEnqueuedException::class.java) {
-      talk.enqueue()
+      os.enqueueTalk(talk)
     }
   }
 
   @Test
   fun `No puedo encolar una segunda charla del mismo speaker`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
-    anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
+    val user = anyUser()
+    val talk1 = anyTalk(user)
+    val talk2 = anyTalk(user)
+    val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
     anyUser(talks = mutableSetOf(talk1, talk2))
-    talk1.enqueue()
+    os.enqueueTalk(talk1)
     assertThrows(AnotherTalkIsEnqueuedException::class.java) {
-      talk2.enqueue()
+      os.enqueueTalk(talk2)
     }
   }
 
   @Test
   fun `Charlas se encolan en orden`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
-    val talk3 = anyTalk()
+    val speaker1 = anyUser()
+    val speaker2 = anyUser()
+    val speaker3 = anyUser()
+    val talk1 = anyTalk(speaker1)
+    val talk2 = anyTalk(speaker2)
+    val talk3 = anyTalk(speaker3)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2, talk3))
-    anyUser(talks = mutableSetOf(talk1))
-    anyUser(talks = mutableSetOf(talk2))
-    anyUser(talks = mutableSetOf(talk3))
-    talk1.enqueue()
-    talk2.enqueue()
-    talk3.enqueue()
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
+    os.enqueueTalk(talk3)
     assertIterableEquals(listOf(talk1, talk2, talk3), os.queue)
   }
 
   @Test
   fun `El speaker actual puede terminar la charla`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
+    val speaker1 = anyUser()
+    val speaker2 = anyUser()
+    val talk1 = anyTalk(speaker1)
+    val talk2 = anyTalk(speaker2)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
-    val speaker = anyUser(talks = mutableSetOf(talk1))
-    anyUser(talks = mutableSetOf(talk2))
-    talk1.enqueue()
-    talk2.enqueue()
-    os.nextTalk(speaker)
+
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
+    os.nextTalk(speaker1)
     assertEquals(talk2, os.currentTalk())
   }
 
   @Test
   fun `El organizador puede terminar la charla`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
+    val speaker1 = anyUser()
+    val speaker2 = anyUser()
+    val talk1 = anyTalk(speaker1)
+    val talk2 = anyTalk(speaker2)
     val os = anOpenSpace(talks = mutableSetOf(talk1, talk2))
     val organizer = anyUser(mutableSetOf(os))
-    anyUser(talks = mutableSetOf(talk1))
-    anyUser(talks = mutableSetOf(talk2))
     os.activeQueue(organizer)
-    talk1.enqueue()
-    talk2.enqueue()
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
     os.nextTalk(organizer)
     assertEquals(talk2, os.currentTalk())
   }
 
   @Test
   fun `Si no soy el organizador o el speaker, no puedo terminar la charla`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
+    val speaker1 = anyUser()
+    val speaker2 = anyUser()
+    val talk1 = anyTalk(speaker1)
+    val talk2 = anyTalk(speaker2)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
-    anyUser(talks = mutableSetOf(talk1))
-    val speaker = anyUser(talks = mutableSetOf(talk2))
-    talk1.enqueue()
-    talk2.enqueue()
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
     assertThrows(CantFinishTalkException::class.java) {
-      os.nextTalk(speaker)
+      os.nextTalk(speaker2)
     }
   }
 
   @Test
   fun `Termina la primer charla es el turno de la segunda`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
+    val speaker1 = anyUser()
+    val speaker2 = anyUser()
+    val talk1 = anyTalk(speaker1)
+    val talk2 = anyTalk(speaker2)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
-    val speaker = anyUser(talks = mutableSetOf(talk1))
     anyUser(talks = mutableSetOf(talk2))
-    talk1.enqueue()
-    talk2.enqueue()
-    os.nextTalk(speaker)
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
+    os.nextTalk(speaker1)
     assertEquals(talk2, os.currentTalk())
   }
 
   @Test
   fun `Termina la primer charla, esta disponible para agendar`() {
-    val talk = anyTalk()
+    val speaker = anyUser()
+    val talk = anyTalk(speaker)
     val os = anyOSWithActiveQueue(mutableSetOf(talk))
-    val speaker = anyUser(talks = mutableSetOf(talk))
-    talk.enqueue()
+    os.enqueueTalk(talk)
     os.nextTalk(speaker)
     assertIterableEquals(setOf(talk), os.toSchedule)
   }
 
   @Test
   fun `No se puede encolar una charla, si no esta activo el encolamiento`() {
-    val talk = anyTalk()
-    anOpenSpace(talks = mutableSetOf(talk))
+    val user = anyUser()
+    val talk = anyTalk(user)
+    val os = anOpenSpace(talks = mutableSetOf(talk))
     assertThrows(InactiveQueueException::class.java) {
-      talk.enqueue()
+      os.enqueueTalk(talk)
     }
   }
 
@@ -191,7 +201,8 @@ class QueueTest {
 
   @Test
   fun `Cuando cierra el encolamiento, la queue esta finalizada`() {
-    val talk = anyTalk()
+    val user = anyUser()
+    val talk = anyTalk(user)
     val os = anOpenSpace(talks = mutableSetOf(talk))
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
@@ -200,12 +211,13 @@ class QueueTest {
 
   @Test
   fun `Cuando cierra el encolamiento, no se pueden encolar charlas`() {
-    val talk = anyTalk()
+    val user = anyUser()
+    val talk = anyTalk(user)
     val os = anOpenSpace(talks = mutableSetOf(talk))
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
     assertThrows(FinishedQueuingException::class.java) {
-      talk.enqueue()
+      os.enqueueTalk(talk)
     }
   }
 
@@ -215,7 +227,7 @@ class QueueTest {
     val organizer = anyUser(mutableSetOf(os))
     os.finishQueuing(organizer)
     assertThrows(FinishedQueuingException::class.java) {
-      os.addTalk(anyTalk())
+      os.addTalk(anyTalk(organizer))
     }
   }
 
@@ -231,14 +243,15 @@ class QueueTest {
 
   @Test
   fun `Se cierra el encolamiento, se descartan las charlas en la cola`() {
-    val talk1 = anyTalk()
-    val talk2 = anyTalk()
+    val organizer = anyUser()
+    val speaker2 = anyUser()
+    val talk1 = anyTalk(organizer)
+    val talk2 = anyTalk(speaker2)
     val os = anOpenSpace(talks = mutableSetOf(talk1, talk2))
-    val organizer = anyUser(mutableSetOf(os), mutableSetOf(talk1))
-    anyUser(talks = mutableSetOf(talk2))
+    organizer.addOpenSpace(openSpace = os)
     os.activeQueue(organizer)
-    talk1.enqueue()
-    talk2.enqueue()
+    os.enqueueTalk(talk1)
+    os.enqueueTalk(talk2)
     os.finishQueuing(organizer)
     assertTrue(os.queue.isEmpty())
     assertNull(os.currentTalk())
