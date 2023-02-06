@@ -138,7 +138,8 @@ class OpenSpaceService(
       description = createTalkDTO.description,
       meetingLink = createTalkDTO.meetingLink,
       track = track,
-      speaker = user
+      speaker = user,
+      documents = createTalkDTO.documents.toMutableSet()
     )
   }
 

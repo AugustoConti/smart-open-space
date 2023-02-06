@@ -26,6 +26,10 @@ class Talk(
   @ManyToOne
   var track: Track? = null,
 
+  @field:Valid
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
+  var documents: MutableSet<Document>? = null,
+
   @ManyToOne
   val speaker: User
 ) {
