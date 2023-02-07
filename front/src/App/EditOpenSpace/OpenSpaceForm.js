@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import Title from '#shared/Title';
 import Detail from '#shared/Detail';
 import Spinner from '#shared/Spinner';
-import { byDate } from '#helpers/time';
 
 const OTHER_SLOT = 'OtherSlot';
 

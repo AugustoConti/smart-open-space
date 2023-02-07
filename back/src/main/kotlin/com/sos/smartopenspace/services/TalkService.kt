@@ -19,7 +19,8 @@ class TalkService(
         private val userService: UserService,
         private val scheduleSocket: ScheduleSocket,
         private val queueSocket: QueueSocket,
-        private val slotRepository: SlotRepository
+        private val slotRepository: SlotRepository,
+        private val updatableItemCollectionService: UpdatableItemCollectionService
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
   private fun findOpenSpace(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
@@ -72,6 +73,11 @@ class TalkService(
       track = track,
       openSpace = openSpaceRepository.findFirstOpenSpaceByTalkId(talkId)
     )
+
+    talk.updateDocuments(
+      updatableItemCollectionService.getNewItems(createTalkDTO.documents),
+      updatableItemCollectionService.getDeletedItems(createTalkDTO.documents, talk.documents)
+      )
 
     return talk
   }

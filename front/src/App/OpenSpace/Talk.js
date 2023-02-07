@@ -9,7 +9,7 @@ import { FormCloseIcon, HomeIcon, LinkIcon, UserIcon } from '#shared/icons';
 import Row from '#shared/Row';
 import Title from '#shared/Title';
 
-const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
+const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink, documents }) => (
   <Layer onClickOutside={onClose} onEsc={onClose}>
     <Box gap="medium" pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
       <Row justify="end">
@@ -33,6 +33,16 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink }) => (
           target="_blank"
         />
       )}
+      {documents.map((document) => (
+        <Row title={document.name}>
+          <Anchor
+            color="dark-1"
+            href={document.link}
+            label={document.name}
+            target="_blank"
+          />
+        </Row>
+      ))}
     </Box>
   </Layer>
 );
@@ -66,7 +76,7 @@ const ButtonGoToLink = ({ onClick }) => (
 );
 
 const Talk = ({
-  talk: { description, name, speaker, meetingLink, track },
+  talk: { description, name, speaker, meetingLink, track, documents },
   room,
   children,
 }) => {
@@ -93,6 +103,7 @@ const Talk = ({
           speaker={speaker.name}
           info={description}
           onClose={() => setOpen(false)}
+          documents={documents}
           meetingLink={meetingLink}
         />
       )}

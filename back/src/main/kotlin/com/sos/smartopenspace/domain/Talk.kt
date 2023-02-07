@@ -26,6 +26,11 @@ class Talk(
   @ManyToOne
   var track: Track? = null,
 
+  @field:Valid
+  @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+  @JoinColumn(name = "talk_id")
+  var documents: MutableSet<Document> = mutableSetOf(),
+
   @ManyToOne
   val speaker: User
 ) {
@@ -42,6 +47,11 @@ class Talk(
     this.description = description
     this.meetingLink = meetingLink
     this.track = track
+  }
+
+  fun updateDocuments(newDocuments: Set<Document>, deletedDocuments: Set<Document>) {
+    this.documents.removeAll(deletedDocuments.toSet())
+    this.documents.addAll(newDocuments)
   }
   
   @JsonProperty

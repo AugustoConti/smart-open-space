@@ -1,8 +1,9 @@
 import { useHistory } from 'react-router-dom';
 import MainHeader from '#shared/MainHeader';
-import { TalkIcon } from '#shared/icons';
+import { TalkIcon, TextAreaIcon } from '#shared/icons';
 import MyForm from '#shared/MyForm';
 import React from 'react';
+import Documents from './Documents';
 
 const emptyTalk = { name: '', description: '', meetingLink: '' };
 
@@ -47,6 +48,15 @@ export const TalkForm = ({
             value={initialValues.track ? initialValues.track.id : ''}
           />
         )}
+        <MyForm.Field
+          component={Documents}
+          icon={<TextAreaIcon />}
+          label="Documentos"
+          name="documents"
+          labelKey="name"
+          valueKey="id"
+          value={initialValues.documents || []}
+        />
       </MyForm>
     </>
   );

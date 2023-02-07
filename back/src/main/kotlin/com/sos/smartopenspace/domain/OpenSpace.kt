@@ -249,26 +249,19 @@ class OpenSpace(
     this.description = description
   }
 
-  fun updateRooms(newRooms: Set<Room>) : List<Room> {
-    return this.updateCollection(newRooms, this.rooms)
+  fun updateRooms(newRooms: Set<Room>, deletedRooms: Set<Room>) {
+    this.rooms.removeAll(deletedRooms)
+    this.rooms.addAll(newRooms)
   }
 
-  fun updateSlots(newSlots: Set<Slot>) : List<Slot>{
-    return this.updateCollection(newSlots, this.slots)
+  fun updateSlots(newSlots: Set<Slot>, deletedSlots: Set<Slot>) {
+    this.slots.removeAll(deletedSlots)
+    this.slots.addAll(newSlots)
   }
 
-  fun updateTracks(newTracks: Set<Track>) : List<Track> {
-    return this.updateCollection(newTracks, this.tracks)
-  }
-  private fun <T : OpenSpaceItemCollection> updateCollection(items: Set<T>, currentItems:  MutableSet<T>) : List<T>  {
-    val newItems = items.filter { it.id.toInt() ==  0 }
-    val remainingItemIds = items.map { it.id }
-    val deletedItems = currentItems.filterNot { remainingItemIds.contains(it.id)}
-
-    currentItems.removeAll(deletedItems.toSet())
-    currentItems.addAll(newItems)
-
-    return deletedItems
+  fun updateTracks(newTracks: Set<Track>, deletedTracks: Set<Track>) {
+    this.tracks.removeAll(deletedTracks)
+    this.tracks.addAll(newTracks)
   }
 
   fun removeInvalidAssignedSlots() {

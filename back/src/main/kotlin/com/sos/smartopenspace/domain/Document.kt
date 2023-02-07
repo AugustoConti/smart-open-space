@@ -7,19 +7,18 @@ import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 @Entity
-class Room (
-  @field:NotEmpty(message = "Ingrese un nombre")
-  @field:NotBlank(message = "Nombre no puede ser vacío")
-  val name: String,
+class Document(
+  @field:NotEmpty()
+  var name: String,
 
   @Column(columnDefinition="VarChar")
-  val description: String = "",
+  @field:NotNull
+  var link: URL,
 
-  @Column(columnDefinition="VarChar")
-  var link: URL? = null,
-
-  @Id @GeneratedValue
+  @Id
+  @GeneratedValue
   override val id: Long = 0
 ) : UpdatableItemCollection
