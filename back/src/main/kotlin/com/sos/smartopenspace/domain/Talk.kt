@@ -29,7 +29,7 @@ class Talk(
   @field:Valid
   @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   @JoinColumn(name = "talk_id")
-  var documents: MutableSet<Document>,
+  var documents: MutableSet<Document> = mutableSetOf(),
 
   @ManyToOne
   val speaker: User

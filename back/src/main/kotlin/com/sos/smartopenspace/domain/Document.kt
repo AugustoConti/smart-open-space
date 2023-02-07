@@ -9,13 +9,13 @@ import javax.validation.constraints.NotEmpty
 
 @Entity
 class Document(
-  @Id
-  @GeneratedValue
-  val id: Long = 0,
-
   @field:NotEmpty()
   var name: String,
 
   @Column(columnDefinition="VarChar")
-  var link: URL? = null
+  var link: URL? = null,
+
+  @Id
+  @GeneratedValue
+  val id: Long = 0
 )
