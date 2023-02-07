@@ -45,8 +45,10 @@ export class OpenSpace {
     this.tracks = tracks;
     this.urlImage = urlImage;
 
-    this.endDate = toDate(endDate);
-    this.startDate = toDate(startDate);
-    this.dates = dates.map((date) => toDate(date));
+    if (dates.length > 0) {
+      this.endDate = toDate(endDate);
+      this.startDate = toDate(startDate);
+      this.dates = dates.map((date) => toDate(date));
+    }
   }
 }
