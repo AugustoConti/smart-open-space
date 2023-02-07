@@ -1,7 +1,6 @@
 package com.sos.smartopenspace.helpers
 
 import com.sos.smartopenspace.domain.Document
-import com.sos.smartopenspace.domain.Track
 import java.net.URL
 import javax.validation.Valid
 import javax.validation.constraints.NotBlank

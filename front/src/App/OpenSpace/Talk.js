@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Anchor, Box, Button, Layer, Markdown, Text } from 'grommet';
+import { Anchor, Box, Button, Layer, Markdown } from 'grommet';
 import PropTypes from 'prop-types';
 
 import Card from '#shared/Card';

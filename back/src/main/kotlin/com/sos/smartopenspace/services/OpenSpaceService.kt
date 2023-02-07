@@ -92,9 +92,7 @@ class OpenSpaceService(
   }
 
   @Transactional(readOnly = true)
-  fun findAssignedSlotsById(id: Long): List<AssignedSlot> {
-    return findById(id).assignedSlots.toList()
-  }
+  fun findAssignedSlotsById(id: Long) = findById(id).assignedSlots.toList()
 
 
   fun activateQueue(userID: Long, osID: Long) =
