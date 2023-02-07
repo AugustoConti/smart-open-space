@@ -1,5 +1,5 @@
 package com.sos.smartopenspace.domain
 
-interface OpenSpaceItemCollection {
+interface UpdatableItemCollection {
   val id: Long
 }

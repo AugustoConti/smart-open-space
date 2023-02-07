@@ -12,6 +12,7 @@ const Documents = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [invalidUrl, setInvalidUrl] = useState(false);
   const hasNoDocumentName = document.name.trim().length < 1;
+  const hasNoDocumentLink = document.link.trim().length < 1;
 
   const updateUrl = (link) => {
     setDocument({ ...document, link });
@@ -44,7 +45,7 @@ const Documents = ({ value, onChange }) => {
           </Box>
         </Box>
         <PlusButton
-          conditionToDisable={hasNoDocumentName || !!invalidUrl}
+          conditionToDisable={hasNoDocumentName || hasNoDocumentLink || !!invalidUrl}
           onChange={onChange}
           value={value}
           item={document}

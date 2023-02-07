@@ -5,7 +5,9 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
 
 @Entity
 class Document(
@@ -13,9 +15,10 @@ class Document(
   var name: String,
 
   @Column(columnDefinition="VarChar")
-  var link: URL? = null,
+  @field:NotNull
+  var link: URL,
 
   @Id
   @GeneratedValue
-  val id: Long = 0
-)
+  override val id: Long = 0
+) : UpdatableItemCollection

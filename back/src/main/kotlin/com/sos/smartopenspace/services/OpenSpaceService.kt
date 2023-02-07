@@ -17,7 +17,8 @@ class OpenSpaceService(
   private val talkRepository: TalkRepository,
   private val trackRepository: TrackRepository,
   private val userService: UserService,
-  private val queueSocket: QueueSocket
+  private val queueSocket: QueueSocket,
+  private val updatableItemCollectionService: UpdatableItemCollectionService
 ) {
   private fun findUser(userID: Long) = userService.findById(userID)
 
@@ -37,9 +38,18 @@ class OpenSpaceService(
     val openSpace = findById(openSpaceID)
     val user = findUser(userID)
 
-    openSpace.updateRooms(openSpaceDTO.rooms)
-    openSpace.updateSlots(openSpaceDTO.slots)
-    openSpace.updateTracks(openSpaceDTO.tracks)
+    openSpace.updateRooms(
+      updatableItemCollectionService.getNewItems(openSpaceDTO.rooms),
+      updatableItemCollectionService.getDeletedItems(openSpaceDTO.rooms, openSpace.rooms)
+    )
+    openSpace.updateSlots(
+      updatableItemCollectionService.getNewItems(openSpaceDTO.slots),
+      updatableItemCollectionService.getDeletedItems(openSpaceDTO.slots, openSpace.slots)
+    )
+    openSpace.updateTracks(
+      updatableItemCollectionService.getNewItems(openSpaceDTO.tracks),
+      updatableItemCollectionService.getDeletedItems(openSpaceDTO.tracks, openSpace.tracks)
+    )
     openSpace.removeInvalidAssignedSlots()
 
     openSpace.update(

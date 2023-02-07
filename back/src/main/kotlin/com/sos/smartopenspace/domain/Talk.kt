@@ -49,11 +49,7 @@ class Talk(
     this.track = track
   }
 
-  fun updateDocuments(documents: Set<Document>) {
-    val newDocuments = documents.filter { it.id.toInt() ==  0 }
-    val remainingDocumentIds = documents.map { it.id }
-    val deletedDocuments = this.documents.filterNot { remainingDocumentIds.contains(it.id)}
-
+  fun updateDocuments(newDocuments: Set<Document>, deletedDocuments: Set<Document>) {
     this.documents.removeAll(deletedDocuments.toSet())
     this.documents.addAll(newDocuments)
   }

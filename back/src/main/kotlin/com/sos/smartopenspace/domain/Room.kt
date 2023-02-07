@@ -22,4 +22,4 @@ class Room (
 
   @Id @GeneratedValue
   override val id: Long = 0
-) : OpenSpaceItemCollection
+) : UpdatableItemCollection

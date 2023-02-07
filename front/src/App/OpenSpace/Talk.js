@@ -35,13 +35,10 @@ const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink, documents
       )}
       {documents.map((document) => (
         <Row title={document.name}>
-          <Title level="5" truncate={false}>
-            {document.name}
-          </Title>
           <Anchor
             color="dark-1"
             href={document.link}
-            label={document.link}
+            label={document.name}
             target="_blank"
           />
         </Row>

@@ -21,4 +21,4 @@ data class Track(
     @Id
     @GeneratedValue
     override var id: Long = 0
-) : OpenSpaceItemCollection 
+) : UpdatableItemCollection
