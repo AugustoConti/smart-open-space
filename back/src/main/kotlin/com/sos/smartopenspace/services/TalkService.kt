@@ -73,6 +73,8 @@ class TalkService(
       openSpace = openSpaceRepository.findFirstOpenSpaceByTalkId(talkId)
     )
 
+    talk.updateDocuments(createTalkDTO.documents)
+
     return talk
   }
 

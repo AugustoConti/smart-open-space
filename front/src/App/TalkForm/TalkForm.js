@@ -53,6 +53,8 @@ export const TalkForm = ({
           icon={<TextAreaIcon />}
           label="Documentos"
           name="documents"
+          labelKey="name"
+          valueKey="id"
           value={initialValues.documents || []}
         />
       </MyForm>

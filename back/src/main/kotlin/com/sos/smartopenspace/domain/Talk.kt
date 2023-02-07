@@ -27,8 +27,9 @@ class Talk(
   var track: Track? = null,
 
   @field:Valid
-  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true)
-  var documents: MutableSet<Document>? = null,
+  @OneToMany(cascade = [CascadeType.ALL])
+  @JoinColumn(name = "talk_id")
+  var documents: MutableSet<Document>,
 
   @ManyToOne
   val speaker: User
@@ -46,6 +47,15 @@ class Talk(
     this.description = description
     this.meetingLink = meetingLink
     this.track = track
+  }
+
+  fun updateDocuments(documents: Set<Document>) {
+    val newDocuments = documents.filter { it.id.toInt() ==  0 }
+    val remainingDocumentIds = documents.map { it.id }
+    val deletedDocuments = this.documents.filterNot { remainingDocumentIds.contains(it.id)}
+
+    this.documents.removeAll(deletedDocuments.toSet())
+    this.documents.addAll(newDocuments)
   }
   
   @JsonProperty

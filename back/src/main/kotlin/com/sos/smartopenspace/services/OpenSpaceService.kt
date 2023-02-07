@@ -133,7 +133,7 @@ class OpenSpaceService(
 
   private fun createTalkFrom(createTalkDTO: CreateTalkDTO, user: User): Talk {
     val track: Track? = findTrack(createTalkDTO.trackId)
-    return Talk(
+    val talk = Talk(
       name = createTalkDTO.name,
       description = createTalkDTO.description,
       meetingLink = createTalkDTO.meetingLink,
@@ -141,6 +141,8 @@ class OpenSpaceService(
       speaker = user,
       documents = createTalkDTO.documents.toMutableSet()
     )
+
+    return talkRepository.save(talk)
   }
 
   private fun findTrack(trackId: Long?): Track? {

@@ -14,12 +14,9 @@ class Document(
   @GeneratedValue
   val id: Long = 0,
 
-  @field:NotEmpty(message = "Ingrese un nombre")
-  @field:NotBlank(message = "Nombre no puede ser vacío")
+  @field:NotEmpty()
   var name: String,
 
   @Column(columnDefinition="VarChar")
   var link: URL? = null
-) {
-
-}
+)
