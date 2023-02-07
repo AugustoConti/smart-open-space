@@ -17,13 +17,11 @@ class OpenSpace(
   var name: String,
 
   @field:Valid
-  @field:NotEmpty(message = "Ingrese al menos una sala")
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
   val rooms: MutableSet<Room>,
 
   @field:Valid
-  @field:NotEmpty(message = "Ingrese al menos un slot")
   @OneToMany(cascade = [CascadeType.ALL])
   @JoinColumn(name = "open_space_id")
   val slots: MutableSet<Slot>,
@@ -207,16 +205,23 @@ class OpenSpace(
 
   @JsonProperty
   fun startDate(): LocalDate? {
-    return Collections.min(dates())
+    val dates = dates()
+    if (dates.isEmpty())
+      return null
+    return Collections.min(dates)
   }
 
   @JsonProperty
   fun endDate(): LocalDate? {
+    val dates = dates()
+    if (dates.isEmpty())
+      return null
     return Collections.max(dates())
   }
 
   @JsonProperty
   fun dates(): Set<LocalDate?> {
+    if (slots.size == 0) return emptySet()
     return slots.map { it.date }.toSet()
   }
 

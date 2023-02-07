@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 import Title from '#shared/Title';
 import Detail from '#shared/Detail';
 import Spinner from '#shared/Spinner';
-import { byDate } from '#helpers/time';
 
 const OTHER_SLOT = 'OtherSlot';
 
@@ -137,18 +136,6 @@ export const OpenSpaceForm = ({
     return tracks.some((eachTrack) => isRepeated(tracks, eachTrack));
   }
 
-  function hasRooms(rooms) {
-    return rooms.length < 1;
-  }
-
-  function hasSlots(times) {
-    return times.length < 1;
-  }
-
-  function hasDates(dates) {
-    return dates.length < 1;
-  }
-
   if (initialValues === undefined) return <Spinner />;
 
   return (
@@ -179,11 +166,6 @@ export const OpenSpaceForm = ({
           icon={<HomeIcon />}
           label="Salas"
           name="rooms"
-          validate={(rooms) => {
-            if (hasRooms(rooms)) {
-              return 'Ingresa al menos una sala';
-            }
-          }}
           value={initialValues.rooms || []}
         />
         <Box direction="row">
@@ -192,11 +174,6 @@ export const OpenSpaceForm = ({
             icon={<CalendarIcon />}
             label="Fecha"
             name="dates"
-            validate={(dates) => {
-              if (hasDates(dates)) {
-                return 'Ingresa al menos una fecha';
-              }
-            }}
             onRemoveItem={(date) => setDeletedDate(date)}
             onChange={(event) => setAvailableDates(event.target.value)}
             value={initialValues.dates || []}
@@ -209,11 +186,6 @@ export const OpenSpaceForm = ({
           name="slots"
           onNewSlot={(type, start, onSubmitSlot) => {
             setShowInputSlot({ onSubmitSlot, start, type });
-          }}
-          validate={(times) => {
-            if (hasSlots(times)) {
-              return 'Ingresa al menos un slot';
-            }
           }}
           deletedDate={deletedDate}
           dates={availableDates}
