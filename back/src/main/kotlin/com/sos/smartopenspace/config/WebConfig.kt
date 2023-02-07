@@ -12,6 +12,6 @@ class WebConfig : WebMvcConfigurer {
     registry
       .addMapping("/**")
       .allowedMethods("GET", "PUT", "POST", "DELETE")
-      .allowedOrigins("http://localhost:1234", "https://smartopenspace.herokuapp.com")
+      .allowedOrigins("http://localhost:1234", "https://smartopenspace.herokuapp.com", "https://smartopenspace.10pines.com")
   }
 }
