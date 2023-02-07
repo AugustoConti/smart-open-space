@@ -27,7 +27,7 @@ class Talk(
   var track: Track? = null,
 
   @field:Valid
-  @OneToMany(cascade = [CascadeType.ALL])
+  @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
   @JoinColumn(name = "talk_id")
   var documents: MutableSet<Document>,
 

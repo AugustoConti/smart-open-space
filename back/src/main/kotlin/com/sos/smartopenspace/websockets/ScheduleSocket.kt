@@ -8,5 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class ScheduleSocket(private val openSpaceService: OpenSpaceService) : AbstractSocket<List<AssignedSlot>>() {
   override fun getData(id: Long) = openSpaceService.findAssignedSlotsById(id)
-  override fun getData(os: OpenSpace) = os.assignedSlots.toList()
+  override fun getData(os: OpenSpace): List<AssignedSlot> {
+    return os.assignedSlots.toList()
+  }
 }
