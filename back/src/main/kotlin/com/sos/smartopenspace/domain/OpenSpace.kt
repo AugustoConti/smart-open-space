@@ -205,24 +205,17 @@ class OpenSpace(
 
   @JsonProperty
   fun startDate(): LocalDate? {
-    val dates = dates()
-    if (dates.isEmpty())
-      return null
-    return Collections.min(dates)
+    return dates().minByOrNull { it }
   }
 
   @JsonProperty
   fun endDate(): LocalDate? {
-    val dates = dates()
-    if (dates.isEmpty())
-      return null
-    return Collections.max(dates())
+    return dates().maxByOrNull { it }
   }
 
   @JsonProperty
-  fun dates(): Set<LocalDate?> {
-    if (slots.size == 0) return emptySet()
-    return slots.map { it.date }.toSet()
+  fun dates(): Set<LocalDate> {
+    return slots.map { it.date }.filterNotNull().toSet()
   }
 
   fun getUserTalks(user: User): List<Talk> {
