@@ -44,7 +44,7 @@ const HomeButton = ({ onClick }) => (
     icon={<LogoSmall />}
     label={
       <Text color="light-1" size="xlarge">
-        {useSize() === 'small' ? 'SOS' : 'Smart-OS'}
+        {useSize() === 'small' ? 'SOS' : 'Smart Open Spaces'}
       </Text>
     }
     onClick={onClick}

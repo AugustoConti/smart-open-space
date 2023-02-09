@@ -14,14 +14,13 @@ class OpenSpaceDTO(
     @field:NotEmpty(message = "Ingrese un nombre")
     @field:NotBlank(message = "Nombre no puede ser vacío")
     val name: String,
+
     val dates:Set<LocalDate>,
 
     @field:Valid
-    @field:NotEmpty(message = "Ingrese al menos una sala")
     val rooms: Set<Room>,
 
     @field:Valid
-    @field:NotEmpty(message = "Ingrese al menos un slot")
     val slots: Set<Slot>,
 
     @field:Column(length = 1000)

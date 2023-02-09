@@ -46,11 +46,19 @@ const OpenSpace = ({ deleteOS, startDate, endTime, id, name, startTime, urlImage
                 <Title level="3">{name}</Title>
                 <Detail
                   icon={CalendarIcon}
-                  text={new Date(startDate).toLocaleDateString('es')}
+                  text={
+                    startDate
+                      ? new Date(startDate).toLocaleDateString('es')
+                      : 'Sin fecha aún'
+                  }
                 />
                 <Detail
                   icon={ClockIcon}
-                  text={`${toTime(startTime)} a ${toTime(endTime)} hs`}
+                  text={
+                    startTime && endTime
+                      ? `${toTime(startTime)} a ${toTime(endTime)} hs`
+                      : ''
+                  }
                 />
               </Box>
             </Button>
