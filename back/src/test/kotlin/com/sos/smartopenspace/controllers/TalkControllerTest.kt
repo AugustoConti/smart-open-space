@@ -195,6 +195,21 @@ class TalkControllerTest {
     ).andExpect(MockMvcResultMatchers.status().isBadRequest)
   }
 
+  @Test
+  fun `review talk adds review to talk reviews`() {
+    val aUser = anySavedUser()
+    val talk = anySavedTalk(aUser)
+    val content = aReviewCreationBody(5, "a review")
+    aUser.addTalk(talk)
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
+        .contentType("application/json")
+        .content(content)
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+      .andExpect(MockMvcResultMatchers.jsonPath("$.reviews[0].grade").value(5))
+  }
+
   private fun anySavedRoom() = roomRepository.save(Room("Sala"))
 
   private fun anySavedTalk(organizer: User) = talkRepository.save(Talk("Charla", speaker = organizer))
@@ -216,4 +231,12 @@ class TalkControllerTest {
 
   private fun freeSlots(openSpace: OpenSpace) = openSpace.freeSlots().first().second
 
+  private fun aReviewCreationBody(grade: Int, comment: String): String {
+    return return """
+      {
+          "grade": "$grade",
+          "comment": "$comment"
+      }
+      """
+  }
 }
