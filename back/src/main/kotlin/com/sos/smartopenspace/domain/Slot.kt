@@ -21,7 +21,9 @@ abstract class Slot(
 
   val endTime: LocalTime,
 
+
   val date: LocalDate? = null,
+
   @Id
   @GeneratedValue
   override val id: Long = 0

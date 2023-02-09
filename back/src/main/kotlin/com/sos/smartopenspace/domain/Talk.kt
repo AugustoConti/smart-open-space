@@ -27,9 +27,14 @@ class Talk(
   var track: Track? = null,
 
   @field:Valid
-  @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+  @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
   @JoinColumn(name = "talk_id")
-  var documents: MutableSet<Document> = mutableSetOf(),
+  val documents: MutableSet<Document> = mutableSetOf(),
+
+  @field:Valid
+  @OneToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+  @JoinColumn(name = "talk_id")
+  val reviews: MutableSet<Review> = mutableSetOf(),
 
   @ManyToOne
   val speaker: User
@@ -69,4 +74,6 @@ class Talk(
 
     votingUsers.remove(user)
   }
+
+  fun addReview(review: Review) = this.reviews.add(review)
 }

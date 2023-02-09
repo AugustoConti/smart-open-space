@@ -37,6 +37,9 @@ const voteTalk = (talkID) =>
 const unvoteTalk = (talkID) =>
   withUser(({ id: userID }) => put(`talk/${talkID}/user/${userID}/unvote`));
 
+const createReview = (talkId, reviewData) =>
+  withUser(({ id }) => post(`talk/${talkId}/user/${id}/review`, reviewData));
+
 const getAllOpenSpaces = () =>
   withUser(({ id }) => get(`openSpace/user/${id}`)).then((openSpaces) =>
     openSpaces.map((openSpace) => new OpenSpace(openSpace))
@@ -107,4 +110,5 @@ export {
   editTalk,
   unvoteTalk,
   deleteTalk,
+  createReview,
 };

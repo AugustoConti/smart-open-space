@@ -119,10 +119,18 @@ const MyForm = ({
   ...props
 }) => {
   const [loading, withLoading] = useLoading();
+  const [value, setValue] = React.useState({});
+
+  const useResetValue = () => setValue({});
+
   return (
     <Form
+      value={value}
       messages={{ invalid: 'Inválido', required: 'Obligatorio' }}
-      onSubmit={withLoading(onSubmit)}
+      onSubmit={(event) => {
+        event = { ...event, useResetValue };
+        withLoading(onSubmit)(event);
+      }}
       {...props}
     >
       {children}

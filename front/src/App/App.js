@@ -18,6 +18,7 @@ import Schedule from './OpenSpace/schedule/Schedule';
 
 import { EditTalk, NewTalk } from './TalkForm';
 import NewOpenSpace from './EditOpenSpace/NewOpenSpace';
+import Talk from './Talk';
 
 const Routes = () => (
   <Switch>
@@ -29,6 +30,7 @@ const Routes = () => (
     <Route path="/os/:id/edit" exact component={EditOpenSpace} />
     <Route path="/os/:id/schedule" exact component={Schedule} />
     <Route path="/os/:id" exact component={OpenSpace} />
+    <Route path="/os/:id/talk/:talkId" exact component={Talk} />
     <Route path={['/login', '/register']} exact component={Login} />
     <Route path="/" exact component={Home} />
     {/* <Route component={Page404} /> */}

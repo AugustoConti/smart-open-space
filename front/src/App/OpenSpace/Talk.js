@@ -1,58 +1,14 @@
 import React, { useState } from 'react';
 
-import { Anchor, Box, Button, Layer, Markdown } from 'grommet';
+import { Box, Button } from 'grommet';
 import PropTypes from 'prop-types';
 
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { FormCloseIcon, HomeIcon, LinkIcon, UserIcon } from '#shared/icons';
-import Row from '#shared/Row';
+import { HomeIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
-
-const DescriptionInfo = ({ title, speaker, info, onClose, meetingLink, documents }) => (
-  <Layer onClickOutside={onClose} onEsc={onClose}>
-    <Box gap="medium" pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}>
-      <Row justify="end">
-        <Button icon={<FormCloseIcon />} onClick={onClose} plain />
-      </Row>
-      <Title level="2" truncate={false}>
-        {title}
-      </Title>
-      <Detail icon={UserIcon} text={speaker} />
-      {info && (
-        <Markdown components={{ p: (props) => <Detail color="dark-1" {...props} /> }}>
-          {info}
-        </Markdown>
-      )}
-      {meetingLink && (
-        <Anchor
-          icon={<LinkIcon />}
-          color="dark-1"
-          href={meetingLink}
-          label={meetingLink}
-          target="_blank"
-        />
-      )}
-      {documents.map((document) => (
-        <Row title={document.name}>
-          <Anchor
-            color="dark-1"
-            href={document.link}
-            label={document.name}
-            target="_blank"
-          />
-        </Row>
-      ))}
-    </Box>
-  </Layer>
-);
-DescriptionInfo.propTypes = {
-  info: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-  speaker: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  meetingLink: PropTypes.string.isRequired,
-};
+import { usePushToTalk } from '#helpers/routes';
+import { useParams } from 'react-router-dom';
 
 const ButtonMoreInfo = ({ onClick }) => (
   <Button
@@ -76,11 +32,12 @@ const ButtonGoToLink = ({ onClick }) => (
 );
 
 const Talk = ({
-  talk: { description, name, speaker, meetingLink, track, documents },
+  talk: { id, description, name, speaker, meetingLink, track },
   room,
   children,
 }) => {
   const [open, setOpen] = useState(false);
+  const pushToTalk = usePushToTalk(useParams().id, id);
 
   const color = track ? track.color : 'accent-3';
   let shouldDisplayMoreInfo = description || meetingLink;
@@ -93,20 +50,10 @@ const Talk = ({
         <Box gap="medium">
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
-          {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => setOpen(true)} />}
+          {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => pushToTalk()} />}
           {talkLink && <ButtonGoToLink onClick={() => window.open(talkLink, '_blank')} />}
         </Box>
       </Card>
-      {open && (
-        <DescriptionInfo
-          title={name}
-          speaker={speaker.name}
-          info={description}
-          onClose={() => setOpen(false)}
-          documents={documents}
-          meetingLink={meetingLink}
-        />
-      )}
     </>
   );
 };
