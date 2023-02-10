@@ -161,7 +161,6 @@ class TalkControllerTest {
   fun `a talk voted by user returns an ok status response and increase talk votes`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk(aUser)
-    aUser.addTalk(talk)
 
     mockMvc.perform(
       MockMvcRequestBuilders.put("/talk/${talk.id}/user/${aUser.id}/vote")
@@ -173,7 +172,6 @@ class TalkControllerTest {
   fun `a talk unvoted by a user returns an ok status response and decrease talk votes`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk(aUser)
-    aUser.addTalk(talk)
     talk.addVoteBy(aUser)
     talkRepository.save(talk)
 
@@ -187,7 +185,6 @@ class TalkControllerTest {
   fun `a talk cannot be unvoted by a user that didnt vote it returns a bad request`() {
     val aUser = anySavedUser()
     val talk = anySavedTalk(aUser)
-    aUser.addTalk(talk)
     talkRepository.save(talk)
 
     mockMvc.perform(
