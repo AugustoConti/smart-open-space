@@ -30,7 +30,7 @@ const Schedule = () => {
   const pushToOpenSpace = usePushToOpenSpace(id);
 
   if (isPending) return <Spinner />;
-  if (isRejected) return <RedirectToRoot />;
+  if (isRejected || dates == undefined) return <RedirectToRoot />;
 
   const sortedSlots = sortTimes(slots);
   console.log(sortedSlots);

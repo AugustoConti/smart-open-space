@@ -38,6 +38,7 @@ const OpenSpace = () => {
       pendingQueue,
       isActiveCallForPapers,
       amountOfTalks,
+      dates,
     } = {},
     isPending,
     isRejected,
@@ -73,13 +74,15 @@ const OpenSpace = () => {
     <>
       <MainHeader>
         <MainHeader.Title label={name} />
-        <MainHeader.Button
-          margin={{ top: 'medium' }}
-          color="accent-1"
-          icon={<ScheduleIcon />}
-          label="Agenda"
-          onClick={pushToSchedule}
-        />
+        {dates && (
+          <MainHeader.Button
+            margin={{ top: 'medium' }}
+            color="accent-1"
+            icon={<ScheduleIcon />}
+            label="Agenda"
+            onClick={pushToSchedule}
+          />
+        )}
         <MainHeader.Description description={description} />
         <MainHeader.Tracks tracks={tracks} />
         {finishedQueue && <MainHeader.SubTitle label="Marketplace finalizado" />}

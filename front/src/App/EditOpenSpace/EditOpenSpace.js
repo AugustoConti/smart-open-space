@@ -35,8 +35,12 @@ const EditOpenSpace = () => {
   if (!user) return <RedirectToRoot />;
 
   const onSubmit = ({ value }) => {
-    const editedOpenSpace = { ...openSpace, ...value };
-    updateOS(openSpace.id, editedOpenSpace).then(pushToRoot);
+    if (value.dates.length > 0 && value.slots.length == 0) {
+      alert('Si agregaste una fecha, tenés que agregar slots');
+    } else {
+      const editedOpenSpace = { ...openSpace, ...value };
+      updateOS(openSpace.id, editedOpenSpace).then(pushToRoot);
+    }
   };
 
   return (
