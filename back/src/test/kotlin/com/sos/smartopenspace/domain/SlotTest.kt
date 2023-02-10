@@ -16,9 +16,7 @@ class SlotTest {
   private val secondDaySlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now().plusDays(1))
 
   private fun anyUser(talk: Talk): User {
-    val user = User("augusto@sos.sos", "Augusto", "Augusto")
-    user.addTalk(talk)
-    return user
+    return User("augusto@sos.sos", "Augusto", "Augusto")
   }
 
   private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, slots: Set<Slot> = setOf(aSlot, otherSlot, secondDaySlot)): OpenSpace {

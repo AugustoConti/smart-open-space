@@ -14,7 +14,6 @@ class TalkTest {
     anOpenSpace.toggleCallForPapers(aUser)
     val aTalk = Talk("Una charla", speaker = aUser)
     anOpenSpace.addTalk(aTalk)
-    aUser.addTalk(aTalk)
     val aTrack = Track("a track name", color = "#FFFFFF")
 
 

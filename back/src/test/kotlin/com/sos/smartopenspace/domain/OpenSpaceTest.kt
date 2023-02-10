@@ -28,7 +28,6 @@ class OpenSpaceTest {
 
     private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()): User {
         val user = User("augusto@sos.sos", "augusto", "Augusto")
-        talks.forEach { user.addTalk(it) }
         openSpaces.forEach { user.addOpenSpace(it) }
         return user
     }
@@ -270,7 +269,6 @@ class OpenSpaceTest {
     private fun createAndEnqueueTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
         openSpace.toggleCallForPapers(organizer)
         openSpace.addTalk(aTalk)
-        organizer.addTalk(aTalk)
         openSpace.activeQueue(organizer)
         openSpace.enqueueTalk(aTalk)
     }
@@ -278,7 +276,6 @@ class OpenSpaceTest {
     private fun createATalkThatIsToBeScheduled(openSpace: OpenSpace, organizer: User, aTalk: Talk) {
         openSpace.toggleCallForPapers(organizer)
         openSpace.addTalk(aTalk)
-        organizer.addTalk(aTalk)
         openSpace.activeQueue(organizer)
         openSpace.enqueueTalk(aTalk)
         openSpace.nextTalk(organizer)
@@ -287,7 +284,6 @@ class OpenSpaceTest {
     private fun createAndScheduleTalk(openSpace: OpenSpace, organizer: User, aTalk: Talk, aSlot: TalkSlot, aRoom: Room) {
         openSpace.toggleCallForPapers(organizer)
         openSpace.addTalk(aTalk)
-        organizer.addTalk(aTalk)
         openSpace.scheduleTalk(aTalk, organizer, aSlot, aRoom)
     }
 
