@@ -1,69 +1,52 @@
-import React, { useState } from 'react';
-import { Heading } from 'grommet';
+import React from 'react';
+import { Anchor } from 'grommet';
 
-import useAuth, { useUser } from '#helpers/useAuth';
-import MyForm from '#shared/MyForm';
+import useAuth from '#helpers/useAuth';
 import {
-  RedirectToRoot,
-  usePushToRoot,
   usePushToRegister,
-  useInRegister,
-  usePushToOpenSpace,
   usePushToRegisterFromOpenSpace,
+  usePushToRecoveryEmail,
 } from '#helpers/routes';
+import UserCredentialsForm from '#shared/UserCredentialsForm';
 
 const Login = ({ location: { state } }) => {
   const returnToOpenSpace = hasOpenSpaceId(state);
   const openSpaceId = state?.openSpaceId;
-  const pushToRoot = usePushToRoot();
-  const pushToOpenSpace = usePushToOpenSpace(openSpaceId);
   const pushToRegisterAndThenGoToRoot = usePushToRegister();
+  const pushToRecoverPassword = usePushToRecoveryEmail();
   const pushToRegisterAndThenGoToOpenSpace = usePushToRegisterFromOpenSpace(openSpaceId);
 
-  const pushToRoute = returnToOpenSpace ? pushToOpenSpace : pushToRoot;
   const pushToRegister = returnToOpenSpace
     ? pushToRegisterAndThenGoToOpenSpace
     : pushToRegisterAndThenGoToRoot;
 
-  const { login, register } = useAuth();
-  const isRegister = useInRegister();
-  const data = {
-    title: isRegister ? 'Registrarse' : 'Iniciar sesión',
-    secondaryLabel: isRegister ? undefined : 'Registrarse',
-    onSecondary: isRegister ? undefined : pushToRegister,
-    primaryLabel: isRegister ? 'Registrarme' : 'Ingresar',
-    action: isRegister ? register : login,
-  };
-  let passwordValidation = '';
-
-  const onSubmit = ({ value: userData }) => {
-    return data.action(userData).then(pushToRoute);
-  };
-
-  if (useUser()) return <RedirectToRoot />;
-
-  const validateConfirm = (value) => {
-    return value != passwordValidation && 'Las contraseñas deben coincidir';
-  };
-
-  const updatePasswordConfirm = (event) => {
-    passwordValidation = event.target.value;
-  };
+  const { login } = useAuth();
 
   return (
-    <MyForm
-      onSecondary={data.onSecondary}
-      primaryLabel={data.primaryLabel}
-      secondaryLabel={data.secondaryLabel}
-      onSubmit={onSubmit}
-      value={{ name: '', email: '', password: '', confirmPassword: '' }}
-    >
-      <Heading>{data.title}</Heading>
-      {isRegister && <MyForm.Text />}
-      <MyForm.Email />
-      <MyForm.Password onChange={updatePasswordConfirm} />
-      {isRegister && <MyForm.ConfirmPassword validate={validateConfirm} />}
-    </MyForm>
+    <>
+      <UserCredentialsForm
+        returnToOpenSpace={returnToOpenSpace}
+        openSpaceId={openSpaceId}
+        data={{
+          title: 'Iniciar sesión',
+          secondaryLabel: 'Registrarse',
+          onSecondary: pushToRegister,
+          primaryLabel: 'Ingresar',
+          action: login,
+        }}
+        hideFields={{
+          hideName: true,
+          hideConfirmPassword: true,
+        }}
+      />
+
+      <Anchor
+        color="dark-1"
+        label={'Olvidaste tu contraseña?'}
+        target="_blank"
+        onClick={pushToRecoverPassword}
+      />
+    </>
   );
 };
 

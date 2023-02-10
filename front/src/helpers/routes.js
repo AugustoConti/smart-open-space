@@ -7,6 +7,7 @@ const useID = (id) => ((idParam) => id || idParam)(useParams().id);
 const toRoot = '/';
 const toLogin = '/login';
 const toRegister = '/register';
+const toRecoveryEmail = '/recovery-email';
 const toNewOS = '/new';
 const useToOS = (id) => `/os/${useID(id)}`;
 const useToEditOS = (id) => `/os/${useID(id)}/edit`;
@@ -30,6 +31,7 @@ const pushTo = (history, path) => () => history.push(path);
 export const usePushToRoot = () => pushTo(useHistory(), toRoot);
 export const usePushToLogin = () => pushTo(useHistory(), toLogin);
 export const usePushToRegister = () => pushTo(useHistory(), toRegister);
+export const usePushToRecoveryEmail = () => pushTo(useHistory(), toRecoveryEmail);
 export const usePushToRegisterFromOpenSpace = (openSpaceId) =>
   pushTo(useHistory(), { pathname: toRegister, state: { openSpaceId } });
 export const usePushToMyTalks = (id) => pushTo(useHistory(), useToMyTalks(id));
