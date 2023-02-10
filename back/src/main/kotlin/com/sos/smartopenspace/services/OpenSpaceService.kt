@@ -5,7 +5,6 @@ import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.helpers.OpenSpaceDTO
 import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
-import org.springframework.data.jpa.domain.JpaSort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
