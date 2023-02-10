@@ -31,7 +31,8 @@ import {
   FormPreviousLink,
   Edit,
   Favorite,
-  Trash
+  Trash,
+  Star,
 } from 'grommet-icons';
 
 export {
@@ -69,4 +70,5 @@ export {
   FormPreviousLink as PreviousLinkIcon,
   Edit as EditIcon,
   Favorite as VoteIcon,
+  Star as StarIcon,
 };

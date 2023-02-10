@@ -1,6 +1,7 @@
 package com.sos.smartopenspace.services
 
 import com.sos.smartopenspace.domain.*
+import com.sos.smartopenspace.helpers.CreateReviewDTO
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.persistence.*
 import com.sos.smartopenspace.websockets.QueueSocket
@@ -104,5 +105,20 @@ class TalkService(
 
   fun getTalk(talkID: Long): Talk {
     return findTalk(talkID)
+  }
+
+  fun addReview(talkID: Long, userId: Long, createReviewDTO: CreateReviewDTO): Talk {
+    val reviewer = userService.findById(userId)
+    val talk = findTalk(talkID)
+
+    val newReview = Review(
+      grade = createReviewDTO.grade,
+      reviewer = reviewer,
+      comment = createReviewDTO.comment
+      )
+
+    talk.addReview(newReview)
+
+    return talk
   }
 }

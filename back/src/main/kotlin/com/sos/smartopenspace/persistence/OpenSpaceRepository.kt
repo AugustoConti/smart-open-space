@@ -1,9 +1,11 @@
 package com.sos.smartopenspace.persistence
 
 import com.sos.smartopenspace.domain.OpenSpace
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
+import java.util.*
 
 interface OpenSpaceRepository : CrudRepository<OpenSpace, Long> {
 
@@ -11,4 +13,7 @@ interface OpenSpaceRepository : CrudRepository<OpenSpace, Long> {
     fun findFirstOpenSpaceByTalkId(@Param("talkId") talkId: Long): OpenSpace
 
     fun findAllByOrganizerId(userId: Long): List<OpenSpace>
+
+    @EntityGraph(attributePaths = ["assignedSlots.talk.reviews", "assignedSlots.talk.documents"])
+    override fun findById(id: Long): Optional<OpenSpace>
 }

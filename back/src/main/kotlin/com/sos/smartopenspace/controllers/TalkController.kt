@@ -1,5 +1,6 @@
 package com.sos.smartopenspace.controllers
 
+import com.sos.smartopenspace.helpers.CreateReviewDTO
 import com.sos.smartopenspace.helpers.CreateTalkDTO
 import com.sos.smartopenspace.services.TalkService
 import org.springframework.web.bind.annotation.GetMapping
@@ -49,4 +50,8 @@ class TalkController(private val talkService: TalkService) {
   @PutMapping("/{talkID}/user/{userID}/unvote")
   fun unvoteTalk( @PathVariable talkID: Long, @PathVariable userID: Long) =
     talkService.unvoteTalk(talkID, userID)
+
+  @PostMapping("/{talkID}/user/{userID}/review")
+  fun reviewTalk( @PathVariable talkID: Long, @PathVariable userID: Long, @Valid @RequestBody createReviewDTO: CreateReviewDTO) =
+    talkService.addReview(talkID, userID, createReviewDTO)
 }

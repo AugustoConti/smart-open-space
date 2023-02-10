@@ -75,7 +75,7 @@ class OpenSpaceService(
   fun findAllByUser(userID: Long) = openSpaceRepository.findAllByOrganizerId(userID)
 
   @Transactional(readOnly = true)
-  fun findById(id: Long) = openSpaceRepository.findByIdOrNull(id) ?: throw OpenSpaceNotFoundException()
+  fun findById(id: Long) = openSpaceRepository.findById(id).orElseThrow { OpenSpaceNotFoundException() }
 
   @Transactional(readOnly = true)
   fun findTrackById(id: Long) = trackRepository.findByIdOrNull(id) ?: throw TrackNotFoundException()
@@ -102,7 +102,6 @@ class OpenSpaceService(
 
   @Transactional(readOnly = true)
   fun findAssignedSlotsById(id: Long) = findById(id).assignedSlots.toList()
-
 
   fun activateQueue(userID: Long, osID: Long) =
     findById(osID).activeQueue(findUser(userID))
