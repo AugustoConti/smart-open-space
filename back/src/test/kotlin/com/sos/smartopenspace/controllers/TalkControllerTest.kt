@@ -210,6 +210,48 @@ class TalkControllerTest {
       .andExpect(MockMvcResultMatchers.jsonPath("$.reviews[0].grade").value(5))
   }
 
+  @Test
+  fun `add review with a grade exciding 5 throws Bad Request`() {
+    val aUser = aUser()
+    val talk = anySavedTalk(aUser)
+    val content = aReviewCreationBody(10, "a review")
+    aUser.addTalk(talk)
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
+        .contentType("application/json")
+        .content(content)
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
+
+  @Test
+  fun `add review with a grade lower than 1 throws Bad Request`() {
+    val aUser = aUser()
+    val talk = anySavedTalk(aUser)
+    val content = aReviewCreationBody(0, "a review")
+    aUser.addTalk(talk)
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
+        .contentType("application/json")
+        .content(content)
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
+
+  @Test
+  fun `create request for invalid reviewer throws reviewer Not Found`() {
+    val aUser = aUser()
+    val talk = anySavedTalk(aUser)
+    val content = aReviewCreationBody(4, "a review")
+    aUser.addTalk(talk)
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/talk/${talk.id}/user/41/review")
+        .contentType("application/json")
+        .content(content)
+    ).andExpect(MockMvcResultMatchers.status().isNotFound)
+  }
+
   private fun anySavedRoom() = roomRepository.save(Room("Sala"))
 
   private fun anySavedTalk(organizer: User) = talkRepository.save(Talk("Charla", speaker = organizer))
