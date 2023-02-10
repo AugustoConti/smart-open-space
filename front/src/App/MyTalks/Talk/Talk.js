@@ -16,7 +16,7 @@ import Card from '#shared/Card';
 import Detail from '#shared/Detail';
 import { DeleteIcon, EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
-
+import { useParams } from 'react-router-dom';
 import SelectSlot from './SelectSlot';
 import {
   usePushToEditTalk,
@@ -24,6 +24,19 @@ import {
   usePushToSchedule,
 } from '#helpers/routes';
 import { Room } from '../../model/room';
+import { usePushToTalk } from '#helpers/routes';
+
+const ButtonMoreInfo = ({ onClick }) => (
+  <Button
+    alignSelf="center"
+    color="accent-3"
+    label="Mas Info"
+    onClick={onClick}
+    primary
+  />
+);
+
+ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -66,6 +79,7 @@ const Talk = ({
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
   const pushToEditTalk = usePushToEditTalk(talk.id);
+  const pushToTalk = usePushToTalk(useParams().id, talk.id);
   const { data: openSpace } = useGetOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -134,6 +148,7 @@ const Talk = ({
         )}
         {shouldDisplayEditTalkButton && (
           <>
+            <ButtonMoreInfo onClick={() => pushToTalk()} />
             <EditButton color={color} onClick={pushToEditTalk} />
             <ButtonAction
               icon={<DeleteIcon />}
