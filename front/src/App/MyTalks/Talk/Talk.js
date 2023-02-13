@@ -14,16 +14,13 @@ import { useUser } from '#helpers/useAuth';
 import ButtonLoading from '#shared/ButtonLoading';
 import Card from '#shared/Card';
 import Detail from '#shared/Detail';
-import { DeleteIcon, EditIcon, TransactionIcon, UserIcon } from '#shared/icons';
+import { DeleteIcon, TransactionIcon, UserIcon } from '#shared/icons';
 import Title from '#shared/Title';
-
+import { useParams } from 'react-router-dom';
 import SelectSlot from './SelectSlot';
-import {
-  usePushToEditTalk,
-  usePushToOpenSpace,
-  usePushToSchedule,
-} from '#helpers/routes';
+import { usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
 import { Room } from '../../model/room';
+import { usePushToTalk } from '#helpers/routes';
 
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
@@ -38,21 +35,6 @@ const ButtonAction = (props) => (
   <ButtonLoading alignSelf="center" margin={{ top: 'small' }} {...props} />
 );
 
-function EditButton(props) {
-  return (
-    <ButtonAction
-      icon={<EditIcon />}
-      color={props.color}
-      label="Editar"
-      onClick={props.onClick}
-    />
-  );
-}
-
-EditButton.propTypes = {
-  color: PropTypes.any,
-  onClick: PropTypes.func,
-};
 const Talk = ({
   talk,
   activeQueue,
@@ -65,7 +47,7 @@ const Talk = ({
 }) => {
   const pushToSchedule = usePushToSchedule();
   const pushToOpenSpace = usePushToOpenSpace();
-  const pushToEditTalk = usePushToEditTalk(talk.id);
+  const pushToTalk = usePushToTalk(useParams().id, talk.id);
   const { data: openSpace } = useGetOpenSpace();
   const user = useUser();
   const [openSchedule, setOpenSchedule] = useState(false);
@@ -80,23 +62,25 @@ const Talk = ({
 
   const color = talk.colorForTalkManagement();
 
-  const shouldDisplayEditTalkButton = talk.speaker.id === user.id;
+  const shouldDisplayDeleteTalkButton = talk.speaker.id === user.id;
 
   return (
     <Card borderColor={color} gap="small">
-      <Title>{talk.name}</Title>
-      <Markdown
-        align="center"
-        components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
-      >
-        {talk.description}
-      </Markdown>
-      {currentUserIsOrganizer && (
-        <>
-          <Detail icon={UserIcon} text={talk.speaker.name} />
-          <Detail size="small" text={talk.speaker.email} />
-        </>
-      )}
+      <Box onClick={pushToTalk}>
+        <Title>{talk.name}</Title>
+        <Markdown
+          align="center"
+          components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
+        >
+          {talk.description}
+        </Markdown>
+        {currentUserIsOrganizer && (
+          <>
+            <Detail icon={UserIcon} text={talk.speaker.name} />
+            <Detail size="small" text={talk.speaker.email} />
+          </>
+        )}
+      </Box>
       <Grid gap={'xsmall'}>
         {talk.isAssigned() ? (
           <Box direction="row" justify="evenly">
@@ -132,16 +116,13 @@ const Talk = ({
             />
           )
         )}
-        {shouldDisplayEditTalkButton && (
-          <>
-            <EditButton color={color} onClick={pushToEditTalk} />
-            <ButtonAction
-              icon={<DeleteIcon />}
-              color={color}
-              label="Eliminar"
-              onClick={() => setShowDeleteModal(true)}
-            />
-          </>
+        {shouldDisplayDeleteTalkButton && (
+          <ButtonAction
+            icon={<DeleteIcon />}
+            color={color}
+            label="Eliminar"
+            onClick={() => setShowDeleteModal(true)}
+          />
         )}
       </Grid>
       {openSchedule && roomsWithFreeSlots && (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Box, Button } from 'grommet';
 import PropTypes from 'prop-types';
@@ -31,16 +31,10 @@ const ButtonGoToLink = ({ onClick }) => (
   />
 );
 
-const Talk = ({
-  talk: { id, description, name, speaker, meetingLink, track },
-  room,
-  children,
-}) => {
-  const [open, setOpen] = useState(false);
+const Talk = ({ talk: { id, name, speaker, meetingLink, track }, room, children }) => {
   const pushToTalk = usePushToTalk(useParams().id, id);
 
   const color = track ? track.color : 'accent-3';
-  let shouldDisplayMoreInfo = description || meetingLink;
   const talkLink = meetingLink || room?.link;
   return (
     <>
@@ -50,7 +44,7 @@ const Talk = ({
         <Box gap="medium">
           <Detail icon={UserIcon} text={speaker.name} />
           {room && <Detail icon={HomeIcon} text={room.name} />}
-          {shouldDisplayMoreInfo && <ButtonMoreInfo onClick={() => pushToTalk()} />}
+          <ButtonMoreInfo onClick={() => pushToTalk()} />
           {talkLink && <ButtonGoToLink onClick={() => window.open(talkLink, '_blank')} />}
         </Box>
       </Card>
