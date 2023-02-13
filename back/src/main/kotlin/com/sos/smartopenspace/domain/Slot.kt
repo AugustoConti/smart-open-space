@@ -21,7 +21,7 @@ abstract class Slot(
 
   val endTime: LocalTime,
 
-  val date: LocalDate? = null,
+  val date: LocalDate,
   @Id
   @GeneratedValue
   override val id: Long = 0
@@ -31,7 +31,7 @@ abstract class Slot(
 }
 
 @Entity
-class TalkSlot(startTime: LocalTime, endTime: LocalTime, date: LocalDate? = null) : Slot(startTime, endTime, date) {
+class TalkSlot(startTime: LocalTime, endTime: LocalTime, date: LocalDate) : Slot(startTime, endTime, date) {
   override fun isAssignable() = true
   override fun cloneWithDate(date: LocalDate): Slot {
     return TalkSlot(startTime, endTime, date)
@@ -39,7 +39,7 @@ class TalkSlot(startTime: LocalTime, endTime: LocalTime, date: LocalDate? = null
 }
 
 @Entity
-class OtherSlot(startTime: LocalTime, endTime: LocalTime, val description: String, date: LocalDate? = null) : Slot(startTime, endTime, date) {
+class OtherSlot(startTime: LocalTime, endTime: LocalTime, val description: String, date: LocalDate) : Slot(startTime, endTime, date) {
   override fun isAssignable() = false
   override fun cloneWithDate(date: LocalDate): Slot {
     return OtherSlot(startTime, endTime, description, date)

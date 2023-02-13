@@ -197,7 +197,6 @@ class TalkControllerTest {
     val aUser = anySavedUser()
     val talk = anySavedTalk(aUser)
     val content = aReviewCreationBody(5, "a review")
-    aUser.addTalk(talk)
 
     mockMvc.perform(
       MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
@@ -212,7 +211,6 @@ class TalkControllerTest {
     val aUser = aUser()
     val talk = anySavedTalk(aUser)
     val content = aReviewCreationBody(10, "a review")
-    aUser.addTalk(talk)
 
     mockMvc.perform(
       MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
@@ -226,7 +224,6 @@ class TalkControllerTest {
     val aUser = aUser()
     val talk = anySavedTalk(aUser)
     val content = aReviewCreationBody(0, "a review")
-    aUser.addTalk(talk)
 
     mockMvc.perform(
       MockMvcRequestBuilders.post("/talk/${talk.id}/user/${aUser.id}/review")
@@ -240,7 +237,6 @@ class TalkControllerTest {
     val aUser = aUser()
     val talk = anySavedTalk(aUser)
     val content = aReviewCreationBody(4, "a review")
-    aUser.addTalk(talk)
 
     mockMvc.perform(
       MockMvcRequestBuilders.post("/talk/${talk.id}/user/41/review")
