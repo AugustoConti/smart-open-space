@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.transaction.annotation.Transactional
 import java.net.URL
+import java.time.LocalDate
 import java.time.LocalTime
 
 
@@ -346,7 +347,7 @@ class OpenSpaceControllerTest {
     private fun anyOpenSpace(): OpenSpace {
         return OpenSpace(
             "os", mutableSetOf(Room("1")), mutableSetOf(
-                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"))
+                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.parse("2007-12-03"))
             )
         )
     }

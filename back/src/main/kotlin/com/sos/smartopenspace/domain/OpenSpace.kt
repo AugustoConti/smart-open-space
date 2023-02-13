@@ -215,7 +215,7 @@ class OpenSpace(
 
   @JsonProperty
   fun dates(): Set<LocalDate> {
-    return slots.map { it.date }.filterNotNull().toSet()
+    return slots.map { it.date }.toSet()
   }
 
   fun getUserTalks(user: User): List<Talk> {

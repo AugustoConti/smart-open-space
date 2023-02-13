@@ -13,9 +13,9 @@ class OpenSpaceTest {
     private fun anyOpenSpace(talks: MutableSet<Talk> = mutableSetOf()) =
         OpenSpace(
             "os", mutableSetOf(), mutableSetOf(
-                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00")),
-                TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00")),
-                TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"))
+                TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("10:00"), LocalDate.parse("2007-12-03")),
+                TalkSlot(LocalTime.parse("10:00"), LocalTime.parse("11:00"), LocalDate.parse("2007-12-03")),
+                TalkSlot(LocalTime.parse("11:00"), LocalTime.parse("12:00"), LocalDate.parse("2007-12-03"))
             ),
             talks
         )
@@ -288,8 +288,8 @@ class OpenSpaceTest {
     }
 
     private fun openSpaceWithTwoDates(
-        startDate: LocalDate?,
-        endDate: LocalDate?
+        startDate: LocalDate,
+        endDate: LocalDate
     ): OpenSpace {
         val first_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), startDate)
         val end_date_slot = TalkSlot(LocalTime.of(9, 0), LocalTime.of(10, 0), endDate)
