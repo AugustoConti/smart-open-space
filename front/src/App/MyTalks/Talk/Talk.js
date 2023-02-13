@@ -66,7 +66,7 @@ const Talk = ({
 
   return (
     <Card borderColor={color} gap="small">
-      <Button onClick={pushToTalk}>
+      <Box onClick={pushToTalk}>
         <Title>{talk.name}</Title>
         <Markdown
           align="center"
@@ -80,7 +80,7 @@ const Talk = ({
             <Detail size="small" text={talk.speaker.email} />
           </>
         )}
-      </Button>
+      </Box>
       <Grid gap={'xsmall'}>
         {talk.isAssigned() ? (
           <Box direction="row" justify="evenly">
