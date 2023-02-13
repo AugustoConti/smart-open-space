@@ -28,10 +28,10 @@ class User(
   var password: String = "",
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  var resetToken: String?,
+  var resetToken: String? = null,
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  var resetTokenLifetime: Long,
+  var resetTokenLifetime: Long? = null,
 
   @Id @GeneratedValue
   var id: Long = 0
@@ -69,7 +69,7 @@ class User(
 
   fun cleanResetToken() {
     this.resetToken = null
-    this.resetTokenLifetime = 0
+    this.resetTokenLifetime = null
   }
 
   private fun secureField(field: String) = Hashing.sha256()

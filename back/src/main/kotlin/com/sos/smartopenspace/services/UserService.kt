@@ -1,16 +1,17 @@
 package com.sos.smartopenspace.services
 
 import com.google.common.hash.Hashing
+import com.sos.smartopenspace.domain.BadRequestException
 import com.sos.smartopenspace.domain.User
 import com.sos.smartopenspace.domain.UserNotFoundException
 import com.sos.smartopenspace.persistence.UserRepository
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.nio.charset.StandardCharsets
 import java.util.*
-
 
 @Service
 @Transactional
@@ -19,8 +20,12 @@ class UserService(private val userRepository: UserRepository) {
   private val resetTokenLifetime: Long = 0
 
   fun create(user: User): User {
-    user.securePassword()
-    return userRepository.save(user)
+    try {
+      user.securePassword()
+      return userRepository.saveAndFlush(user)
+    } catch (error: DataIntegrityViolationException) {
+      throw BadRequestException("El mail ya esta en uso")
+    }
   }
 
   @Transactional(readOnly = true)
@@ -33,7 +38,7 @@ class UserService(private val userRepository: UserRepository) {
   fun resetPassword(email: String, resetToken: String, password: String) :User{
     val hashedToken = hash(resetToken)
     val user = userRepository.findByEmailAndResetToken(email, hashedToken) ?: throw UserNotFoundException()
-    if (user.resetTokenLifetime < System.currentTimeMillis()) { throw SecurityException() }
+    if (user.resetTokenLifetime == null || user.resetTokenLifetime!! < System.currentTimeMillis()) { throw SecurityException() }
 
     user.cleanResetToken()
     user.resetPassword(password)

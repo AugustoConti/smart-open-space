@@ -26,7 +26,7 @@ class UserTest {
   }
 
   private fun aUser(): User {
-    return User("test@mail.com", "testuser", "password", resetToken = null, resetTokenLifetime = 0)
+    return User("test@mail.com", "testuser", "password")
   }
 
 }

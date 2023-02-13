@@ -20,29 +20,23 @@ class EmailService(
   @Value("\${frontend.reset.url}")
   private val frontendResetUrl: String = ""
 
-  fun sendEmail(email: String): User {
+  fun sendRecoveryEmail(email: String): User {
     val user = userService.findByEmail(email)
     val resetToken = userService.generatePasswordResetToken(user)
-
-    val mail = Email(
-      to = email,
-      subject ="recuperación de password",
-      text = "$frontendResetUrl/reset-password?email=$email&token=$resetToken",
-      withAttachment = false
-    )
-    val msg = createSimpleMessage(mail)
-    emailSender.send(msg)
-
+    sendEmail(email, "recuperación de password", "$frontendResetUrl/reset-password?email=$email&token=$resetToken",)
     return user
   }
 
-  private fun createSimpleMessage(email: Email): SimpleMailMessage {
-    val message = SimpleMailMessage()
-    message.setFrom(springNameUsername)
-    message.setTo(email.to)
-    message.setSubject(email.subject)
-    message.setText(email.text)
+  fun sendEmail(email: String, subject: String, text: String) {
+    val mail = Email(email, subject, text, withAttachment = false)
+    val msg = createSimpleMessage(mail)
+    emailSender.send(msg)
+  }
 
-    return message
+  private fun createSimpleMessage(email: Email) = SimpleMailMessage().apply {
+    setFrom(springNameUsername)
+    setTo(email.to)
+    setSubject(email.subject)
+    setText(email.text)
   }
 }

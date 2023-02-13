@@ -27,12 +27,8 @@ class UserControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
-
   @Autowired
   lateinit var repoUser: UserRepository
-
-  @Autowired
-  lateinit var repoOpenSpace: OpenSpaceRepository
 
   @Autowired
   lateinit var userService: UserService
@@ -53,6 +49,26 @@ class UserControllerTest {
 
     val id = JsonPath.read<Int>(response.contentAsString, "$.id").toLong()
     assertNotNull(repoUser.findByIdOrNull(id))
+  }
+
+  @Test
+  fun `user registration with existing mail returns error response`() {
+    val email = "email@gmail.com"
+    val password = "password"
+    val name = "Fran"
+    val userInformation = anUserCreationBody(email = email, password = password, name = name)
+
+    val response = mockMvc.perform(
+      MockMvcRequestBuilders.post("/user")
+        .contentType("application/json")
+        .content(userInformation)
+    ).andReturn().response
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user")
+        .contentType("application/json")
+        .content(userInformation)
+    ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
   }
 
   @Test
@@ -85,7 +101,7 @@ class UserControllerTest {
     fun `user login returns not found status response`() {
         val email = "email@gmail.com"
         val password = "password"
-        userService.create(User(email= email, name = "Fran", password = password, resetToken = null, resetTokenLifetime = 0))
+        userService.create(User(email= email, name = "Fran", password = password))
 
         val userLoginInformation = """
           {
