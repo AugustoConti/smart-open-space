@@ -16,7 +16,7 @@ class VoteTest {
     }
 
     private fun anyUser(): User {
-        return User("anemail@gmail.com", "Aname")
+        return User("anemail@gmail.com", "Aname", resetToken = null, resetTokenLifetime = 0)
     }
 
     @Test

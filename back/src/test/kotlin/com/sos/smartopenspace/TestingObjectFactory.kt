@@ -64,7 +64,7 @@ fun anOpenSpaceWith(
 }
 
 fun aUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf(), userEmail: String = "apprentices@sos.sos"): User {
-    val user =  User(userEmail, "apprentices", "apprentices")
+    val user =  User(userEmail, "apprentices", "apprentices", resetToken = null, resetTokenLifetime = 0)
     openSpaces.forEach { user.addOpenSpace(it) }
     return user
 }

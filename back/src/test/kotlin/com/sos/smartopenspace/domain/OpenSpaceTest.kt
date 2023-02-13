@@ -27,7 +27,7 @@ class OpenSpaceTest {
     }
 
     private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()): User {
-        val user = User("augusto@sos.sos", "augusto", "Augusto")
+        val user = User("augusto@sos.sos", "augusto", "Augusto", resetToken = null, resetTokenLifetime = 0)
         openSpaces.forEach { user.addOpenSpace(it) }
         return user
     }

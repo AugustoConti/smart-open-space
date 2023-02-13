@@ -7,7 +7,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 class SlotTest {
-  private val user = User("anemail@gmail.com", "Pepe")
+  private val user = User("anemail@gmail.com", "Pepe", resetToken = null, resetTokenLifetime = 0)
   private val room1 = Room("1")
   private val talk1 = Talk("talk1", speaker = user)
   private val talk2 = Talk("talk2", speaker = user)
@@ -16,12 +16,12 @@ class SlotTest {
   private val secondDaySlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now().plusDays(1))
 
   private fun anyUser(talk: Talk): User {
-    return User("augusto@sos.sos", "Augusto", "Augusto")
+    return User("augusto@sos.sos", "Augusto", "Augusto", resetToken = null, resetTokenLifetime = 0)
   }
 
   private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, slots: Set<Slot> = setOf(aSlot, otherSlot, secondDaySlot)): OpenSpace {
     val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1), slots = slots)
-    val organizer = User("augusto@sos.sos", "augusto", "Augusto")
+    val organizer = User("augusto@sos.sos", "augusto", "Augusto", resetToken = null, resetTokenLifetime = 0)
     organizer.addOpenSpace(openSpace)
     openSpace.activeQueue(organizer)
     talks.forEach {
@@ -36,7 +36,7 @@ class SlotTest {
     talks: MutableSet<Talk> = mutableSetOf(talk1, talk2)
   ): OpenSpace {
     val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1), slots = setOf(aSlot, otherSlot))
-    val organizer = User("augusto@sos.sos", "augusto", "Augusto")
+    val organizer = User("augusto@sos.sos", "augusto", "Augusto", resetToken = null, resetTokenLifetime = 0)
     organizer.addOpenSpace(openSpace)
     openSpace.activeQueue(organizer)
     return openSpace

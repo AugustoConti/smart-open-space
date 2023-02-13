@@ -85,7 +85,7 @@ class UserControllerTest {
     fun `user login returns not found status response`() {
         val email = "email@gmail.com"
         val password = "password"
-        userService.create(User(email= email, name = "Fran", password = password))
+        userService.create(User(email= email, name = "Fran", password = password, resetToken = null, resetTokenLifetime = 0))
 
         val userLoginInformation = """
           {
