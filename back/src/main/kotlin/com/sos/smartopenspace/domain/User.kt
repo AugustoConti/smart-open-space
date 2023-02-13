@@ -68,7 +68,7 @@ class User(
   }
 
   fun cleanResetToken() {
-    this.resetToken = ""
+    this.resetToken = null
     this.resetTokenLifetime = 0
   }
 
