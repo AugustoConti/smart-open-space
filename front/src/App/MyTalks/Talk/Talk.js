@@ -22,18 +22,6 @@ import { usePushToOpenSpace, usePushToSchedule } from '#helpers/routes';
 import { Room } from '../../model/room';
 import { usePushToTalk } from '#helpers/routes';
 
-const ButtonMoreInfo = ({ onClick }) => (
-  <Button
-    alignSelf="center"
-    color="accent-3"
-    label="Mas Info"
-    onClick={onClick}
-    primary
-  />
-);
-
-ButtonMoreInfo.propTypes = { onClick: PropTypes.func.isRequired };
-
 const Badge = ({ color, text }) => (
   <Box alignSelf="center">
     <Text color={color} weight="bold">
@@ -80,7 +68,12 @@ const Talk = ({
     <Card borderColor={color} gap="small">
       <Button onClick={pushToTalk}>
         <Title>{talk.name}</Title>
-        <Detail size="small" align="center" fill text={talk.description} truncate />
+        <Markdown
+          align="center"
+          components={{ p: (props) => <Detail size="small" {...props} truncate /> }}
+        >
+          {talk.description}
+        </Markdown>
         {currentUserIsOrganizer && (
           <>
             <Detail icon={UserIcon} text={talk.speaker.name} />
