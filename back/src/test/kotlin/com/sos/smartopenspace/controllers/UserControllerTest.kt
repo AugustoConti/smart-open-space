@@ -116,6 +116,58 @@ class UserControllerTest {
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
     }
 
+  @Test
+  fun `user reset password with correct token updates password`() {
+    val user = userService.create(User(email = "email@gmail.com", name = "Fran", password = "password"))
+    val resetToken = userService.generatePasswordResetToken(user)
+    val anotherPassword = "OtraPassword"
+
+    val userResetPasswordInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword",
+                "resetToken": "$resetToken"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/reset")
+        .contentType("application/json")
+        .content(userResetPasswordInformation)
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+
+    val userLoginInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/auth")
+        .contentType("application/json")
+        .content(userLoginInformation)
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+  }
+
+  @Test
+  fun `user reset password with invalid token throws not found`() {
+    val user = userService.create(User(email = "email@gmail.com", name = "Fran", password = "password"))
+    userService.generatePasswordResetToken(user)
+    val anotherPassword = "OtraPassword"
+
+    val userResetPasswordInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword",
+                "resetToken": "ivalidtokenn"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/reset")
+        .contentType("application/json")
+        .content(userResetPasswordInformation)
+    ).andExpect(MockMvcResultMatchers.status().isNotFound)
+  }
+
   private fun anUserCreationBody(email: String, password: String, name: String): String {
     return return """
 {
