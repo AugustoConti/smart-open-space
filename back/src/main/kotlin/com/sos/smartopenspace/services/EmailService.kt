@@ -1,8 +1,6 @@
 package com.sos.smartopenspace.services
 import com.sos.smartopenspace.domain.Email
 import com.sos.smartopenspace.domain.User
-import net.sargue.mailgun.Configuration
-import net.sargue.mailgun.Mail
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
