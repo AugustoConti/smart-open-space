@@ -21,7 +21,7 @@ class EmailService(
   fun sendRecoveryEmail(email: String): User {
     val user = userService.findByEmail(email)
     val resetToken = userService.generatePasswordResetToken(user)
-    sendEmail(email, "recuperación de password", "$frontendResetUrl/reset-password?email=$email&token=$resetToken",)
+    sendEmail(email, "recuperación de password", "$frontendResetUrl/login?reset=true&email=$email&token=$resetToken")
     return user
   }
 

@@ -8,6 +8,7 @@ const toRoot = '/';
 const toLogin = '/login';
 const toRegister = '/register';
 const toRecoveryEmail = '/recovery-email';
+const toResetPassword = (email, token) => `/reset-password?email=${email}&token=${token}`;
 const toNewOS = '/new';
 const useToOS = (id) => `/os/${useID(id)}`;
 const useToEditOS = (id) => `/os/${useID(id)}/edit`;
@@ -21,6 +22,9 @@ const useToEditTalk = (talkId, openSpaceId) =>
 
 export const RedirectToRoot = () => <Redirect to={toRoot} />;
 export const RedirectToLogin = () => <Redirect to={toLogin} />;
+export const RedirectToResetPassword = ({ email, token }) => (
+  <Redirect to={toResetPassword(email, token)} />
+);
 export const RedirectToLoginFromOpenSpace = ({ openSpaceId }) => (
   <Redirect to={{ pathname: toLogin, state: { openSpaceId } }} />
 );
