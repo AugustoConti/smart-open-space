@@ -2,8 +2,14 @@ import React from 'react';
 import { Heading } from 'grommet';
 import MyForm from '#shared/MyForm';
 import PropTypes from 'prop-types';
-import { RedirectToRoot, usePushToRoot, usePushToOpenSpace } from '#helpers/routes';
+import {
+  RedirectToRoot,
+  usePushToRoot,
+  usePushToOpenSpace,
+  RedirectToResetPassword,
+} from '#helpers/routes';
 import { useUser } from '#helpers/useAuth';
+import { useLocation } from 'react-router-dom';
 
 const UserCredentialsForm = ({
   returnToOpenSpace,
@@ -11,6 +17,9 @@ const UserCredentialsForm = ({
   data: { title, secondaryLabel, onSecondary, primaryLabel, action },
   hideFields: { hideEmail, hideName, hidePassword, hideConfirmPassword },
 }) => {
+  const email = new URLSearchParams(useLocation().search).get('email');
+  const token = new URLSearchParams(useLocation().search).get('token');
+  const reset = new URLSearchParams(useLocation().search).get('reset');
   const pushToRoot = usePushToRoot();
   const pushToOpenSpace = usePushToOpenSpace(openSpaceId);
   const pushToRoute = returnToOpenSpace ? pushToOpenSpace : pushToRoot;
@@ -21,7 +30,7 @@ const UserCredentialsForm = ({
   };
 
   const validateConfirm = (value) => {
-    return value != passwordValidation && 'Las contraseñas deben coincidir';
+    return value !== passwordValidation && 'Las contraseñas deben coincidir';
   };
 
   const updatePasswordConfirm = (event) => {
@@ -29,6 +38,10 @@ const UserCredentialsForm = ({
   };
 
   if (useUser()) return <RedirectToRoot />;
+
+  if (reset) {
+    return <RedirectToResetPassword email={email} token={token} />;
+  }
 
   return (
     <MyForm
