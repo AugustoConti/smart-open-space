@@ -38,7 +38,7 @@ class UserControllerTest {
     val email = "email@gmail.com"
     val password = "password"
     val name = "Fran"
-    val userInformation = anUserCreationBody(email = email, password = password, name = name)
+    val userInformation = aUserCreationBody(email = email, password = password, name = name)
 
     val response = mockMvc.perform(
       MockMvcRequestBuilders.post("/user")
@@ -56,7 +56,7 @@ class UserControllerTest {
     val email = "email@gmail.com"
     val password = "password"
     val name = "Fran"
-    val userInformation = anUserCreationBody(email = email, password = password, name = name)
+    val userInformation = aUserCreationBody(email = email, password = password, name = name)
 
     val response = mockMvc.perform(
       MockMvcRequestBuilders.post("/user")
@@ -68,7 +68,7 @@ class UserControllerTest {
       MockMvcRequestBuilders.post("/user")
         .contentType("application/json")
         .content(userInformation)
-    ).andExpect(MockMvcResultMatchers.status().is4xxClientError)
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
   }
 
   @Test
@@ -76,7 +76,7 @@ class UserControllerTest {
       val email = "email@gmail.com"
       val password = "password"
       val name = "Fran"
-      val userInformation = anUserCreationBody(email = email, password = password, name = name)
+      val userInformation = aUserCreationBody(email = email, password = password, name = name)
 
       mockMvc.perform(
               MockMvcRequestBuilders.post("/user")
@@ -168,7 +168,7 @@ class UserControllerTest {
     ).andExpect(MockMvcResultMatchers.status().isNotFound)
   }
 
-  private fun anUserCreationBody(email: String, password: String, name: String): String {
+  private fun aUserCreationBody(email: String, password: String, name: String): String {
     return return """
 {
     "email": "${email}",

@@ -38,7 +38,7 @@ class UserService(private val userRepository: UserRepository) {
   fun resetPassword(email: String, resetToken: String, password: String) :User{
     val hashedToken = hash(resetToken)
     val user = userRepository.findByEmailAndResetToken(email, hashedToken) ?: throw UserNotFoundException()
-    if (user.resetTokenLifetime == null || user.resetTokenLifetime!! < System.currentTimeMillis()) { throw SecurityException() }
+    if (user.resetTokenLifetime == null || user.resetTokenLifetime!! < System.currentTimeMillis()) { throw SecurityException("El token esta vencido") }
 
     user.cleanResetToken()
     user.resetPassword(password)
@@ -57,12 +57,10 @@ class UserService(private val userRepository: UserRepository) {
 
   fun generatePasswordResetToken(user: User): String {
     val random = ByteArray(64)
-    var token: String = random.toString()
-
-    token = convertToBase64(token)
-    token = token.replace("=", "")
-    token = token.replace("/", "")
-    token = token.replace("+", "")
+    var token = convertToBase64(random.toString())
+      .replace("=", "")
+      .replace("/", "")
+      .replace("+", "")
 
     user.secureResetToken(token, resetTokenLifetime)
 
