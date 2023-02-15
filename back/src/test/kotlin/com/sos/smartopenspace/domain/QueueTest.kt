@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 
 class QueueTest {
 
-  private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf(), talks: MutableSet<Talk> = mutableSetOf()): User {
+  private fun anyUser(openSpaces: MutableSet<OpenSpace> = mutableSetOf()): User {
     val user = User("augusto@sos.sos", "augusto", "Augusto")
     openSpaces.forEach { user.addOpenSpace(it) }
     return user
@@ -90,7 +90,6 @@ class QueueTest {
     val talk1 = anyTalk(user)
     val talk2 = anyTalk(user)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
-    anyUser(talks = mutableSetOf(talk1, talk2))
     os.enqueueTalk(talk1)
     assertThrows(AnotherTalkIsEnqueuedException::class.java) {
       os.enqueueTalk(talk2)
@@ -162,7 +161,6 @@ class QueueTest {
     val talk1 = anyTalk(speaker1)
     val talk2 = anyTalk(speaker2)
     val os = anyOSWithActiveQueue(mutableSetOf(talk1, talk2))
-    anyUser(talks = mutableSetOf(talk2))
     os.enqueueTalk(talk1)
     os.enqueueTalk(talk2)
     os.nextTalk(speaker1)

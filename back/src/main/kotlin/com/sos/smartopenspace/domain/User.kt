@@ -27,6 +27,12 @@ class User(
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   var password: String = "",
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  var resetToken: String? = null,
+
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  var resetTokenLifetime: Long? = null,
+
   @Id @GeneratedValue
   var id: Long = 0
 ) {
@@ -49,8 +55,24 @@ class User(
   fun isOwnerOf(talk: Talk) = this == talk.speaker
 
   fun securePassword() {
-    password = Hashing.sha256()
-      .hashString(password, StandardCharsets.UTF_8)
-      .toString()
+    password = secureField(password)
   }
+
+  fun resetPassword(newPassword: String) {
+    password = secureField(newPassword)
+  }
+
+  fun secureResetToken(resetToken: String, lifetime: Long) {
+    this.resetToken = secureField(resetToken)
+    this.resetTokenLifetime = System.currentTimeMillis() + lifetime
+  }
+
+  fun cleanResetToken() {
+    this.resetToken = null
+    this.resetTokenLifetime = null
+  }
+
+  private fun secureField(field: String) = Hashing.sha256()
+    .hashString(field, StandardCharsets.UTF_8)
+    .toString()
 }

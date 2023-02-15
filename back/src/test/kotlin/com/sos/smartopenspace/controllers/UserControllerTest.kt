@@ -27,12 +27,8 @@ class UserControllerTest {
   @Autowired
   lateinit var mockMvc: MockMvc
 
-
   @Autowired
   lateinit var repoUser: UserRepository
-
-  @Autowired
-  lateinit var repoOpenSpace: OpenSpaceRepository
 
   @Autowired
   lateinit var userService: UserService
@@ -42,7 +38,7 @@ class UserControllerTest {
     val email = "email@gmail.com"
     val password = "password"
     val name = "Fran"
-    val userInformation = anUserCreationBody(email = email, password = password, name = name)
+    val userInformation = aUserCreationBody(email = email, password = password, name = name)
 
     val response = mockMvc.perform(
       MockMvcRequestBuilders.post("/user")
@@ -56,11 +52,31 @@ class UserControllerTest {
   }
 
   @Test
+  fun `user registration with existing mail returns error response`() {
+    val email = "email@gmail.com"
+    val password = "password"
+    val name = "Fran"
+    val userInformation = aUserCreationBody(email = email, password = password, name = name)
+
+    val response = mockMvc.perform(
+      MockMvcRequestBuilders.post("/user")
+        .contentType("application/json")
+        .content(userInformation)
+    ).andReturn().response
+
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user")
+        .contentType("application/json")
+        .content(userInformation)
+    ).andExpect(MockMvcResultMatchers.status().isBadRequest)
+  }
+
+  @Test
   fun `user login returns ok status response`() {
       val email = "email@gmail.com"
       val password = "password"
       val name = "Fran"
-      val userInformation = anUserCreationBody(email = email, password = password, name = name)
+      val userInformation = aUserCreationBody(email = email, password = password, name = name)
 
       mockMvc.perform(
               MockMvcRequestBuilders.post("/user")
@@ -100,7 +116,59 @@ class UserControllerTest {
         ).andExpect(MockMvcResultMatchers.status().isNotFound)
     }
 
-  private fun anUserCreationBody(email: String, password: String, name: String): String {
+  @Test
+  fun `user reset password with correct token updates password`() {
+    val user = userService.create(User(email = "email@gmail.com", name = "Fran", password = "password"))
+    val resetToken = userService.generatePasswordResetToken(user)
+    val anotherPassword = "OtraPassword"
+
+    val userResetPasswordInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword",
+                "resetToken": "$resetToken"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/reset")
+        .contentType("application/json")
+        .content(userResetPasswordInformation)
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+
+    val userLoginInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/auth")
+        .contentType("application/json")
+        .content(userLoginInformation)
+    ).andExpect(MockMvcResultMatchers.status().isOk)
+  }
+
+  @Test
+  fun `user reset password with invalid token throws not found`() {
+    val user = userService.create(User(email = "email@gmail.com", name = "Fran", password = "password"))
+    userService.generatePasswordResetToken(user)
+    val anotherPassword = "OtraPassword"
+
+    val userResetPasswordInformation = """
+          {
+                "email": "${user.email}",
+                "password": "$anotherPassword",
+                "resetToken": "ivalidtokenn"
+          }
+      """
+    mockMvc.perform(
+      MockMvcRequestBuilders.post("/user/reset")
+        .contentType("application/json")
+        .content(userResetPasswordInformation)
+    ).andExpect(MockMvcResultMatchers.status().isNotFound)
+  }
+
+  private fun aUserCreationBody(email: String, password: String, name: String): String {
     return return """
 {
     "email": "${email}",

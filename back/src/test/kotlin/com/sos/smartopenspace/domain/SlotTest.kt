@@ -15,17 +15,17 @@ class SlotTest {
   private val otherSlot = TalkSlot(LocalTime.parse("09:30"), LocalTime.parse("09:45"), LocalDate.now())
   private val secondDaySlot = TalkSlot(LocalTime.parse("09:00"), LocalTime.parse("09:30"), LocalDate.now().plusDays(1))
 
-  private fun anyUser(talk: Talk): User {
+  private fun anyUser(): User {
     return User("augusto@sos.sos", "Augusto", "Augusto")
   }
 
   private fun anyOpenSpaceWithActiveQueued(talks: Set<Talk>, slots: Set<Slot> = setOf(aSlot, otherSlot, secondDaySlot)): OpenSpace {
     val openSpace = anOpenSpace(talks = talks.toMutableSet(), rooms = setOf(room1), slots = slots)
-    val organizer = User("augusto@sos.sos", "augusto", "Augusto")
+    val organizer = anyUser()
     organizer.addOpenSpace(openSpace)
     openSpace.activeQueue(organizer)
     talks.forEach {
-      anyUser(it)
+      anyUser()
       openSpace.enqueueTalk(it)
       openSpace.nextTalk(organizer)
     }
@@ -46,7 +46,7 @@ class SlotTest {
   fun `Si una charla no esta para agendar, no se puede agendar`() {
     val openSpace = anyOpenSpaceWithOrganizer()
     assertThrows(TalkIsNotForScheduledException::class.java) {
-      openSpace.scheduleTalk(talk1, anyUser(talk1), aSlot, room1)
+      openSpace.scheduleTalk(talk1, anyUser(), aSlot, room1)
     }
   }
 
@@ -92,7 +92,7 @@ class SlotTest {
     val openSpace = anyOpenSpaceWithOrganizer()
     assertThrows(TalkDoesntBelongException::class.java) {
       val talk = Talk("otra", speaker = user)
-      openSpace.scheduleTalk(talk, anyUser(talk), aSlot, room1)
+      openSpace.scheduleTalk(talk, anyUser(), aSlot, room1)
     }
   }
 
