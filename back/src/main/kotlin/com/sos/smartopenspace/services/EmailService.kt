@@ -15,7 +15,7 @@ class EmailService(
   @Value("\${spring.mail.username}")
   private val springNameUsername: String = ""
 
-  @Value("\${frontend.reset.url}")
+  @Value("\${frontend.url}")
   private val frontendResetUrl: String = ""
 
   fun sendRecoveryEmail(email: String): User {
